@@ -1,0 +1,116 @@
+body{
+    margin:0;
+    font-family:"Segoe UI", sans-serif;
+    background:#d9e9ee;
+}
+
+/* ===== ヘッダー ===== */
+.simple-header{
+    height:70px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#d8e8ee;
+    border-bottom:1px solid #999;
+}
+
+.simple-logo{
+    font-size:56px;
+    font-family:"Times New Roman", serif;
+    font-style:italic;
+    background:#edf5f8;
+    border:1px solid #aaa;
+    padding:0 25px;
+}
+
+/* ===== メイン ===== */
+.input-main{
+    height:calc(100vh - 70px);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* ===== ボックス ===== */
+.input-box{
+    width:400px;
+    background:white;
+    border-radius:12px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.15);
+    padding:30px;
+    text-align:center;
+}
+
+/* ===== タブ ===== */
+.input-tabs{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.input-tab{
+    padding:10px 20px;
+    border:none;
+    border-radius:6px;
+    background:#e0e0e0;
+    cursor:pointer;
+    font-size:18px;
+    transition:0.25s;
+}
+
+.input-tab.active{
+    background:#1976d2;
+    color:white;
+    font-weight:bold;
+}
+
+.input-tab:hover{
+    background:#64b5f6;
+    color:white;
+}
+
+/* ===== 入力フォーム ===== */
+.input-form{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.input-form input{
+    padding:10px;
+    font-size:16px;
+    border:1px solid #aaa;
+    border-radius:6px;
+    transition:0.25s;
+}
+
+.input-form input:focus{
+    border-color:#1976d2;
+    box-shadow:0 0 5px rgba(25,118,210,0.5);
+    outline:none;
+}
+
+/* ===== 結果表示 ===== */
+.input-result{
+    font-size:16px;
+    margin-bottom:20px;
+}
+
+/* ===== ボタン ===== */
+.input-submit{
+    background:#1976d2;
+    color:white;
+    border:none;
+    padding:12px 25px;
+    font-size:18px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:0.25s;
+}
+
+.input-submit:hover{
+    background:#1565c0;
+    transform:translateY(-2px);
+}

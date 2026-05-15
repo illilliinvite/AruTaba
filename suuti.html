@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>AruTaba - 数値入力</title>
+
+    <!-- CSS 読み込み（順番が重要） -->
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/suuti.css">
+</head>
+
+<body>
+
+    <!-- ヘッダー -->
+    <header class="header">
+
+        <!-- ハンバーガーメニュー -->
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- タイトル -->
+        <div class="simple-logo">AruTaba</div>
+
+    </header>
+
+    <!-- サイドメニュー -->
+    <nav class="sidebar" id="sidebar">
+
+        <ul>
+            <li>🏠 ホーム</li>
+            <li>👥 フレンド</li>
+            <li>📅 カレンダー</li>
+            <li>📋 掲示板</li>
+            <li>⌨ 数値入力</li>
+            <li>🔔 お知らせ</li>
+            <li>⚙ プロフィール設定</li>
+        </ul>
+
+        <button class="logout">ログアウト</button>
+    </nav>
+
+    <!-- メイン -->
+    <main class="input-main">
+
+        <section class="input-box">
+
+            <!-- タブ -->
+            <div class="input-tabs">
+                <button class="input-tab active" id="tab-tobacco">タバコ</button>
+                <button class="input-tab" id="tab-alcohol">アルコール</button>
+            </div>
+
+            <!-- 入力フォーム -->
+            <div class="input-form">
+                <input type="text" id="brand" placeholder="銘柄">
+                <input type="number" id="amount" placeholder="本数">
+            </div>
+
+
+            <button class="input-submit" id="submit-btn">確定</button>
+
+        </section>
+
+    </main>
+
+    <!-- JS 読み込み -->
+    <script src="javascript/main.js"></script>
+    <script src="javascript/suuti.js"></script>
+
+</body>
+</html>
