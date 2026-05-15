@@ -119,3 +119,53 @@ body{
     font-size:16px;
     cursor:pointer;
 }
+
+/* ===== メイン ===== */
+main{
+    padding:20px;
+}
+
+/* ===== ランキング ===== */
+.ranking{
+    max-width:700px;
+    margin:20px auto;
+}
+
+.ranking h2{
+    margin-bottom:15px;
+    font-size:28px;
+}
+
+/* ランキングカード */
+.ranking-card{
+    background:white;
+    border-radius:12px;
+    padding:15px 20px;
+    margin-bottom:15px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* 順位 */
+.rank{
+    font-size:24px;
+    font-weight:bold;
+    color:#d4a017;
+}
+
+/* ユーザー名 */
+.user{
+    font-size:20px;
+    flex:1;
+    margin-left:20px;
+}
+
+/* スコア */
+.score{
+    font-size:18px;
+    color:#555;
+}
