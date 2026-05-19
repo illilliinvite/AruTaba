@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カレンダー予定表</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/carender.css">
+</head>
+
+<body>
+
+    <!-- ヘッダー -->
+    <header class="header">
+
+        <!-- ハンバーガーメニュー -->
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- タイトル -->
+        <div class="logo">AruTaba</div>
+
+    </header>
+
+    <!-- サイドメニュー -->
+    <nav class="sidebar" id="sidebar">
+
+        <ul>
+            <li>ホーム</li>
+            <li>フレンド</li>
+            <li>カレンダー</li>
+            <li>掲示板</li>
+            <li>数値入力</li>
+            <li>お知らせ</li>
+            <li>プロフィール設定</li>
+        </ul>
+
+        <button class="logout">ログアウト</button>
+    </nav>
+
+
+    <!-- カレンダー -->
+    <div class="calendar-container">
+
+        <div class="c_header">
+            <button id="prev">◀</button>
+            <h1 id="month"></h1>
+            <button id="next">▶</button>
+        </div>
+
+        <div class="weekdays">
+            <div>日</div>
+            <div>月</div>
+            <div>火</div>
+            <div>水</div>
+            <div>木</div>
+            <div>金</div>
+            <div>土</div>
+        </div>
+
+        <div id="calendar" class="calendar"></div>
+
+    </div>
+
+
+    <!-- モーダル -->
+    <div id="modal" class="modal hidden">
+
+        <div class="modal-content">
+
+            <h2 id="selected-date"></h2>
+
+            <textarea id="schedule-input" placeholder="予定を入力"></textarea>
+
+            <div class="modal-buttons">
+                <button id="save-btn">保存</button>
+                <button id="delete-btn">削除</button>
+                <button id="close-btn">閉じる</button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- JavaScript -->
+    <script src="javascript/main.js"></script>
+    <script src="javascript/carender.js"></script>
+
+</body>
+</html>
