@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <!-- ヘッダー -->
+<header class="header">
+    <meta charset="UTF-8" />
+    <!-- ハンバーガーメニュー -->
+    <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- タイトル -->
+    <div class="logo">AruTaba</div>
+
+</header>
+
+<!-- サイドメニュー -->
+<nav class="sidebar" id="sidebar">
+
+    <ul>
+        <li>🏠 ホーム</li>
+        <li>👥 フレンド</li>
+        <li>📅 カレンダー</li>
+        <li>📋 掲示板</li>
+        <li>⌨ 数値入力</li>
+        <li>🔔 お知らせ</li>
+        <li>⚙ プロフィール設定</li>
+    </ul>
+
+    <button class="logout">ログアウト</button>
+</nav>
+<script src="../javascript/main.js"></script>
+<link rel="stylesheet" href="../css/header.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat UI</title>
+  <link rel="stylesheet" href="../css/keiziban.css" />
+</head>
+<body>
+    
+    <div class="profile-container">
+
+    <!-- アイコン -->
+    <div class="icon-area">
+        <div class="icon-circle">
+            アイコン
+        </div>
+    </div>
+
+    <!-- 入力フォーム -->
+    <form class="profile-form" method="post">
+
+        <input type="text"
+               name="user_name"
+               placeholder="名前">
+
+        <input type="email"
+               name="mail_address"
+               placeholder="メールアドレス">
+
+        <input type="password"
+               name="password"
+               placeholder="パスワード">
+
+        <button type="submit">登録</button>
+
+    </form>
+
+</div>
+
+ 
+ <!-- フッター -->
+<footer class="footer"></footer>
+<link rel="stylesheet" href="../css/footer.css">
+
+</body>
+</html>
