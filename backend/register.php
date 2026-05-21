@@ -70,6 +70,8 @@
         $stmt->execute();
 
         echo "登録成功";
+        header("Location: ../html/login.html");
+        exit;
 
     }catch(PDOException $e){
         echo "登録失敗：" . $e->getMessage();

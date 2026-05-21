@@ -39,6 +39,11 @@ try{
         //echo "ログイン成功";
 
         //home画面へ飛ばしたい場合
+        session_start();
+        
+        $_SESSION["user_id"] = $user_id;
+
+
         header("Location: ../html/home.html");
         exit();    
 
