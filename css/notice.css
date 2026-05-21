@@ -1,0 +1,73 @@
+body{
+    margin:0;
+    font-family:sans-serif;
+    background:#dcecef;
+}
+
+/* ===== メイン ===== */
+main{
+    padding:30px;
+}
+
+/* ===== ヘッダー ===== */
+/* ヘッダー固定 */
+.header{
+    position:sticky;
+    top:0;
+    z-index:999;
+}
+
+/* ===== お知らせ全体 ===== */
+.notice{
+    width:70%;
+    max-width:900px;
+
+    margin:0 auto;
+    padding:40px 60px;
+
+    border:2px solid #2d8cff;
+    border-radius:50px;
+
+    background:rgba(255,255,255,0.05);
+}
+
+/* タイトル */
+.notice-title{
+    text-align:center;
+    font-size:48px;
+    font-weight:normal;
+
+    margin-top:0;
+    margin-bottom:40px;
+}
+
+/* 一覧 */
+.notice-list{
+    display:flex;
+    flex-direction:column;
+    gap:50px;
+}
+
+/* お知らせ1件 */
+.notice-item{
+    display:flex;
+    align-items:center;
+    gap:40px;
+
+    padding-bottom:20px;
+    border-bottom:2px solid #333;
+}
+
+/* 日付 */
+.notice-date{
+    min-width:100px;
+
+    font-size:32px;
+    font-style:italic;
+}
+
+/* 内容 */
+.notice-text{
+    font-size:32px;
+    font-style:italic;
+}
