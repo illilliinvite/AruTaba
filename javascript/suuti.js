@@ -33,6 +33,6 @@ submitBtn.addEventListener("click", () => {
     if (mode === "tobacco") {
         result.textContent = `銘柄：${brand} ／ 本数：${amount}本`;
     } else {
-        result.textContent = `銘柄：${brand} ／ アルコール度数：${amount}% ／ 飲んだ量：${(amount * 10).toFixed(0)}ml`;
+        result.textContent = `飲んだ量：${amount}ml ／ アルコール度数：${(amount * 0.1).toFixed(1)}%`;
     }
 });
