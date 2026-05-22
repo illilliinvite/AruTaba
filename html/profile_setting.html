@@ -1,62 +1,155 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-    <!-- ヘッダー -->
-<header class="header">
-    <meta charset="UTF-8" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Chat UI</title>
+
+  <link rel="stylesheet" href="../css/header.css">
+  <link rel="stylesheet" href="../css/profile_setting.css" />
+  <link rel="stylesheet" href="../css/footer.css">
+
+  <style>
+    /* 中央要素 */
+    .container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    /* アイコン */
+    .icon {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      border: 1.5px solid #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #555;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    /* フォーム */
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form input {
+      width: 180px;
+      padding: 8px 10px;
+      border: 0.5px solid rgba(0, 0, 0, 0.25);
+      border-radius: 8px;
+      background: #fff;
+      color: #222;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .form input:focus {
+      border-color: rgba(0, 0, 0, 0.4);
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.06);
+    }
+
+    .form button[type="submit"] {
+      margin-top: 4px;
+      padding: 8px 20px;
+      background: #fff;
+      border: 0.5px solid rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      font-size: 14px;
+      color: #222;
+      cursor: pointer;
+      align-self: flex-start;
+    }
+
+    .form button[type="submit"]:hover {
+      background: #f0f0f0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ヘッダー -->
+  <header class="header">
+
     <!-- ハンバーガーメニュー -->
     <div class="hamburger" id="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
 
     <!-- タイトル -->
     <div class="logo">AruTaba</div>
 
-</header>
+  </header>
 
-<!-- サイドメニュー -->
-<nav class="sidebar" id="sidebar">
+  <!-- サイドメニュー -->
+  <nav class="sidebar" id="sidebar">
 
     <ul>
-        <li>🏠 ホーム</li>
-        <li>👥 フレンド</li>
-        <li>📅 カレンダー</li>
-        <li>📋 掲示板</li>
-        <li>⌨ 数値入力</li>
-        <li>🔔 お知らせ</li>
-        <li>⚙ プロフィール設定</li>
+      <li>🏠 ホーム</li>
+      <li>👥 フレンド</li>
+      <li>📅 カレンダー</li>
+      <li>📋 掲示板</li>
+      <li>⌨ 数値入力</li>
+      <li>🔔 お知らせ</li>
+      <li>⚙ プロフィール設定</li>
     </ul>
 
     <button class="logout">ログアウト</button>
-</nav>
-<script src="../javascript/main.js"></script>
-<link rel="stylesheet" href="../css/header.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chat UI</title>
-  <link rel="stylesheet" href="../css/profile_setting.css" />
-</head>
-<body>
-    
-    <div class="container">
+  </nav>
 
-    <div class="icon">
-      <span>アイコン</span>
+  <!-- 中央要素 -->
+  <div class="container">
+    <div class="card">
+
+      <div class="icon">
+        <span>アイコン</span>
+      </div>
+
+      <form class="form" method="post">
+
+        <input type="text"
+               name="user_name"
+               placeholder="名前">
+
+        <input type="email"
+               name="mail_address"
+               placeholder="メールアドレス">
+
+        <input type="password"
+               name="password"
+               placeholder="パスワード">
+
+        <button type="submit">登録</button>
+
+      </form>
+
     </div>
-
-    <form class="form" method="post">
-      <input type="text" name="user_name" placeholder="名前">
-      <input type="email" name="mail_address" placeholder="メールアドレス">
-      <input type="password" name="password" placeholder="パスワード">
-    </form>
-
   </div>
 
- 
- <!-- フッター -->
-<footer class="footer"></footer>
-<link rel="stylesheet" href="../css/footer.css">
+  <!-- フッター -->
+  <footer class="footer"></footer>
+
+  <script src="../javascript/main.js"></script>
 
 </body>
 </html>
