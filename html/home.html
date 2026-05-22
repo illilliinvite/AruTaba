@@ -42,8 +42,22 @@
   <div class="top-row">
     
     <section class="card ranking-card">
-      <h2>🏆 ランキング</h2>
-      <ul class="ranking-list">
+      <div class="ranking-header">
+
+        <h2>🏆 ランキング</h2>
+
+        <div class="ranking-tabs">
+          <button class="tab-button active" id="tab-tobacco">
+            タバコ
+          </button>
+
+          <button class="tab-button" id="tab-alcohol" id="tab-tobacco">
+            アルコール
+          </button>
+        </div>
+
+      </div>
+      <ul class="ranking-list" id="ranking-list">
         <li class="rank-item rank-1"><span class="rank-badge">1位</span><span class="user-name">田中さん</span><span class="days">禁煙120日</span></li>
         <li class="rank-item rank-2"><span class="rank-badge">2位</span><span class="user-name">佐藤さん</span><span class="days">禁煙98日</span></li>
         <li class="rank-item rank-3"><span class="rank-badge">3位</span><span class="user-name">鈴木さん</span><span class="days">禁煙76日</span></li>
@@ -58,14 +72,15 @@
     </section> </div> <section class="card quick-access-card">
     <h2>⚡ クイックアクセス</h2>
     <div class="quick-grid">
-      <div class="quick-item"><div class="icon-circle icon-green">👤</div><h3>フレンド一覧</h3><p>？？？</p></div>
-      <div class="quick-item"><div class="icon-circle icon-blue">📅</div><h3>カレンダー</h3><p>今日の記録を入力</p></div>
-      <div class="quick-item"><div class="icon-circle icon-purple">✒</div><h3>掲示板</h3><p>？？？</p></div>
-      <div class="quick-item"><div class="icon-circle icon-gold">✒</div><h3>数値入力</h3><p>目標値を設定</p></div>
-      <div class="quick-item"><div class="icon-circle icon-dark">⚙️</div><h3>設定</h3><p>各種設定を変更</p></div>
+      <a href="friend.html" class="quick-item"><div class="icon-circle icon-green">👤</div><h3>フレンド一覧</h3><p>？？？</p></a>
+      <a href="carender.html" class="quick-item"><div class="icon-circle icon-blue">📅</div><h3>カレンダー</h3><p>今日の記録を入力</p></a>
+      <a href="#" class="quick-item"><div class="icon-circle icon-purple">✒</div><h3>掲示板</h3><p>？？？</p></a>
+      <a href="#" class="quick-item"><div class="icon-circle icon-gold">✒</div><h3>数値入力</h3><p>目標値を設定</p></a>
+      <a href="#" class="quick-item"><div class="icon-circle icon-dark">⚙️</div><h3>設定</h3><p>各種設定を変更</p></a>
     </div>
   </section> </main>
 
   <script src="../javascript/main.js"></script>
+  <script src="../javascript/home.js"></script>
 </body>
 </html>

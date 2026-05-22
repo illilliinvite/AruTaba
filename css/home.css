@@ -29,6 +29,7 @@ main {
 
 /* 2つのカードが横幅を「1.5 : 1」の割合で綺麗に分け合う設定 */
 .ranking-card {
+  min-height: 340px;
   flex: 1.5 1 0%; /* 100%に広がろうとする力を完全にリセット */
 }
 
@@ -37,6 +38,48 @@ main {
 }
 
 /* ===== 各パーツのデザイン ===== */
+
+/* 上部分 */
+.ranking-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* ボタン横並び */
+.ranking-tabs{
+  display: flex;
+  gap: 12px;
+}
+
+/* ボタン */
+.tab-button{
+  border: none;
+  padding: 12px 22px;
+  border-radius: 10px;
+
+  background: #ececec;
+  color: black;
+
+  font-size: 16px;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+/* 選択中 */
+.tab-button.active{
+  background: #1f7ae0;
+  color: white;
+}
+
+/* hover */
+.tab-button:hover{
+  opacity: 0.85;
+}
 
 /* 1. ランキング */
 .ranking-list {
@@ -111,6 +154,9 @@ main {
   text-align: center;
   transition: transform 0.2s;
   cursor: pointer;
+
+  text-decoration: none;
+  color: inherit;
 }
 .quick-item:hover {
   transform: translateY(-2px);
