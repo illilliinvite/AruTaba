@@ -4,31 +4,65 @@
     <meta charset="UTF-8">
     <title>AruTaba - 数値入力</title>
 
-    <!-- CSS 読み込み（順番が重要） -->
+    <!-- CSS 読み込み -->
     <link rel="stylesheet" href="../css/header.css">
     <link rel="stylesheet" href="../css/suuti.css">
+
+    <style>
+        /* 横並びにするための追加CSS */
+        .input-box {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 80px;
+            padding: 20px;
+        }
+
+        .input-group {
+            width: 40%;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+
+        .input-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .input-form input {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .input-submit {
+            display: block;
+            margin: 30px auto 0;
+            width: 200px;
+            padding: 12px;
+            font-size: 18px;
+        }
+    </style>
 </head>
 
 <body>
 
     <!-- ヘッダー -->
     <header class="header">
-
-        <!-- ハンバーガーメニュー -->
         <div class="hamburger" id="hamburger">
             <span></span>
             <span></span>
             <span></span>
         </div>
 
-        <!-- タイトル -->
         <div class="simple-logo">AruTaba</div>
-
     </header>
 
     <!-- サイドメニュー -->
     <nav class="sidebar" id="sidebar">
-
         <ul>
             <li>🏠 ホーム</li>
             <li>👥 フレンド</li>
@@ -45,24 +79,34 @@
     <!-- メイン -->
     <main class="input-main">
 
-        <section class="input-box">
+        <!-- ★★★ フォーム（POST） ★★★ -->
+        <form action="../backend/suuti.php" method="POST">
 
-            <!-- タブ -->
-            <div class="input-tabs">
-                <button class="input-tab active" id="tab-tobacco">タバコ</button>
-                <button class="input-tab" id="tab-alcohol">アルコール</button>
-            </div>
+            <section class="input-box">
 
-            <!-- 入力フォーム -->
-            <div class="input-form">
-                <input type="text" id="brand" placeholder="銘柄">
-                <input type="number" id="amount" placeholder="本数">
-            </div>
+                <!-- タバコ入力 -->
+                <div class="input-group">
+                    <h2 class="input-title">タバコ</h2>
+                    <div class="input-form">
+                        <input type="text" name="tobacco_brand" placeholder="銘柄">
+                        <input type="number" name="tobacco_amount" placeholder="本数">
+                    </div>
+                </div>
 
+                <!-- アルコール入力 -->
+                <div class="input-group">
+                    <h2 class="input-title">アルコール</h2>
+                    <div class="input-form">
+                        <input type="number" name="alcohol_dosuu" placeholder="度数（%）">
+                        <input type="number" name="alcohol_amount" placeholder="量（mlなど）">
+                    </div>
+                </div>
 
-            <button class="input-submit" id="submit-btn">確定</button>
+            </section>
 
-        </section>
+            <button class="input-submit" type="submit">確定</button>
+
+        </form>
 
     </main>
 

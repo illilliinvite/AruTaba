@@ -1,124 +1,237 @@
 /* carender.css */
-body{
-  margin:0;
-  padding:0;
+
+body {
+  margin: 0;
+  padding: 0;
 }
 
-.calendar-container{
-  width:900px;
-  background:white;
-  border-radius:15px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.1);
-  overflow:hidden;
-  margin:30px auto;
-  margin-top:30px;
+/* ===== メインコンテンツ =====
+   サイドバーの後ろに隠れないよう z-index を調整
+   ヘッダーの高さ分だけ上部に余白を確保
+*/
+.main-content {
+  position: relative;
+  z-index: 1;          /* サイドバー(z-index:1000想定)より低く */
+  padding-top: 20px;   /* ヘッダーの高さ分 */
 }
 
-.c_header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:20px;
-  background:#4a90e2;
-  color:white;
+/* ===== カレンダー全体 ===== */
+
+.calendar-container {
+  width: min(95%, 900px);
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+  margin: 10px auto;
 }
 
-.c_header button{
-  background:white;
-  border:none;
-  padding:10px 15px;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:16px;
+/* ===== カレンダーヘッダー ===== */
+
+.c_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: #4a90e2;
+  color: white;
 }
 
-.weekdays{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  background:#dcecff;
-  text-align:center;
-  font-weight:bold;
-  padding:10px 0;
+.c_header h1 {
+  margin: 0;
+  font-size: 28px;
 }
 
-.calendar{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
+.c_header button {
+  background: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: opacity 0.2s;
 }
 
-.day{
-  border:1px solid #ddd;
-  min-height:120px;
-  padding:8px;
-  box-sizing:border-box;
-  cursor:pointer;
-  position:relative;
-  background:white;
+.c_header button:hover {
+  opacity: 0.7;
 }
 
-.day:hover{
-  background:#f5faff;
+/* ===== 曜日 ===== */
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: #dcecff;
+  text-align: center;
+  font-weight: bold;
+  padding: 10px 0;
 }
 
-.day-number{
-  font-weight:bold;
+/* ===== カレンダーグリッド ===== */
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
 }
 
-.schedule{
-  margin-top:8px;
-  font-size:14px;
-  color:#333;
-  white-space:pre-wrap;
+.day {
+  border: 1px solid #ddd;
+  min-height: 110px;
+  padding: 8px;
+  box-sizing: border-box;
+  cursor: pointer;
+  background: white;
+  transition: background 0.2s;
 }
 
-.today{
-  background:#fff3cd;
+.day:hover {
+  background: #f5faff;
 }
 
-/* モーダル */
-.modal{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.5);
-
-  display:flex;
-  justify-content:center;
-  align-items:center;
+.day-number {
+  font-weight: bold;
+  font-size: 15px;
 }
 
-.hidden{
-  display:none;
+/* 記録表示エリア */
+.day-record {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #555;
+  line-height: 1.6;
 }
 
-.modal-content{
-  background:white;
-  width:400px;
-  padding:20px;
-  border-radius:12px;
+.today {
+  background: #fff3cd;
 }
 
-.modal-content textarea{
-  width:100%;
-  height:120px;
-  margin-top:10px;
-  resize:none;
-  padding:10px;
-  box-sizing:border-box;
+/* ===== モーダル ===== */
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 }
 
-.modal-buttons{
-  margin-top:15px;
-  display:flex;
-  gap:10px;
-  justify-content:flex-end;
+.hidden {
+  display: none;
 }
 
-.modal-buttons button{
-  padding:8px 14px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
+.modal-content {
+  background: white;
+  width: min(90%, 400px);
+  padding: 24px;
+  border-radius: 12px;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+/* 入力グループ */
+.input-group {
+  margin-top: 16px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+  border-color: #4a90e2;
+}
+
+/* ボタン */
+.modal-buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.modal-buttons button {
+  padding: 9px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: opacity 0.2s;
+}
+
+.modal-buttons button:hover {
+  opacity: 0.8;
+}
+
+#save-btn {
+  background: #4a90e2;
+  color: white;
+}
+
+#delete-btn {
+  background: #e57373;
+  color: white;
+}
+
+#close-btn {
+  background: #eee;
+  color: #333;
+}
+
+/* ===== スマホ対応 ===== */
+
+@media (max-width: 768px) {
+
+  .main-content {
+    padding-top: 70px;
+  }
+
+  .calendar-container {
+    width: 95%;
+    margin: 15px auto;
+  }
+
+  .c_header h1 {
+    font-size: 20px;
+  }
+
+  .day {
+    min-height: 80px;
+    padding: 5px;
+  }
+
+  .day-number {
+    font-size: 13px;
+  }
+
+  .day-record {
+    font-size: 10px;
+  }
+
+  .weekdays {
+    font-size: 12px;
+  }
 }
