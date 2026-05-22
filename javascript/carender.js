@@ -14,11 +14,20 @@ const nextBtn        = document.getElementById("next");
 
 let currentDate  = new Date();
 let selectedDate = "";
+let calendarData = {};
 
-/* ローカルストレージからデータ取得 */
-function getData(dateKey) {
-  const raw = localStorage.getItem(dateKey);
-  return raw ? JSON.parse(raw) : null;
+async function fetchCalendarData() {
+
+  const response = await fetch(
+  "../backend/get_carender.php",
+    {
+      credentials: "same-origin"
+    }
+  );
+
+  calendarData = await response.json();
+
+  renderCalendar();
 }
 
 /* ===== カレンダー描画 ===== */
@@ -45,8 +54,8 @@ function renderCalendar() {
   /* 日付マス */
   for (let day = 1; day <= lastDate; day++) {
 
-    const dateKey = `${year}-${month + 1}-${day}`;
-    const data    = getData(dateKey);
+    const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const data    = calendarData[dateKey];
 
     const dayDiv = document.createElement("div");
     dayDiv.classList.add("day");
@@ -91,7 +100,7 @@ function renderCalendar() {
       selectedDate = dateKey;
       selectedDateText.textContent = `${year}年${month + 1}月${day}日`;
 
-      const saved = getData(dateKey);
+      const saved = calendarData[dateKey];
       smokeInput.value   = saved ? saved.smoke   : "";
       alcoholInput.value = saved ? saved.alcohol  : "";
 
@@ -103,26 +112,48 @@ function renderCalendar() {
 }
 
 /* ===== 保存 ===== */
-saveBtn.addEventListener("click", () => {
+saveBtn.addEventListener("click", async () => {
 
   const smoke   = parseInt(smokeInput.value)   || 0;
   const alcohol = parseInt(alcoholInput.value) || 0;
 
-  localStorage.setItem(
-    selectedDate,
-    JSON.stringify({ smoke, alcohol })
-  );
+  const formData = new FormData();
+
+  formData.append("date", selectedDate);
+  formData.append("smoke", smoke);
+  formData.append("alcohol", alcohol);
+
+  const response = await fetch("../backend/save_carender.php", {
+    method: "POST",
+    body: formData,
+    credentials: "same-origin"
+  });
+
+  const text = await response.text();
+
+  alert(text);
 
   modal.classList.add("hidden");
-  renderCalendar();
+
+  fetchCalendarData();
 });
 
 /* ===== 削除 ===== */
-deleteBtn.addEventListener("click", () => {
+deleteBtn.addEventListener("click", async () => {
 
-  localStorage.removeItem(selectedDate);
+  const formData = new FormData();
+
+  formData.append("date", selectedDate);
+
+  await fetch("../backend/delete_carender.php", {
+  method: "POST",
+  body: formData,
+  credentials: "same-origin"
+});
+
   modal.classList.add("hidden");
-  renderCalendar();
+
+  fetchCalendarData();
 });
 
 /* ===== 閉じる ===== */
@@ -142,4 +173,4 @@ nextBtn.addEventListener("click", () => {
 });
 
 /* ===== 初回描画 ===== */
-renderCalendar();
+fetchCalendarData();
