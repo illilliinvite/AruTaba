@@ -33,22 +33,6 @@ $score = ($alcohol_amount * $alcohol_dosuu) + ($tobacco_amount * 400);
 // 外部キーに使う user_id
 $user_id = $_SESSION["user_id"];
 
-// ★ 重要：profile に user_id が存在しないと外部キーエラーになる
-//   必要なら自動で作る（任意）
-$check = $pdo->prepare("SELECT user_id FROM profile WHERE user_id = :user_id");
-$check->bindParam(':user_id', $user_id);
-$check->execute();
-
-if ($check->rowCount() === 0) {
-    // login にも必要なので、login の構造に合わせて修正してね
-    $pdo->prepare("INSERT INTO login (user_id, password) VALUES (:user_id, 'dummy')")
-        ->execute([':user_id' => $user_id]);
-
-    $pdo->prepare("
-        INSERT INTO profile (user_id, user_name, mail_address, alcohol_level, smoke_level)
-        VALUES (:user_id, 'test_user', 'test@example.com', 0, 0)
-    ")->execute([':user_id' => $user_id]);
-}
 
 // INSERT 処理
 $stmt = $pdo->prepare("
