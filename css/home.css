@@ -1,171 +1,156 @@
-body{
-    margin:0;
-    font-family:sans-serif;
-    background:#dcecef;
+
+ 
+/* ===== メインレイアウト ===== */
+/*カードのサイズ変更可能*/
+main {
+  max-width: 1200px;
+  margin: 50px auto 0 auto;
+  padding: 24px;
 }
 
-/* ===== ヘッダー ===== */
-.header{
-    height:70px;
-    background:#d8e8ee;
-    border-bottom:1px solid #999;
+/* 共通カードデザイン */
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  margin-bottom: 24px;
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    position:relative;
+  width: auto;
 }
 
-/* タイトル */
-.logo{
-    font-size:56px;
-    font-family:"Times New Roman", serif;
-    font-style:italic;
-
-    border:1px solid #aaa;
-    padding:0 25px;
-    background:#edf5f8;
+/* 💡 ここが最重要！横並びの指定 */
+.top-row {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 24px;
+  width: 100%;
 }
 
-/* ===== ハンバーガー ===== */
-.hamburger{
-    position:absolute;
-    left:15px;
-
-    width:35px;
-    cursor:pointer;
+/* 2つのカードが横幅を「1.5 : 1」の割合で綺麗に分け合う設定 */
+.ranking-card {
+  flex: 1.5 1 0%; /* 100%に広がろうとする力を完全にリセット */
 }
 
-.hamburger span{
-    display:block;
-    height:3px;
-    margin:6px 0;
-    background:black;
+.record-card {
+  flex: 1 1 0%;   /* 100%に広がろうとする力を完全にリセット */
 }
 
-/* ===== 右上ボタン ===== */
-.window-buttons{
-    position:absolute;
-    right:5px;
-    top:5px;
+/* ===== 各パーツのデザイン ===== */
 
-    display:flex;
-    gap:2px;
+/* 1. ランキング */
+.ranking-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.rank-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.rank-item:last-child {
+  border-bottom: none;
+}
+.rank-badge {
+  width: 60px;
+  font-weight: bold;
+}
+.rank-1 .rank-badge { color: #e6b422; }
+.rank-2 .rank-badge { color: #a0a0a0; }
+.rank-3 .rank-badge { color: #be6614; }
+
+.user-name {
+  flex: 1;
+  color: #555;
+}
+.days {
+  color: #666;
+  font-size: 14px;
 }
 
-.window-btn{
-    width:22px;
-    height:22px;
-
-    border:1px solid #555;
-    background:#eee;
-    cursor:pointer;
+/* 2. 今日の記録 */
+.record-label {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.record-days {
+  font-size: 48px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+.record-days span {
+  font-size: 20px;
+  margin-left: 4px;
+}
+.cheer-message {
+  background-color: #e8f4fd;
+  color: #1da1f2;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
 }
 
-.close{
-    background:red;
-    color:white;
+/* 3. クイックアクセス */
+.quick-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap; /* 画面が狭くなったら折り返す */
+}
+.quick-item {
+  flex: 1;
+  min-width: 160px;
+  background-color: #ffffff;
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  padding: 20px 12px;
+  text-align: center;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+.quick-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
 }
 
-/* ===== サイドバー ===== */
-.sidebar{
-    position:fixed;
-    top:70px;
-    left:-220px;
+/* アイコン丸背景カラー */
+.icon-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin: 0 auto 12px auto;
+}
+.icon-green  { background-color: #e6f7ed; }
+.icon-blue   { background-color: #e8f4fd; }
+.icon-purple { background-color: #f3e8fd; }
+.icon-gold   { background-color: #fdf6e8; }
+.icon-dark   { background-color: #f0f0f0; }
 
-    width:220px;
-    height:calc(100vh - 70px);
-
-    background:#f4f4f4;
-    border-right:1px solid #999;
-
-    transition:0.3s;
-    
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
+.quick-item h3 {
+  font-size: 15px;
+  margin: 0 0 4px 0;
+}
+.quick-item p {
+  font-size: 12px;
+  color: #777;
+  margin: 0;
 }
 
-/* 開いた状態 */
-.sidebar.active{
-    left:0;
-}
-
-/* メニュー */
-.sidebar ul{
-    list-style:none;
-    padding:0;
-    margin:0;
-}
-
-.sidebar li{
-    padding:18px;
-    border-bottom:1px solid #ccc;
-    cursor:pointer;
-    background:white;
-}
-
-.sidebar li:hover{
-    background:#e8e8e8;
-}
-
-/* ログアウト */
-.logout{
-    background:red;
-    color:white;
-    border:none;
-    padding:15px;
-    font-size:16px;
-    cursor:pointer;
-}
-
-/* ===== メイン ===== */
-main{
-    padding:20px;
-}
-
-/* ===== ランキング ===== */
-.ranking{
-    max-width:700px;
-    margin:20px auto;
-}
-
-.ranking h2{
-    margin-bottom:15px;
-    font-size:28px;
-}
-
-/* ランキングカード */
-.ranking-card{
-    background:white;
-    border-radius:12px;
-    padding:15px 20px;
-    margin-bottom:15px;
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    box-shadow:0 2px 6px rgba(0,0,0,0.1);
-}
-
-/* 順位 */
-.rank{
-    font-size:24px;
-    font-weight:bold;
-    color:#d4a017;
-}
-
-/* ユーザー名 */
-.user{
-    font-size:20px;
-    flex:1;
-    margin-left:20px;
-}
-
-/* スコア */
-.score{
-    font-size:18px;
-    color:#555;
+/* ===== レスポンシブ (スマホ表示) ===== */
+@media (max-width: 768px) {
+  .top-row {
+    flex-direction: column;
+  }
+  .quick-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
