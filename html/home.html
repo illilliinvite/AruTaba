@@ -1,70 +1,86 @@
 <!DOCTYPE html>
 <html lang="ja">
-    <head>
-        <meta charset="utf-8">
-        <title>ホーム画面</title>
-    </head>
+<head>
+    <!-- ヘッダー -->
+<header class="header">
+    <meta charset="UTF-8" />
+    <!-- ハンバーガーメニュー -->
+    <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- タイトル -->
+    <div class="logo">AruTaba</div>
+
+</header>
+
+<!-- サイドメニュー -->
+<nav class="sidebar" id="sidebar">
+
+    <ul>
+        <li>🏠 ホーム</li>
+        <li>👥 フレンド</li>
+        <li>📅 カレンダー</li>
+        <li>📋 掲示板</li>
+        <li>⌨ 数値入力</li>
+        <li>🔔 お知らせ</li>
+        <li>⚙ プロフィール設定</li>
+    </ul>
+
+    <button class="logout">ログアウト</button>
+</nav>
+<script src="../javascript/main.js"></script>
+<link rel="stylesheet" href="../css/header.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat UI</title>
+  <link rel="stylesheet" href="../css/home.css" />
+</head>
+
+<main>
+  <div class="top-row">
     
-    <body>
+    <section class="card ranking-card">
+      <div class="ranking-header">
 
-        <!-- ヘッダー -->
-        <header class="header">
+        <h2>🏆 ランキング</h2>
 
-            <!-- ハンバーガーメニュー -->
-            <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+        <div class="ranking-tabs">
+          <button class="tab-button active" id="tab-tobacco">
+            タバコ
+          </button>
 
-            <!-- タイトル -->
-            <div class="logo">AruTaba</div>
+          <button class="tab-button" id="tab-alcohol" id="tab-tobacco">
+            アルコール
+          </button>
+        </div>
 
-        </header>
-        <!-- サイドメニュー -->
-        <nav class="sidebar" id="sidebar">
+      </div>
+      <ul class="ranking-list" id="ranking-list">
+        <li class="rank-item rank-1"><span class="rank-badge">1位</span><span class="user-name">田中さん</span><span class="days">禁煙120日</span></li>
+        <li class="rank-item rank-2"><span class="rank-badge">2位</span><span class="user-name">佐藤さん</span><span class="days">禁煙98日</span></li>
+        <li class="rank-item rank-3"><span class="rank-badge">3位</span><span class="user-name">鈴木さん</span><span class="days">禁煙76日</span></li>
+        <li class="rank-item"><span class="rank-badge">4位</span><span class="user-name">伊藤さん</span><span class="days">禁煙65日</span></li>
+        <li class="rank-item"><span class="rank-badge">5位</span><span class="user-name">高橋さん</span><span class="days">禁煙50日</span></li>
+      </ul>
+    </section> <section class="card record-card">
+      <h2>📅 今日の記録</h2>
+      <p class="record-label">禁煙継続日数</p>
+      <div class="record-days">23<span>日</span></div>
+      <div class="cheer-message">素晴らしい！この調子で続けましょう！</div>
+    </section> </div> <section class="card quick-access-card">
+    <h2>⚡ クイックアクセス</h2>
+    <div class="quick-grid">
+      <a href="friend.html" class="quick-item"><div class="icon-circle icon-green">👤</div><h3>フレンド一覧</h3><p>？？？</p></a>
+      <a href="carender.html" class="quick-item"><div class="icon-circle icon-blue">📅</div><h3>カレンダー</h3><p>今日の記録を入力</p></a>
+      <a href="#" class="quick-item"><div class="icon-circle icon-purple">✒</div><h3>掲示板</h3><p>？？？</p></a>
+      <a href="#" class="quick-item"><div class="icon-circle icon-gold">✒</div><h3>数値入力</h3><p>目標値を設定</p></a>
+      <a href="#" class="quick-item"><div class="icon-circle icon-dark">⚙️</div><h3>設定</h3><p>各種設定を変更</p></a>
+    </div>
+  </section> </main>
 
-            <ul>
-                <li>🏠 ホーム</li>
-                <li>👥 フレンド</li>
-                <li>📅 カレンダー</li>
-                <li>📋 掲示板</li>
-                <li>⌨ 数値入力</li>
-                <li>🔔 お知らせ</li>
-                <li>⚙ プロフィール設定</li>
-            </ul>
-
-            <button class="logout">ログアウト</button>
-            <script src="javascript/main.js"></script>
-            <link rel="stylesheet" href="../css/home.css">
-        </nav>
-
-        <main>
-        <!-- ランキング -->
-        <section class="ranking">
-
-            <h2>🏆 ランキング</h2>
-
-            <div class="ranking-card">
-                <div class="rank">1位</div>
-                <div class="user">田中さん</div>
-                <div class="score">禁煙 120日</div>
-            </div>
-
-            <div class="ranking-card">
-                <div class="rank">2位</div>
-                <div class="user">佐藤さん</div>
-                <div class="score">禁煙 98日</div>
-            </div>
-
-            <div class="ranking-card">
-                <div class="rank">3位</div>
-                <div class="user">鈴木さん</div>
-                <div class="score">禁煙 76日</div>
-            </div>
-
-        </section>
-        </main>
-    </body>
-
+  <script src="../javascript/main.js"></script>
+  <script src="../javascript/home.js"></script>
+</body>
 </html>

@@ -34,7 +34,7 @@ $score = ($alcohol_amount * $alcohol_dosuu) + ($tobacco_amount * 400);
 $user_id = $_SESSION["user_id"];
 
 
-// INSERT 処理
+// INSERT or UPDATE
 $stmt = $pdo->prepare("
     INSERT INTO calender(
         alcohol_consumption,
@@ -51,6 +51,11 @@ $stmt = $pdo->prepare("
         :smoke_day,
         :user_id
     )
+
+    ON DUPLICATE KEY UPDATE
+        alcohol_consumption = :alcohol_update,
+        ciggarette_consumption = :ciggarette_update,
+        score = :score_update
 ");
 
 $stmt->bindParam(':alcohol_consumption', $alcohol_amount, PDO::PARAM_INT);
@@ -59,6 +64,10 @@ $stmt->bindParam(':osake_drinking', $today, PDO::PARAM_STR);
 $stmt->bindParam(':score', $score, PDO::PARAM_INT);
 $stmt->bindParam(':smoke_day', $today, PDO::PARAM_STR);
 $stmt->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+
+$stmt->bindParam(':alcohol_update', $alcohol_amount, PDO::PARAM_INT);
+$stmt->bindParam(':ciggarette_update', $tobacco_amount, PDO::PARAM_INT);
+$stmt->bindParam(':score_update', $score, PDO::PARAM_INT);
 
 $stmt->execute();
 
