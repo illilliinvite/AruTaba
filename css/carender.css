@@ -12,7 +12,7 @@ body {
 .main-content {
   position: relative;
   z-index: 1;          /* サイドバー(z-index:1000想定)より低く */
-  padding-top: 80px;   /* ヘッダーの高さ分 */
+  padding-top: 20px;   /* ヘッダーの高さ分 */
 }
 
 /* ===== カレンダー全体 ===== */
@@ -23,7 +23,7 @@ body {
   border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   overflow: hidden;
-  margin: 30px auto;
+  margin: 10px auto;
 }
 
 /* ===== カレンダーヘッダー ===== */
@@ -76,7 +76,7 @@ body {
 
 .day {
   border: 1px solid #ddd;
-  min-height: 120px;
+  min-height: 110px;
   padding: 8px;
   box-sizing: border-box;
   cursor: pointer;
