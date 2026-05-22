@@ -1,104 +1,71 @@
-/* style.css */
-
-body {
-  margin: 0;
-  background: #d8e8ef;
-  font-family: sans-serif;
+.friend-container {
+    padding: 20px;
+    max-width: 600px;        /* 中央寄せの幅 */
+    margin: 0 auto;          /* 中央寄せ */
+    text-align: center;      /* 中央寄せ */
 }
 
-/* 要素だけ中央寄せ */
-.container {
-  width: 400px;
-  background: #f5f5f5;
-  border: 1px solid #555;
-  padding-bottom: 20px;
-
-  margin: 50px auto;
-}
-
-.tabs {
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #aaa;
-}
-
-.tab {
-  padding: 10px 20px;
-  border: none;
-  background: #ddd;
-  cursor: pointer;
-  font-size: 14px;
-  border-right: 1px solid #aaa;
-}
-
-.tab.active {
-  background: #f5f5f5;
-}
-
+/* 検索欄 */
 .search-box {
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-  padding: 5px 10px;
-  gap: 5px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
 .search-box input {
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: 14px;
-  width: 80px;
+    width: 60%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #aaa;
 }
 
-.friend-list {
-  padding: 10px;
+.search-box button {
+    padding: 10px 20px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-.friend-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-  gap: 10px;
+/* タブ */
+.friend-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
 }
 
-.icon {
-  width: 45px;
-  height: 45px;
-  border: 1px solid #333;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: white;
-  font-size: 10px;
+.friend-tabs button {
+    padding: 10px 20px;
+    border: none;
+    background: #ddd;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
 }
 
-.name-box {
-  flex: 1;
-  height: 35px;
-  border: 1px solid #aaa;
-  background: white;
-  display: flex;
-  align-items: center;
-  padding-left: 10px;
+.friend-tabs button.active {
+    background: #4CAF50;
+    color: white;
 }
 
-.accept-btn,
-.reject-btn {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  border: 1px solid #333;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
+/* コンテンツ */
+.tab-content {
+    display: none;
 }
 
-.accept-btn {
-  background: #7ea5d8;
+.tab-content.active {
+    display: block;
 }
 
-.reject-btn {
-  background: red;
+.approve {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
