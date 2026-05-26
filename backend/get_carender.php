@@ -22,7 +22,8 @@ $stmt = $pdo->prepare("
     SELECT
         osake_drinking,
         alcohol_consumption,
-        ciggarette_consumption
+        ciggarette_consumption,
+        score
     FROM calender
     WHERE user_id = :user_id
 ");
@@ -38,7 +39,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
     $data[$date] = [
         "smoke"   => $row["ciggarette_consumption"],
-        "alcohol" => $row["alcohol_consumption"]
+        "alcohol" => $row["alcohol_consumption"],
+        "score" => $row["score"]
     ];
 }
 

@@ -12,6 +12,13 @@ const closeBtn       = document.getElementById("close-btn");
 const prevBtn        = document.getElementById("prev");
 const nextBtn        = document.getElementById("next");
 
+const warningModal    = document.getElementById("warning-modal");
+const warningMessage  = document.getElementById("warning-message");
+const warningImage    = document.getElementById("warning-image");
+const warningCloseBtn = document.getElementById("warning-close-btn");
+
+warningModal.style.display = "none";
+
 let currentDate  = new Date();
 let selectedDate = "";
 let calendarData = {};
@@ -19,7 +26,7 @@ let calendarData = {};
 async function fetchCalendarData() {
 
   const response = await fetch(
-  "../backend/get_carender.php",
+    "../backend/get_carender.php",
     {
       credentials: "same-origin"
     }
@@ -27,7 +34,35 @@ async function fetchCalendarData() {
 
   calendarData = await response.json();
 
+  console.log(calendarData);
+
   renderCalendar();
+
+  checkMonthlyScore();
+}
+
+/* ===== 月間スコア判定 ===== */
+function checkMonthlyScore() {
+
+  let totalScore = 0;
+
+  for (const date in calendarData) {
+
+    totalScore += Number(calendarData[date].score) || 0;
+  }
+
+  alert(totalScore);
+
+  if (totalScore >= 50000) {
+
+    warningMessage.textContent =
+    "喫煙や飲酒量が増えています。肺や血管への負担が大きくなる可能性があります。";
+
+  warningImage.src =
+    "../image/warning_smoke.jpg";
+
+    warningModal.style.display = "flex";
+  }
 }
 
 /* ===== カレンダー描画 ===== */
@@ -46,24 +81,30 @@ function renderCalendar() {
 
   /* 空白マス */
   for (let i = 0; i < firstDay; i++) {
+
     const empty = document.createElement("div");
+
     empty.classList.add("day");
+
     calendar.appendChild(empty);
   }
 
   /* 日付マス */
   for (let day = 1; day <= lastDate; day++) {
 
-    const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    const data    = calendarData[dateKey];
+    const dateKey =
+      `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+    const data = calendarData[dateKey];
 
     const dayDiv = document.createElement("div");
+
     dayDiv.classList.add("day");
 
     /* 今日 */
     if (
       year  === today.getFullYear() &&
-      month === today.getMonth()    &&
+      month === today.getMonth() &&
       day   === today.getDate()
     ) {
       dayDiv.classList.add("today");
@@ -71,38 +112,55 @@ function renderCalendar() {
 
     /* 日付番号 */
     const dayNumber = document.createElement("div");
+
     dayNumber.classList.add("day-number");
+
     dayNumber.textContent = day;
 
     /* 記録表示 */
     const record = document.createElement("div");
+
     record.classList.add("day-record");
 
     if (data) {
-      if (data.smoke   > 0) {
+
+      if (data.smoke > 0) {
+
         const smokeLine = document.createElement("div");
+
         smokeLine.textContent = `🚬 ${data.smoke}本`;
+
         record.appendChild(smokeLine);
       }
+
       if (data.alcohol > 0) {
+
         const alcoholLine = document.createElement("div");
+
         alcoholLine.textContent = `🍺 ${data.alcohol}ml`;
+
         record.appendChild(alcoholLine);
       }
-  }
+    }
 
     dayDiv.appendChild(dayNumber);
     dayDiv.appendChild(record);
 
-    /* クリックでモーダルを開く */
+    /* クリックでモーダル */
     dayDiv.addEventListener("click", () => {
 
       selectedDate = dateKey;
-      selectedDateText.textContent = `${year}年${month + 1}月${day}日`;
+
+      selectedDateText.textContent =
+        `${year}年${month + 1}月${day}日`;
 
       const saved = calendarData[dateKey];
-      smokeInput.value   = saved ? saved.smoke   : "";
-      alcoholInput.value = saved ? saved.alcohol  : "";
+
+      smokeInput.value =
+        saved ? saved.smoke : "";
+
+      alcoholInput.value =
+        saved ? saved.alcohol : "";
 
       modal.classList.remove("hidden");
     });
@@ -114,7 +172,7 @@ function renderCalendar() {
 /* ===== 保存 ===== */
 saveBtn.addEventListener("click", async () => {
 
-  const smoke   = parseInt(smokeInput.value)   || 0;
+  const smoke   = parseInt(smokeInput.value) || 0;
   const alcohol = parseInt(alcoholInput.value) || 0;
 
   const formData = new FormData();
@@ -123,15 +181,11 @@ saveBtn.addEventListener("click", async () => {
   formData.append("smoke", smoke);
   formData.append("alcohol", alcohol);
 
-  const response = await fetch("../backend/save_carender.php", {
+  await fetch("../backend/save_carender.php", {
     method: "POST",
     body: formData,
     credentials: "same-origin"
   });
-
-  const text = await response.text();
-
-  alert(text);
 
   modal.classList.add("hidden");
 
@@ -146,10 +200,10 @@ deleteBtn.addEventListener("click", async () => {
   formData.append("date", selectedDate);
 
   await fetch("../backend/delete_carender.php", {
-  method: "POST",
-  body: formData,
-  credentials: "same-origin"
-});
+    method: "POST",
+    body: formData,
+    credentials: "same-origin"
+  });
 
   modal.classList.add("hidden");
 
@@ -158,17 +212,28 @@ deleteBtn.addEventListener("click", async () => {
 
 /* ===== 閉じる ===== */
 closeBtn.addEventListener("click", () => {
+
   modal.classList.add("hidden");
+});
+
+/* ===== 警告閉じる ===== */
+warningCloseBtn.addEventListener("click", () => {
+
+  warningModal.style.display = "none";
 });
 
 /* ===== 前月 / 次月 ===== */
 prevBtn.addEventListener("click", () => {
+
   currentDate.setMonth(currentDate.getMonth() - 1);
+
   renderCalendar();
 });
 
 nextBtn.addEventListener("click", () => {
+
   currentDate.setMonth(currentDate.getMonth() + 1);
+
   renderCalendar();
 });
 
