@@ -1,3 +1,4 @@
+
 <?php
 
 if(!isset($_POST["friend_id"]))
@@ -23,16 +24,47 @@ try {
     exit;
 }
 
+// ① 相手のメールアドレスと名前を取得
 $stmt = $pdo->prepare("
-    insert into friend(user_id, friend_id, friend_wait, friend) values(:user_id, :friend_id, 1, 0)
+    SELECT mail_address, user_name 
+    FROM profile 
+    WHERE mail_address = :mail
+");
+
+$stmt->bindParam(":mail", $_POST["friend_id"], PDO::PARAM_STR);
+$stmt->execute();
+
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$row) {
+    echo json_encode([
+        "status" => "error",
+        "message" => "アカウントが見つかりませんでした"
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+$friend_id  = $row["mail_address"];
+$user_name  = $row["user_name"];
+
+// ② friend テーブルに登録
+$stmt = $pdo->prepare("
+    INSERT INTO friend(user_id, user_name, friend_id, friend_wait, friend)
+    VALUES(:user_id, :user_name, :friend_id, 1, 0)
 ");
 
 $user_id = $_SESSION["user_id"];
-$friend_id = $_POST["friend_id"];
-$stmt->bindParam(':friend_id', $friend_id, PDO::PARAM_STR);
+
 $stmt->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+$stmt->bindParam(':user_name', $user_name, PDO::PARAM_STR);
+$stmt->bindParam(':friend_id', $friend_id, PDO::PARAM_STR);
 
-echo "登録成功!!";
+$stmt->execute();
+
+// ③ 成功レスポンス
+echo json_encode([
+    "status" => "ok",
+    "message" => "登録が完了しました"
+], JSON_UNESCAPED_UNICODE);
+
 exit;
-
-?>

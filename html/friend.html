@@ -42,7 +42,7 @@
 
     <!-- 検索欄 -->
     <div class="search-box">
-        <input type="text" id="friend-search" placeholder="フレンドを検索 / フレンド申請">  
+        <input type="text" id="friend-search" placeholder="メールアドレスでフレンド申請">  
         <button id="search-btn">検索</button>
 
     </div>
@@ -79,16 +79,22 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
+    // ============================
+    // フレンド検索
+    // ============================
+    const searchBtn = document.getElementById("search-btn");
+    const searchInput = document.getElementById("friend-search");
 
-        const searchBtn = document.getElementById("search-btn");
-
+    if (searchBtn && searchInput) {
         searchBtn.addEventListener("click", () => {
-            const friendId = document.getElementById("friend-search").value;
+            const friendId = searchInput.value.trim();
 
-            
+            if (friendId === "") {
+                alert("検索ワードを入力してください");
+                return;
+            }
 
-            // PHP に friend_id を送信
-            fetch("../backend/friend_kensaku.php", {
+            fetch("../backend/friend.send.php", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded"
@@ -102,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log(data);
 
                 if (data.status === "ok") {
-                    alert("フレンド申請を送りました！");
+                    alert(data);
                 } else {
                     alert("エラー：" + data.message);
                 }
@@ -112,39 +118,97 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("通信エラー");
             });
         });
-        // ============================
+    }
+
+    // ============================
     // タブ切り替え
     // ============================
     const tabFriend = document.getElementById("tab-friend");
     const tabRequest = document.getElementById("tab-request");
-
     const friendList = document.getElementById("friend-list");
     const requestList = document.getElementById("request-list");
 
-    tabFriend.addEventListener("click", () => {
-        tabFriend.classList.add("active");
-        tabRequest.classList.remove("active");
+    if (tabFriend && tabRequest && friendList && requestList) {
+        tabFriend.addEventListener("click", () => {
+            tabFriend.classList.add("active");
+            tabRequest.classList.remove("active");
 
-        friendList.classList.add("active");
-        requestList.classList.remove("active");
-    });
+            friendList.classList.add("active");
+            requestList.classList.remove("active");
+        });
 
-    tabRequest.addEventListener("click", () => {
-        tabRequest.classList.add("active");
-        tabFriend.classList.remove("active");
+        tabRequest.addEventListener("click", () => {
+            tabRequest.classList.add("active");
+            tabFriend.classList.remove("active");
 
-        requestList.classList.add("active");
-        friendList.classList.remove("active");
-    });
-
-
-    // ============================
-    // フレンド検索 → PHP へ送信
-    // ============================
-
+            requestList.classList.add("active");
+            friendList.classList.remove("active");
+        });
+    }
 
 });
+// ============================
+// 承認待ち一覧の取得
+// ============================
+function loadRequests() {
+    fetch("../backend/friend_recive.php")
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+
+            const requestList = document.querySelector("#request-list ul");
+            requestList.innerHTML = ""; // 一旦クリア
+
+            if (data.status !== "ok" || data.requests.length === 0) {
+                requestList.innerHTML = "<li>承認待ちはありません</li>";
+                return;
+            }
+
+            data.requests.forEach(item => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+        ${item.user_name}
+        <button class="approve">承認</button>
+    `;
+    requestList.appendChild(li);
+});
+
+        })
+        .catch(err => {
+            console.error(err);
+            alert("承認待ちの取得に失敗しました");
+        });
+}
+
+// 承認ボタンのイベント設定
+document.addEventListener("click", function(e) {
+    if (e.target.classList.contains("approve")) {
+        const userId = e.target.dataset.userId;
+
+        fetch(`../backend/friend_syounin.php?user_id=${encodeURIComponent(userId)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "ok") {
+                    alert("承認しました");
+                    loadRequests(); // 再読み込み
+                } else {
+                    alert("エラー：" + data.message);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("通信エラー");
+            });
+    }
+});
+
+
+
+// ページ読み込み時に実行
+loadRequests();
+
 </script>
+
 
 
 
