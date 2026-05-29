@@ -100,7 +100,7 @@
 
     </div>
 
-    <!-- 警告モーダル -->
+<!-- 警告モーダル -->
 <div id="warning-modal" class="modal hidden">
 
     <div class="modal-content">
@@ -109,16 +109,29 @@
 
         <p id="warning-message"></p>
 
-        <img
-            id="warning-image"
-            src=""
-            alt="warning"
-            style="
-                width:100%;
-                border-radius:10px;
-                margin-top:15px;
-            "
-        >
+        <!-- ↓ この div で囲む -->
+        <div id="warning-image-scroll" style="
+            max-height: 300px;
+            overflow-y: scroll;
+            border-radius: 10px;
+            margin-top: 15px;
+        ">
+
+            <img
+                id="warning-image"
+                src=""
+                alt="warning"
+                style="width:100%; border-radius:10px;"
+            >
+
+            <img
+                id="warning-image2"
+                src=""
+                alt="warning2"
+                style="width:100%; border-radius:10px; margin-top:10px;"
+            >
+
+        </div>
 
         <div class="modal-buttons">
             <button id="warning-close-btn">

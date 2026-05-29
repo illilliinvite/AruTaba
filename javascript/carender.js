@@ -15,6 +15,7 @@ const nextBtn        = document.getElementById("next");
 const warningModal    = document.getElementById("warning-modal");
 const warningMessage  = document.getElementById("warning-message");
 const warningImage    = document.getElementById("warning-image");
+const warningImage2   = document.getElementById("warning-image2");
 const warningCloseBtn = document.getElementById("warning-close-btn");
 
 warningModal.style.display = "none";
@@ -58,8 +59,11 @@ function checkMonthlyScore() {
     warningMessage.textContent =
     "喫煙や飲酒量が増えています。肺や血管への負担が大きくなる可能性があります。";
 
-  warningImage.src =
+    warningImage.src =
     "../image/warning_smoke.jpg";
+
+    warningImage2.src = 
+    "../image/warning_alcohol.jpg";
 
     warningModal.style.display = "flex";
   }
