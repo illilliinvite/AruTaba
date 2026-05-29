@@ -4,70 +4,187 @@ body{
     background:#dcecef;
 }
 
-/* ===== メイン ===== */
-main{
-    padding:30px;
+
+/* =========================
+   お知らせページ
+========================= */
+
+.notice-main{
+    max-width:1000px;
+    margin:40px auto;
+    padding:0 24px;
 }
 
-/* ===== ヘッダー ===== */
-/* ヘッダー固定 */
-.header{
-    position:sticky;
-    top:0;
-    z-index:999;
-}
-
-/* ===== お知らせ全体 ===== */
-.notice{
-    width:70%;
-    max-width:900px;
-
-    margin:0 auto;
-    padding:40px 60px;
-
-    border:2px solid #2d8cff;
-    border-radius:50px;
-
-    background:rgba(255,255,255,0.05);
-}
-
-/* タイトル */
 .notice-title{
     text-align:center;
-    font-size:48px;
-    font-weight:normal;
+    font-size:32px;
+    margin-bottom:32px;
+    font-weight:700;
+}
 
-    margin-top:0;
-    margin-bottom:40px;
+.notice-wrapper{
+    background:#fff;
+    border-radius:20px;
+    padding:28px 40px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.04);
 }
 
 /* 一覧 */
+
 .notice-list{
     display:flex;
     flex-direction:column;
-    gap:50px;
 }
 
-/* お知らせ1件 */
+/* 各行 */
+
 .notice-item{
     display:flex;
     align-items:center;
-    gap:40px;
 
-    padding-bottom:20px;
-    border-bottom:2px solid #333;
+    gap:22px;
+
+    padding:24px 4px;
+
+    border-bottom:1px solid #edf1f4;
+
+    text-decoration:none;
+    color:#222;
+
+    transition:0.2s;
+}
+
+.notice-item:last-child{
+    border-bottom:none;
+}
+
+.notice-item:hover{
+    background:#f8fbfd;
 }
 
 /* 日付 */
+
 .notice-date{
-    min-width:100px;
+    width:72px;
+    height:72px;
 
-    font-size:32px;
-    font-style:italic;
+    border-radius:14px;
+
+    background:#f8fbfd;
+
+    border:1px solid #edf1f4;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    flex-shrink:0;
 }
 
-/* 内容 */
-.notice-text{
-    font-size:32px;
-    font-style:italic;
+.month{
+    font-size:20px;
+    font-weight:bold;
 }
+
+/* 本文 */
+
+.notice-content{
+    flex:1;
+}
+
+.notice-content h2{
+    font-size:20px;
+    margin-top:8px;
+    font-weight:600;
+}
+
+/* アコーディオン */
+
+.notice-block{
+    border-bottom:1px solid #edf1f4;
+}
+
+.notice-item{
+    cursor:pointer;
+}
+
+.notice-detail{
+
+    max-height:0;
+    overflow:hidden;
+
+    transition:0.55s cubic-bezier(0.22, 1, 0.36, 1);
+
+    padding:0 94px 0 94px;
+
+    color:#666;
+    line-height:1.8;
+    font-size:15px;
+}
+
+.notice-block.active .notice-detail{
+
+    max-height:200px;
+
+    padding:0 94px 24px 94px;
+}
+
+/* 矢印 */
+
+.notice-arrow{
+    font-size:20px;
+    color:#aab4be;
+
+    transition:0.3s;
+
+    transform:rotate(0deg);
+}
+
+.notice-block.active .notice-arrow{
+    transform:rotate(90deg);
+}
+
+/* タグ */
+
+.notice-tag{
+    display:inline-block;
+
+    padding:5px 12px;
+
+    border-radius:999px;
+
+    font-size:12px;
+    font-weight:bold;
+}
+
+.info{
+    background:#e8f3ff;
+    color:#2c7be5;
+}
+
+.update{
+    background:#e7f8ee;
+    color:#18a558;
+}
+
+.maintenance{
+    background:#eaf7ee;
+    color:#1f9d55;
+}
+
+/* 右矢印 */
+
+.notice-arrow{
+    font-size:34px;
+    color:#b4bcc5;
+}
+
+/* 下テキスト */
+
+.notice-footer{
+    text-align:center;
+    margin-top:22px;
+    color:#7d8790;
+    font-size:14px;
+}
+

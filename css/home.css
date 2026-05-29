@@ -29,7 +29,7 @@ main {
 
 /* 2つのカードが横幅を「1.5 : 1」の割合で綺麗に分け合う設定 */
 .ranking-card {
-  min-height: 340px;
+  min-height: 380px;
   flex: 1.5 1 0%; /* 100%に広がろうとする力を完全にリセット */
 }
 
@@ -81,6 +81,30 @@ main {
   opacity: 0.85;
 }
 
+/*-----余裕があれば追加(ランキングページ[ranking.html]の製作が必要)-----*/
+
+/* ランキングリンク */
+/*
+.ranking-link{
+  text-decoration: none;
+  color: black;
+
+  transition: 0.2s;
+}
+*/
+
+/* カーソル合わせた時 */
+/*
+.ranking-link:hover{
+  text-decoration: underline;
+  opacity: 0.7;
+}
+*/
+
+/*-----〆-----*/
+
+
+
 /* 1. ランキング */
 .ranking-list {
   list-style: none;
@@ -90,7 +114,7 @@ main {
 .rank-item {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
+  padding: 14px 16px;
   border-bottom: 1px solid #f0f0f0;
 }
 .rank-item:last-child {
@@ -107,25 +131,27 @@ main {
 .user-name {
   flex: 1;
   color: #555;
+  font-size: 18px;
 }
 .days {
   color: #666;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 /* 2. 今日の記録 */
 .record-label {
   color: #666;
-  font-size: 14px;
-  margin-bottom: 8px;
+  font-size: 18px;
+  margin-bottom: 12px;
 }
 .record-days {
-  font-size: 48px;
+  font-size: 60px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-left: 26px;
+  margin-bottom: 26px;
 }
 .record-days span {
-  font-size: 20px;
+  font-size: 26px;
   margin-left: 4px;
 }
 .cheer-message {
@@ -133,7 +159,7 @@ main {
   color: #1da1f2;
   padding: 12px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
 }
 

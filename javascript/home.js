@@ -9,8 +9,8 @@ const rankingList = document.getElementById("ranking-list");
 const tobaccoRanking = `
 <li class="rank-item rank-1">
   <span class="rank-badge">1位</span>
-  <span class="user-name">田中さん</span>
-  <span class="days">禁煙120日</span>
+  <span class="user-name">勝原さん</span>
+  <span class="days">禁煙520日</span>
 </li>
 
 <li class="rank-item rank-2">
@@ -36,6 +36,7 @@ const tobaccoRanking = `
   <span class="user-name">高橋さん</span>
   <span class="days">禁煙50日</span>
 </li>
+
 `;
 
 // アルコールランキング
@@ -69,6 +70,7 @@ const alcoholRanking = `
   <span class="user-name">半分太さん</span>
   <span class="days">禁酒100日</span>
 </li>
+
 `;
 
 // タバコボタン
