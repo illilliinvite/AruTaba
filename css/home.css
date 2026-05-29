@@ -1,7 +1,4 @@
-
- 
 /* ===== メインレイアウト ===== */
-/*カードのサイズ変更可能*/
 main {
   max-width: 1200px;
   margin: 50px auto 0 auto;
@@ -14,27 +11,48 @@ main {
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-  margin-bottom: 24px;
-
-  width: auto;
+  margin-bottom: 0; /* 下下のメニューとの余白はmargin-bottomではなく他で制御するためリセット */
+  box-sizing: border-box; /* パディングを含めたサイズ計算にする */
 }
 
-/* 💡 ここが最重要！横並びの指定 */
+/* 横並びの指定 */
 .top-row {
   display: flex !important;
   flex-direction: row !important;
   gap: 24px;
   width: 100%;
+  margin-bottom: 24px; /* 下のメニューカードとの間に隙間を空ける */
 }
 
-/* 2つのカードが横幅を「1.5 : 1」の割合で綺麗に分け合う設定 */
+/* 【左側】ランキングカード（元のサイズ・比率を維持） */
 .ranking-card {
-  min-height: 380px;
-  flex: 1.5 1 0%; /* 100%に広がろうとする力を完全にリセット */
+  flex: 1.5 1 0%; 
+  min-height: 380px; /* 元の設定を維持 */
 }
 
+/* 右側の列を縦並びにする設定 */
+.right-column {
+  flex: 1 1 0%;         /* ランキング「1.5」に対して「1」の幅を維持 */
+  display: flex;
+  flex-direction: column; /* 中身を縦に並べる */
+  gap: 24px;             /* 上段と下段のカードの間の隙間 */
+  
+  /* 💡【重要】親の高さ（ランキングの高さ）に強制的に合わせる設定 */
+  align-self: stretch;  
+}
+
+/* record-card の flex 設定を変更 */
+.notice-card {
+  flex: 1 1 0%;          /* 💡【重要】0%を基準にして、右側の高さをきれいに半分ずつ分ける */
+  min-height: 0;         /* 💡【重要】文字の高さに引っ張られて伸びるのを防ぐ */
+  margin-bottom: 0;      /* 下の隙間は gap で制御するので 0 に */
+}
+
+/* 新しい下段カードのスタイル */
 .record-card {
-  flex: 1 1 0%;   /* 100%に広がろうとする力を完全にリセット */
+  flex: 1 1 0%;          /* 💡【重要】上と同じ設定で、残りの半分をぴったり埋める */
+  min-height: 0;         /* 💡【重要】中身に引っ張られるのを防ぐ */
+  margin-bottom: 0;      /* メインの余白と重複しないように 0 に */
 }
 
 /* ===== 各パーツのデザイン ===== */
@@ -138,29 +156,40 @@ main {
   font-size: 16px;
 }
 
-/* 2. 今日の記録 */
+/* 2. right-colum */
+
+.notice-card h2,
+.record-card h2 {
+  margin-bottom: 4px; /* 元の設定から余白をギュッと縮めます */
+}
+
+/* お知らせ */
+
+.notice-label {
+  color: #666;
+  font-size: 18px;
+  margin-bottom: 12px;
+  margin-left: 20px;
+}
+.notice-days {
+  font-size: 20px;
+  font-weight: bold;
+  margin-left: 30px;
+  margin-bottom: 26px;
+}
+
+/* 継続日数 */
 .record-label {
   color: #666;
   font-size: 18px;
   margin-bottom: 12px;
+  margin-left: 20px;
 }
 .record-days {
-  font-size: 60px;
+  font-size: 20px;
   font-weight: bold;
-  margin-left: 26px;
+  margin-left: 30px;
   margin-bottom: 26px;
-}
-.record-days span {
-  font-size: 26px;
-  margin-left: 4px;
-}
-.cheer-message {
-  background-color: #e8f4fd;
-  color: #1da1f2;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: bold;
 }
 
 /* 3. クイックアクセス */
