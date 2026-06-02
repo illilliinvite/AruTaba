@@ -129,21 +129,30 @@
 
 <form class="form" id="profileForm" method="post" action="profile_setting.php">
 
+            <input type="text"
+                  name="user_name"
+                  placeholder="名前">
 
+            <input type="email"
+                  name="mail_address"
+                  placeholder="メールアドレス">
 
-        <input type="text"
-               name="user_name"
-               placeholder="名前">
+            <input type="password"
+                  name="password"
+                  placeholder="パスワード">
 
-        <input type="email"
-               name="mail_address"
-               placeholder="メールアドレス">
+            <input type="number"
+                  name="smoking_limit"
+                  placeholder="喫煙上限（本/日）"
+                  min="0">
 
-        <input type="password"
-               name="password"
-               placeholder="パスワード">
+            <input type="number"
+                  name="drinking_limit"
+                  placeholder="飲酒上限（杯/日）"
+                  min="0">
 
-        <button type="submit">登録</button>
+            <button type="submit">登録</button>
+
 
       </form>
 

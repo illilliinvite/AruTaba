@@ -31,12 +31,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // フォーム取得
     $user_name = $_POST["user_name"];
     $mail_address = $_POST["mail_address"];
+    $password = $_POST["password"];
+    $smoking_limit = $_POST["smoking_limit"];
+    $drinking_limit = $_POST["drinking_limit"];
+
+    // 空欄チェック
+    if (
+        empty($user_name) ||
+        empty($mail_address) ||
+        empty($password) ||
+        $smoking_limit === "" ||
+        $drinking_limit === ""
+    ) {
+        echo "更新失敗";
+        exit;
+    }
 
     // セッション取得
     $user_id = $_SESSION["user_id"];
 
     try {
 
+        // profileテーブル更新
         $sql = "UPDATE profile
                 SET
                     user_name = :user_name,
@@ -44,44 +60,94 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 WHERE
                     user_id = :user_id";
 
-                   
-
         $stmt = $pdo->prepare($sql);
 
-        $stmt->bindValue(":user_id", $user_id);
-        $stmt->bindValue(":user_name", $user_name);
-        $stmt->bindValue(":mail_address", $mail_address);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+        $stmt->bindParam(":user_name", $user_name, PDO::PARAM_STR);
+        $stmt->bindParam(":mail_address", $mail_address, PDO::PARAM_STR);
 
         $stmt->execute();
 
+        // loginテーブル更新
         $sql = "UPDATE login
                 SET
                     user_name = :user_name,
-                    mail_address = :mail_address
+                    mail_address = :mail_address,
+                    password = :password
                 WHERE
-                    user_id = :user_id"; 
+                    user_id = :user_id";
 
-                     $stmt = $pdo->prepare($sql);
+        $stmt = $pdo->prepare($sql);
 
-        $stmt->bindValue(":user_id", $user_id);
-        $stmt->bindValue(":user_name", $user_name);
-        $stmt->bindValue(":mail_address", $mail_address);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+        $stmt->bindParam(":user_name", $user_name, PDO::PARAM_STR);
+        $stmt->bindParam(":mail_address", $mail_address, PDO::PARAM_STR);
+        $stmt->bindParam(":password", $password, PDO::PARAM_STR);
 
         $stmt->execute();
 
-        // 実行
-        if ($stmt->rowCount() > 0) {
+        // goal_valueテーブルにuser_idが存在するか確認
+        $sql = "SELECT COUNT(*)
+                FROM goal_value
+                WHERE user_id = :user_id";
 
-            echo "更新成功";
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        $count = $stmt->fetchColumn();
+
+        if ($count > 0) {
+
+            // 存在する場合はUPDATE
+            $sql = "UPDATE goal_value
+                    SET
+                        alcohol_limit = :alcohol_limit,
+                        ciggarette_limit = :ciggarette_limit
+                    WHERE
+                        user_id = :user_id";
+
+            $stmt = $pdo->prepare($sql);
+
+            $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+            $stmt->bindParam(":alcohol_limit", $drinking_limit, PDO::PARAM_INT);
+            $stmt->bindParam(":ciggarette_limit", $smoking_limit, PDO::PARAM_INT);
+
+            $stmt->execute();
 
         } else {
 
-            echo "更新失敗";
+            // 存在しない場合はINSERT
+            $sql = "INSERT INTO goal_value
+                    (
+                        user_id,
+                        alcohol_limit,
+                        ciggarette_limit
+                    )
+                    VALUES
+                    (
+                        :user_id,
+                        :alcohol_limit,
+                        :ciggarette_limit
+                    )";
+
+            $stmt = $pdo->prepare($sql);
+
+            $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+            $stmt->bindParam(":alcohol_limit", $drinking_limit, PDO::PARAM_INT);
+            $stmt->bindParam(":ciggarette_limit", $smoking_limit, PDO::PARAM_INT);
+
+            $stmt->execute();
         }
+
+        echo "更新成功";
 
     } catch(PDOException $e) {
 
         echo $e->getMessage();
     }
 }
+
 ?>
