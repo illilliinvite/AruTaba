@@ -178,6 +178,20 @@ main {
   margin-bottom: 26px;
 }
 
+/* お知らせリンク */
+.notice-link{
+  text-decoration: none;
+  color: black;
+
+  transition: 0.2s;
+}
+/* カーソル合わせた時 */
+.notice-link:hover{
+  text-decoration: underline;
+  opacity: 0.7;
+}
+
+
 /* 継続日数 */
 .record-label {
   color: #666;

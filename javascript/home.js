@@ -4,6 +4,9 @@ const alcoholBtn = document.getElementById("tab-alcohol");
 
 const rankingList = document.getElementById("ranking-list");
 
+const recordLabel = document.getElementById("record-label");
+const recordDays = document.getElementById("record-days");
+
 // タバコランキング
 // タバコランキング
 const tobaccoRanking = `
@@ -49,7 +52,7 @@ const alcoholRanking = `
 
 <li class="rank-item rank-2">
   <span class="rank-badge">2位</span>
-  <span class="user-name">埼京線でそそり立つさん</span>
+  <span class="user-name">ゲべさん</span>
   <span class="days">禁酒180日</span>
 </li>
 
@@ -81,6 +84,8 @@ tobaccoBtn.addEventListener("click", () => {
   tobaccoBtn.classList.add("active");
   alcoholBtn.classList.remove("active");
 
+  recordLabel.textContent = "禁煙継続日数";
+  recordDays.textContent = "50日";
 });
 
 // アルコールボタン
@@ -91,4 +96,6 @@ alcoholBtn.addEventListener("click", () => {
   alcoholBtn.classList.add("active");
   tobaccoBtn.classList.remove("active");
 
+  recordLabel.textContent = "禁酒継続日数";
+  recordDays.textContent = "30日";
 });
