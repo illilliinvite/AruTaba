@@ -45,25 +45,31 @@ async function fetchCalendarData() {
 /* ===== 月間スコア判定 ===== */
 function checkMonthlyScore() {
 
+  const year  = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+
+  // 現在表示中の月のキー（例: "2026-06"）を作成
+  const currentMonthPrefix =
+    `${year}-${String(month + 1).padStart(2, '0')}`;
+
   let totalScore = 0;
 
   for (const date in calendarData) {
 
-    totalScore += Number(calendarData[date].score) || 0;
-  }
+    // 現在の月のデータだけを合計する
+    if (date.startsWith(currentMonthPrefix)) {
 
-  alert(totalScore);
+      totalScore += Number(calendarData[date].score) || 0;
+    }
+  }
 
   if (totalScore >= 50000) {
 
     warningMessage.textContent =
     "喫煙や飲酒量が増えています。肺や血管への負担が大きくなる可能性があります。";
 
-    warningImage.src =
-    "../image/warning_smoke.jpg";
-
-    warningImage2.src = 
-    "../image/warning_alcohol.jpg";
+    warningImage.src  = "../image/warning_smoke.jpg";
+    warningImage2.src = "../image/warning_alcohol.jpg";
 
     warningModal.style.display = "flex";
   }
