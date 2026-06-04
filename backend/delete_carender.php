@@ -30,4 +30,5 @@ $stmt->execute([
     ':date'    => $date
 ]);
 
+
 echo json_encode(["success" => true]);

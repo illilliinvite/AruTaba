@@ -134,23 +134,13 @@ function renderCalendar() {
 
     if (data) {
 
-      if (data.smoke > 0) {
+      const smokeLine = document.createElement("div");
+      smokeLine.textContent = `🚬 ${data.smoke}本`;
+      record.appendChild(smokeLine);
 
-        const smokeLine = document.createElement("div");
-
-        smokeLine.textContent = `🚬 ${data.smoke}本`;
-
-        record.appendChild(smokeLine);
-      }
-
-      if (data.alcohol > 0) {
-
-        const alcoholLine = document.createElement("div");
-
-        alcoholLine.textContent = `🍺 ${data.alcohol}ml`;
-
-        record.appendChild(alcoholLine);
-      }
+      const alcoholLine = document.createElement("div");
+      alcoholLine.textContent = `🍺 ${data.alcohol}ml`;
+      record.appendChild(alcoholLine);
     }
 
     dayDiv.appendChild(dayNumber);

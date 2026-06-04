@@ -1,3 +1,92 @@
+function loadTobaccoRanking() {
+
+  console.log("ランキング取得開始");
+
+  fetch("../backend/get_tobacco_ranking.php")
+    .then(response => response.json())
+    .then(data => {
+
+      console.log(data);
+
+      rankingList.innerHTML = "";
+
+      data.forEach((user, index) => {
+
+        let rankClass = "";
+
+        if(index === 0){
+          rankClass = "rank-1";
+        }
+        else if(index === 1){
+          rankClass = "rank-2";
+        }
+        else if(index === 2){
+          rankClass = "rank-3";
+        }
+
+        rankingList.innerHTML += `
+          <li class="rank-item ${rankClass}">
+            <span class="rank-badge">${index + 1}位</span>
+            <span class="user-name">${user.user_name}</span>
+            <span class="days">${user.ciggarette_consumption}本</span>
+          </li>
+        `;
+      });
+
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}
+
+function loadAlcoholRanking() {
+
+  fetch("../backend/get_alcohol_ranking.php")
+    .then(response => response.json())
+    .then(data => {
+
+      rankingList.innerHTML = "";
+
+      data.forEach((user, index) => {
+
+        let rankClass = "";
+
+        if(index === 0){
+          rankClass = "rank-1";
+        }
+        else if(index === 1){
+          rankClass = "rank-2";
+        }
+        else if(index === 2){
+          rankClass = "rank-3";
+        }
+
+        rankingList.innerHTML += `
+          <li class="rank-item ${rankClass}">
+            <span class="rank-badge">${index + 1}位</span>
+            <span class="user-name">${user.user_name}</span>
+            <span class="days">${user.alcohol_consumption}ml</span>
+          </li>
+        `;
+      });
+
+    });
+}
+
+function loadRecord() {
+
+  fetch("../backend/get_record.php")
+    .then(response => response.json())
+    .then(data => {
+
+      tobaccoBtn.dataset.days = data.tobacco_days;
+      alcoholBtn.dataset.days = data.alcohol_days;
+
+      recordDays.textContent =
+        data.tobacco_days + "日";
+    });
+}
+
 // ボタン取得
 const tobaccoBtn = document.getElementById("tab-tobacco");
 const alcoholBtn = document.getElementById("tab-alcohol");
@@ -7,95 +96,31 @@ const rankingList = document.getElementById("ranking-list");
 const recordLabel = document.getElementById("record-label");
 const recordDays = document.getElementById("record-days");
 
-// タバコランキング
-// タバコランキング
-const tobaccoRanking = `
-<li class="rank-item rank-1">
-  <span class="rank-badge">1位</span>
-  <span class="user-name">勝原さん</span>
-  <span class="days">禁煙520日</span>
-</li>
-
-<li class="rank-item rank-2">
-  <span class="rank-badge">2位</span>
-  <span class="user-name">佐藤さん</span>
-  <span class="days">禁煙98日</span>
-</li>
-
-<li class="rank-item rank-3">
-  <span class="rank-badge">3位</span>
-  <span class="user-name">鈴木さん</span>
-  <span class="days">禁煙76日</span>
-</li>
-
-<li class="rank-item">
-  <span class="rank-badge">4位</span>
-  <span class="user-name">伊藤さん</span>
-  <span class="days">禁煙65日</span>
-</li>
-
-<li class="rank-item">
-  <span class="rank-badge">5位</span>
-  <span class="user-name">高橋さん</span>
-  <span class="days">禁煙50日</span>
-</li>
-
-`;
-
-// アルコールランキング
-const alcoholRanking = `
-<li class="rank-item rank-1">
-  <span class="rank-badge">1位</span>
-  <span class="user-name">最強さんさん</span>
-  <span class="days">禁酒200日</span>
-</li>
-
-<li class="rank-item rank-2">
-  <span class="rank-badge">2位</span>
-  <span class="user-name">ゲべさん</span>
-  <span class="days">禁酒180日</span>
-</li>
-
-<li class="rank-item rank-3">
-  <span class="rank-badge">3位</span>
-  <span class="user-name">校長さん</span>
-  <span class="days">禁酒150日</span>
-</li>
-
-<li class="rank-item">
-  <span class="rank-badge">4位</span>
-  <span class="user-name">孫さん</span>
-  <span class="days">禁酒120日</span>
-</li>
-
-<li class="rank-item">
-  <span class="rank-badge">5位</span>
-  <span class="user-name">半分太さん</span>
-  <span class="days">禁酒100日</span>
-</li>
-
-`;
-
 // タバコボタン
 tobaccoBtn.addEventListener("click", () => {
 
-  rankingList.innerHTML = tobaccoRanking;
+  loadTobaccoRanking();
 
   tobaccoBtn.classList.add("active");
   alcoholBtn.classList.remove("active");
 
   recordLabel.textContent = "禁煙継続日数";
-  recordDays.textContent = "50日";
+  recordDays.textContent = tobaccoBtn.dataset.days + "日";
 });
 
 // アルコールボタン
 alcoholBtn.addEventListener("click", () => {
 
-  rankingList.innerHTML = alcoholRanking;
+  loadAlcoholRanking();
 
   alcoholBtn.classList.add("active");
   tobaccoBtn.classList.remove("active");
 
   recordLabel.textContent = "禁酒継続日数";
-  recordDays.textContent = "30日";
+  recordDays.textContent = alcoholBtn.dataset.days + "日";
 });
+
+
+
+loadTobaccoRanking();
+loadRecord();
