@@ -53,7 +53,7 @@ try{
         // 🔧 セッションにuser_idを保存
         $_SESSION["user_id"] = $user_id['user_id'];
 
-        header("Location: ../html/home.html");
+        header("Location: ../html/transition.html");
         exit();    
 
     }
