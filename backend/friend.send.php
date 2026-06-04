@@ -1,14 +1,5 @@
-
 <?php
-
-if(!isset($_POST["friend_id"]))
-{
-    echo "nothing";
-    exit;
-}
-
 ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once "session.php";
@@ -20,51 +11,111 @@ try {
         "arutaba"
     );
 } catch (Exception $e) {
-    echo json_encode(["error" => "db connection failed"]);
+    echo json_encode(["status" => "error", "message" => "DB接続失敗"]);
     exit;
 }
 
-// ① 相手のメールアドレスと名前を取得
+// ===============================
+// 入力チェック
+// ===============================
+if (!isset($_POST["friend_id"]) || $_POST["friend_id"] === "") {
+    echo json_encode(["status" => "error", "message" => "friend_id がありません"]);
+    exit;
+}
+
+$friend_id = $_POST["friend_id"];  // メールアドレス
+$my_user_id = $_SESSION["user_id"];
+
+// ===============================
+// 自分の user_name と mail_address を取得
+// ===============================
 $stmt = $pdo->prepare("
-    SELECT mail_address, user_name 
-    FROM profile 
+    SELECT user_name, mail_address
+    FROM profile
+    WHERE user_id = :uid
+");
+$stmt->bindParam(":uid", $my_user_id);
+$stmt->execute();
+$me = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$me) {
+    echo json_encode(["status" => "error", "message" => "自分の情報が取得できません"]);
+    exit;
+}
+
+$my_name = $me["user_name"];
+$my_mail = $me["mail_address"];
+
+// user_name が NULL の場合の対策
+if ($my_name === null || $my_name === "") {
+    $my_name = "名無し";  // ← 必要なら変更してOK
+}
+
+// ===============================
+// 自分自身に申請していないかチェック
+// ===============================
+if ($friend_id === $my_mail) {
+    echo json_encode(["status" => "error", "message" => "自分自身には申請できません"]);
+    exit;
+}
+
+// ===============================
+// 相手が存在するかチェック
+// ===============================
+$stmt = $pdo->prepare("
+    SELECT user_id, user_name
+    FROM profile
     WHERE mail_address = :mail
 ");
-
-$stmt->bindParam(":mail", $_POST["friend_id"], PDO::PARAM_STR);
+$stmt->bindParam(":mail", $friend_id);
 $stmt->execute();
+$target = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$row) {
-    echo json_encode([
-        "status" => "error",
-        "message" => "アカウントが見つかりませんでした"
-    ], JSON_UNESCAPED_UNICODE);
+if (!$target) {
+    echo json_encode(["status" => "error", "message" => "このメールアドレスのユーザーは存在しません"]);
     exit;
 }
 
-$friend_id  = $row["mail_address"];
-$user_name  = $row["user_name"];
+$target_user_id = $target["user_id"];
 
-// ② friend テーブルに登録
+// ===============================
+// すでにフレンド or 承認待ちかチェック
+// ===============================
 $stmt = $pdo->prepare("
-    INSERT INTO friend(user_id, user_name, friend_id, friend_wait, friend)
-    VALUES(:user_id, :user_name, :friend_id, 1, 0)
+    SELECT *
+    FROM friend
+    WHERE user_id = :me AND friend_id = :target
+");
+$stmt->bindParam(":me", $my_user_id);
+$stmt->bindParam(":target", $friend_id);
+$stmt->execute();
+$exists = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($exists) {
+    if ($exists["friend"] == 1) {
+        echo json_encode(["status" => "error", "message" => "すでにフレンドです"]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "すでに申請済みです"]);
+    }
+    exit;
+}
+
+// ===============================
+// フレンド申請を登録
+// ===============================
+$stmt = $pdo->prepare("
+    INSERT INTO friend (user_id, user_name, friend_id, friend_wait, friend)
+    VALUES (:uid, :uname, :fid, 1, 0)
 ");
 
-$user_id = $_SESSION["user_id"];
+$stmt->bindParam(":uid", $my_user_id);
+$stmt->bindParam(":uname", $my_name);  // ← ここが重要！必ず名前を入れる
+$stmt->bindParam(":fid", $friend_id);
 
-$stmt->bindParam(':user_id', $user_id, PDO::PARAM_STR);
-$stmt->bindParam(':user_name', $user_name, PDO::PARAM_STR);
-$stmt->bindParam(':friend_id', $friend_id, PDO::PARAM_STR);
-
-$stmt->execute();
-
-// ③ 成功レスポンス
-echo json_encode([
-    "status" => "ok",
-    "message" => "登録が完了しました"
-], JSON_UNESCAPED_UNICODE);
+if ($stmt->execute()) {
+    echo json_encode(["status" => "ok", "message" => "フレンド申請を送信しました"]);
+} else {
+    echo json_encode(["status" => "error", "message" => "申請に失敗しました"]);
+}
 
 exit;

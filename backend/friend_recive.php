@@ -11,7 +11,7 @@ try {
         "arutaba"
     );
 } catch (Exception $e) {
-    echo json_encode(["error" => "db connection failed"]);
+    echo json_encode(["status" => "error", "message" => "DB接続失敗"]);
     exit;
 }
 
@@ -32,19 +32,39 @@ if (!$me) {
 
 $mail_address = $me["mail_address"];
 
-// 承認待ち一覧取得
+// 承認待ち一覧取得（user_id だけ取る）
 $stmt = $pdo->prepare("
-    SELECT user_id, user_name
+    SELECT user_id
     FROM friend
     WHERE friend_wait = 1 AND friend_id = :friend_id
 ");
 $stmt->bindParam(":friend_id", $mail_address);
 $stmt->execute();
-
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$final = [];
+
+// user_id から profile の user_name を取得
+foreach ($rows as $r) {
+    $stmt = $pdo->prepare("
+        SELECT user_name
+        FROM profile
+        WHERE user_id = :uid
+    ");
+    $stmt->bindParam(":uid", $r["user_id"]);
+    $stmt->execute();
+    $p = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($p) {
+        $final[] = [
+            "user_id" => $r["user_id"],
+            "user_name" => $p["user_name"]
+        ];
+    }
+}
 
 echo json_encode([
     "status" => "ok",
-    "requests" => $rows
+    "requests" => $final
 ], JSON_UNESCAPED_UNICODE);
 exit;
