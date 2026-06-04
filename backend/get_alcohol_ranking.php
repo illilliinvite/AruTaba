@@ -19,7 +19,6 @@ WHERE
     AND MONTH(c.osake_drinking) = MONTH(CURDATE())
 GROUP BY c.user_id, l.user_name
 ORDER BY alcohol_consumption DESC
-LIMIT 5
 ";
 
 $result = $conn->query($sql);

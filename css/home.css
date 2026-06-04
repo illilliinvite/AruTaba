@@ -26,8 +26,11 @@ main {
 
 /* 【左側】ランキングカード（元のサイズ・比率を維持） */
 .ranking-card {
-  flex: 1.5 1 0%; 
-  min-height: 380px; /* 元の設定を維持 */
+  flex: 1.5 1 0%;
+  min-height: 380px;
+
+  display: flex;
+  flex-direction: column;
 }
 
 /* 右側の列を縦並びにする設定 */
@@ -128,6 +131,9 @@ main {
   list-style: none;
   padding: 0;
   margin: 0;
+
+  max-height: 280px;
+  overflow-y: auto;
 }
 .rank-item {
   display: flex;
