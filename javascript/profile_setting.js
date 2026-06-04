@@ -1,49 +1,42 @@
 console.log("JS読み込み成功");
 
-document.addEventListener("DOMContentLoaded", () => {
+document.getElementById("profileForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
   const form = document.getElementById("profileForm");
   const message = document.getElementById("message");
+  const formData = new FormData(form);
 
-  form.addEventListener("submit", async (e) => {
+  try {
+    const response = await fetch("../backend/profile_setting.php", {
+      method: "POST",
+      body: formData
+    });
 
-    // ページ遷移停止
-    e.preventDefault();
+    if (!response.ok) {
+      throw new Error("通信失敗");
+    }
 
-    // フォームデータ取得
-    const formData = new FormData(form);
+    const result = await response.text();
 
-    try {
+    message.textContent = result;
+    message.style.display = "block";
+    message.style.color = result.includes("成功") ? "green" : "red";
 
-      const response = await fetch("../backend/profile_setting.php", {
-        method: "POST",
-        body: formData
-      });
+    setTimeout(() => {
+      message.style.display = "none";
+    }, 3000);
 
-      if (!response.ok) {
-        throw new Error("通信失敗");
-      }
+  } catch (error) {
+    message.textContent = "更新失敗";
+    message.style.color = "red";
+    message.style.display = "block";
 
-      const result = await response.text();
+    setTimeout(() => {
+      message.style.display = "none";
+    }, 3000);
 
-      // メッセージ表示
-      message.textContent = result;
-
-      // 色変更
-      if (result.includes("成功")) {
-        message.style.color = "green";
-      } else {
-        message.style.color = "red";
-      }
-
-    } catch (error) {
-
-  message.textContent = "更新失敗";
-  message.style.color = "red";
-
-  console.error(error);
-}
-
-  });
+    console.error(error);
+  }
 
 });

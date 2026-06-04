@@ -84,16 +84,3 @@ body {
   color: white;
   cursor: pointer;
 }
-
-#message {
-  position: fixed;
-  top: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 10px;
-  background: white;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: bold;
-  z-index: 2000;
-}
