@@ -14,12 +14,13 @@
   <style>
     /* 中央要素 */
     .container {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 40px 20px;
-    }
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+  padding-top: 80px; /* ← ヘッダーの高さ分だけ追加 */
+}
 
     .card {
       display: flex;
@@ -81,6 +82,22 @@
     .form button[type="submit"]:hover {
       background: #f0f0f0;
     }
+
+    #message {
+  display: none; /* 最初は非表示 */
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  background: white;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  z-index: 2000;
+}
+
+    
   </style>
 </head>
 
@@ -125,7 +142,6 @@
         <span>アイコン</span>
       </div>
 
-      <div id="message"></div>
 
 <form class="form" id="profileForm" method="post" action="profile_setting.php">
 
@@ -158,12 +174,13 @@
 
     </div>
   </div>
+  <div id="message"></div>
 
   <!-- フッター -->
   <footer class="footer"></footer>
-
-  <script src="../javascript/main.js"></script>
   <script src="../javascript/profile_setting.js"></script>
+  <script src="../javascript/main.js"></script>
+ 
   
 
 </body>

@@ -1,6 +1,9 @@
-<!-- ヘッダー -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <!-- ヘッダー -->
 <header class="header">
-
+    <meta charset="UTF-8" />
     <!-- ハンバーガーメニュー -->
     <div class="hamburger" id="hamburger">
         <span></span>
@@ -29,47 +32,108 @@
     <button class="logout">ログアウト</button>
 </nav>
 <script src="../javascript/main.js"></script>
+<link rel="stylesheet" href="../css/friendchat.css">
 <link rel="stylesheet" href="../css/header.css">
+
+</head>
 
 <body>
 
-    <!-- チャット相手情報 -->
-    <div class="chat-header">
-        <button class="back-btn">←</button>
-        <div class="friend-info">
-            <img src="img/user.png" alt="プロフィール画像" class="friend-icon">
-            <span class="friend-name">山田 太郎</span>
+        <!-- 相手 -->
+        <div class="message-row friend">
+            <img src="img/profile.png" alt="icon" class="icon">
+
+            <div class="message-content">
+                <div class="bubble">
+                    お疲れ様！
+                </div>
+                <div class="time">10:30</div>
+            </div>
         </div>
+
+        <!-- 相手 -->
+<div class="message-row friend">
+    <div class="bubble friend-bubble">
+        お疲れ様！
     </div>
+</div>
 
-    <!-- メッセージ表示エリア -->
-    <div class="chat-area">
-
-        <!-- 相手のメッセージ -->
-        <div class="message friend-message">
-            <p>こんにちは！</p>
-            <span class="time">10:00</span>
-        </div>
-
-        <!-- 自分のメッセージ -->
-        <div class="message my-message">
-            <p>こんにちは！元気ですか？</p>
-            <span class="time">10:01</span>
-        </div>
-
-        <!-- 相手のメッセージ -->
-        <div class="message friend-message">
-            <p>元気ですよ！</p>
-            <span class="time">10:02</span>
-        </div>
-
+<!-- 自分 -->
+<div class="message-row me">
+    <div class="bubble me-bubble">
+        お疲れ！今どこ？
     </div>
+</div>
 
-    <!-- メッセージ入力 -->
-    <div class="chat-input">
-        <input type="text" placeholder="メッセージを入力">
-        <button>送信</button>
-    </div>
+    </main>
+
+    <!-- 入力エリア -->
+    <footer class="chat-input-area">
+        <button class="plus-btn">＋</button>
+
+        <input
+            type="text"
+            placeholder="メッセージを入力">
+
+        <button class="send-btn">送信</button>
+    </footer>
+
+    <script>
+function sendMessage() {
+
+    const input = document.getElementById("messageInput");
+    const message = input.value.trim();
+
+    if(message === ""){
+        return;
+    }
+
+    // 現在時刻取得
+    const now = new Date();
+    const time =
+        String(now.getHours()).padStart(2, "0")
+        + ":" +
+        String(now.getMinutes()).padStart(2, "0");
+
+    // メッセージ追加
+    const chatContainer =
+        document.getElementById("chatContainer");
+
+    chatContainer.innerHTML += `
+        <div class="message-row me">
+            <div class="message-content">
+                <div class="bubble">
+                    ${message}
+                </div>
+                <div class="time">
+                    ${time}
+                </div>
+            </div>
+        </div>
+    `;
+
+    // 入力欄クリア
+    input.value = "";
+
+    // 一番下までスクロール
+    window.scrollTo(
+        0,
+        document.body.scrollHeight
+    );
+}
+</script>
+
+<script>
+document
+.getElementById("messageInput")
+.addEventListener("keypress", function(e){
+
+    if(e.key === "Enter"){
+        sendMessage();
+    }
+
+});
+</script>
 
 </body>
 
