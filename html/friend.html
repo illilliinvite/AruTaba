@@ -44,7 +44,6 @@
     <div class="search-box">
         <input type="text" id="friend-search" placeholder="メールアドレスでフレンド申請">  
         <button id="search-btn">検索</button>
-
     </div>
 
     <!-- タブ切り替えボタン -->
@@ -55,18 +54,15 @@
 
     <!-- フレンド一覧 -->
     <div id="friend-list" class="tab-content active">
-        <ul>
-            <li>山田太郎</li>
-            <li>佐藤花子</li>
-            <li>田中一郎</li>
+        <ul id="friend-list-ul">
+            <!-- PHP で取得するならここに JS で追加 -->
         </ul>
     </div>
 
     <!-- 承認待ち -->
     <div id="request-list" class="tab-content">
         <ul>
-            <li>鈴木次郎 <button class="approve">承認</button></li>
-            <li>高橋美咲 <button class="approve">承認</button></li>
+            <!-- JS で承認待ちを追加 -->
         </ul>
     </div>
 
@@ -76,7 +72,11 @@
 <footer class="footer"></footer>
 
 <script src="../javascript/main.js"></script>
+
 <script>
+// ============================
+// ページ読み込み時
+// ============================
 document.addEventListener("DOMContentLoaded", () => {
 
     // ============================
@@ -85,40 +85,38 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchBtn = document.getElementById("search-btn");
     const searchInput = document.getElementById("friend-search");
 
-    if (searchBtn && searchInput) {
-        searchBtn.addEventListener("click", () => {
-            const friendId = searchInput.value.trim();
+    searchBtn.addEventListener("click", () => {
+        const friendId = searchInput.value.trim();
 
-            if (friendId === "") {
-                alert("検索ワードを入力してください");
-                return;
+        if (friendId === "") {
+            alert("検索ワードを入力してください");
+            return;
+        }
+
+        fetch("../backend/friend.send.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({
+                friend_id: friendId
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+
+            if (data.status === "ok") {
+                alert("フレンド申請を送信しました");
+            } else {
+                alert("エラー：" + data.message);
             }
-
-            fetch("../backend/friend.send.php", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: new URLSearchParams({
-                    friend_id: friendId
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-
-                if (data.status === "ok") {
-                    alert(data);
-                } else {
-                    alert("エラー：" + data.message);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert("通信エラー");
-            });
+        })
+        .catch(err => {
+            console.error(err);
+            alert("通信エラー");
         });
-    }
+    });
 
     // ============================
     // タブ切り替え
@@ -128,25 +126,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const friendList = document.getElementById("friend-list");
     const requestList = document.getElementById("request-list");
 
-    if (tabFriend && tabRequest && friendList && requestList) {
-        tabFriend.addEventListener("click", () => {
-            tabFriend.classList.add("active");
-            tabRequest.classList.remove("active");
+    tabFriend.addEventListener("click", () => {
+        tabFriend.classList.add("active");
+        tabRequest.classList.remove("active");
 
-            friendList.classList.add("active");
-            requestList.classList.remove("active");
-        });
+        friendList.classList.add("active");
+        requestList.classList.remove("active");
+    });
 
-        tabRequest.addEventListener("click", () => {
-            tabRequest.classList.add("active");
-            tabFriend.classList.remove("active");
+    tabRequest.addEventListener("click", () => {
+        tabRequest.classList.add("active");
+        tabFriend.classList.remove("active");
 
-            requestList.classList.add("active");
-            friendList.classList.remove("active");
-        });
-    }
+        requestList.classList.add("active");
+        friendList.classList.remove("active");
+    });
 
+    // 初回ロード
+    loadRequests();
 });
+
+
 // ============================
 // 承認待ち一覧の取得
 // ============================
@@ -165,14 +165,15 @@ function loadRequests() {
             }
 
             data.requests.forEach(item => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-        ${item.user_name}
-        <button class="approve">承認</button>
-    `;
-    requestList.appendChild(li);
-});
-
+                const li = document.createElement("li");
+                li.innerHTML = `
+                    ${item.user_name ?? "(名前なし)"} 
+                    <button class="approve" data-user-id="${item.user_id}">
+                        承認
+                    </button>
+                `;
+                requestList.appendChild(li);
+            });
         })
         .catch(err => {
             console.error(err);
@@ -180,12 +181,15 @@ function loadRequests() {
         });
 }
 
-// 承認ボタンのイベント設定
+
+// ============================
+// 承認ボタンの処理
+// ============================
 document.addEventListener("click", function(e) {
     if (e.target.classList.contains("approve")) {
         const userId = e.target.dataset.userId;
 
-        fetch(`../backend/friend_syounin.php?user_id=${encodeURIComponent(userId)}`)
+        fetch(`../backend/firend_syounin.php?user_id=${encodeURIComponent(userId)}`)
             .then(res => res.json())
             .then(data => {
                 if (data.status === "ok") {
@@ -201,16 +205,7 @@ document.addEventListener("click", function(e) {
             });
     }
 });
-
-
-
-// ページ読み込み時に実行
-loadRequests();
-
 </script>
-
-
-
 
 </body>
 </html>
