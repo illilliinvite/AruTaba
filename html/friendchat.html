@@ -1,0 +1,78 @@
+<!-- ヘッダー -->
+<header class="header">
+
+    <!-- ハンバーガーメニュー -->
+    <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- タイトル -->
+    <div class="logo">AruTaba</div>
+
+</header>
+
+<!-- サイドメニュー -->
+<nav class="sidebar" id="sidebar">
+
+    <ul>
+        <li>🏠 ホーム</li>
+        <li>👥 フレンド</li>
+        <li>📅 カレンダー</li>
+        <li>📋 掲示板</li>
+        <li>⌨ 数値入力</li>
+        <li>🔔 お知らせ</li>
+        <li>⚙ プロフィール設定</li>
+    </ul>
+
+    <button class="logout">ログアウト</button>
+</nav>
+<script src="../javascript/main.js"></script>
+<link rel="stylesheet" href="../css/header.css">
+
+<body>
+
+    <!-- チャット相手情報 -->
+    <div class="chat-header">
+        <button class="back-btn">←</button>
+        <div class="friend-info">
+            <img src="img/user.png" alt="プロフィール画像" class="friend-icon">
+            <span class="friend-name">山田 太郎</span>
+        </div>
+    </div>
+
+    <!-- メッセージ表示エリア -->
+    <div class="chat-area">
+
+        <!-- 相手のメッセージ -->
+        <div class="message friend-message">
+            <p>こんにちは！</p>
+            <span class="time">10:00</span>
+        </div>
+
+        <!-- 自分のメッセージ -->
+        <div class="message my-message">
+            <p>こんにちは！元気ですか？</p>
+            <span class="time">10:01</span>
+        </div>
+
+        <!-- 相手のメッセージ -->
+        <div class="message friend-message">
+            <p>元気ですよ！</p>
+            <span class="time">10:02</span>
+        </div>
+
+    </div>
+
+    <!-- メッセージ入力 -->
+    <div class="chat-input">
+        <input type="text" placeholder="メッセージを入力">
+        <button>送信</button>
+    </div>
+
+</body>
+
+<!-- フッター -->
+<footer class="footer"></footer>
+<link rel="stylesheet" href="../css/footer.css">
