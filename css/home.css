@@ -265,6 +265,135 @@ main {
   margin: 0;
 }
 
+/* ===== 記録未入力モーダル ===== */
+
+/* オーバーレイ */
+#guide-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* モーダル本体 */
+.guide-modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -48%) scale(0.9);
+  opacity: 0;
+  z-index: 9999;
+  width: 300px;
+  background: #ffffff;
+  border-radius: 20px;
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.guide-modal.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* モーダル上部カラーバー */
+.guide-modal-bar {
+  background: #1f7ae0;
+  padding: 22px 22px 18px;
+  text-align: center;
+}
+
+.guide-modal-bar-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+  font-size: 22px;
+}
+
+.guide-modal-bar-title {
+  font-size: 15px;
+  font-weight: bold;
+  color: #ffffff;
+  line-height: 1.4;
+}
+
+/* モーダル下部 */
+.guide-modal-body {
+  padding: 18px 22px 20px;
+}
+
+.guide-modal-body p {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.65;
+  margin: 0 0 16px;
+}
+
+.guide-modal-body button {
+  display: block;
+  width: 100%;
+  padding: 11px;
+  background: #1f7ae0;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.guide-modal-body button:hover {
+  opacity: 0.88;
+}
+
+/* ===== ハイライト（ブルン＋パルス） ===== */
+
+@keyframes burun {
+  0%   { transform: scale(1); }
+  18%  { transform: scale(1.10); }
+  36%  { transform: scale(0.95); }
+  54%  { transform: scale(1.05); }
+  72%  { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+
+@keyframes guide-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 4px rgba(31,122,224,0.45),
+                0 0 0 8px rgba(31,122,224,0.15);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(31,122,224,0.3),
+                0 0 0 14px rgba(31,122,224,0.08);
+  }
+}
+
+.guide-highlight {
+  position: relative;
+  z-index: 9999;
+  border-radius: 12px;
+  animation: burun 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+  outline: 2.5px solid rgba(31, 122, 224, 0.7);
+  outline-offset: 2px;
+}
+
+.guide-highlight.pulsing {
+  animation: burun 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards,
+             guide-pulse 1.5s ease-in-out 0.55s infinite;
+}
+
 /* ===== レスポンシブ (スマホ表示) ===== */
 @media (max-width: 768px) {
   .top-row {

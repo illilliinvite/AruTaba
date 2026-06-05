@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", () => {
+
 function loadTobaccoRanking() {
 
   console.log("ランキング取得開始");
@@ -87,6 +89,53 @@ function loadRecord() {
     });
 }
 
+function checkTodayInput() {
+  fetch("../backend/check_today_record.php")
+    .then(response => response.json())
+    .then(async data => {
+
+      if (data.exists) return;
+
+      const modal   = document.getElementById("guide-modal");
+      const overlay = document.getElementById("guide-overlay");
+      const okBtn   = document.getElementById("guide-ok-btn");
+      const target  = document.getElementById("suuti-guide");
+
+      const wait = ms => new Promise(r => setTimeout(r, ms));
+
+      // オーバーレイ＋モーダルをふわっと表示
+      overlay.style.display = "block";
+      await wait(10);
+      overlay.style.opacity = "1";
+      modal.style.display = "block";
+      await wait(10);
+      modal.classList.add("show");
+
+      okBtn.onclick = async () => {
+
+        // モーダルを閉じる
+        modal.classList.remove("show");
+        await wait(400);
+        modal.style.display = "none";
+
+        // ハイライト（ブルン）
+        target.classList.add("guide-highlight");
+        await wait(100);
+        target.classList.add("pulsing");
+
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        // 数値入力カードをクリックしたら解除
+        target.addEventListener("click", async () => {
+          target.classList.remove("guide-highlight", "pulsing");
+          overlay.style.opacity = "0";
+          await wait(300);
+          overlay.style.display = "none";
+        }, { once: true });
+      };
+    });
+}
+
 // ボタン取得
 const tobaccoBtn = document.getElementById("tab-tobacco");
 const alcoholBtn = document.getElementById("tab-alcohol");
@@ -124,3 +173,6 @@ alcoholBtn.addEventListener("click", () => {
 
 loadTobaccoRanking();
 loadRecord();
+checkTodayInput();
+
+});

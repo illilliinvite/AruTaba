@@ -95,12 +95,30 @@
     <h2>📌 メニュー</h2>
     <div class="quick-grid">
       <a href="friend.html" class="quick-item"><div class="icon-circle icon-green">👤</div><h3>フレンド一覧</h3><p>フレンドを確認</p></a>
-      <a href="carender.html" class="quick-item"><div class="icon-circle icon-blue">📅</div><h3>カレンダー</h3><p>今日の記録を入力</p></a>
+      <a href="carender.html" class="quick-item"><div class="icon-circle icon-blue">📅</div><h3>カレンダー</h3><p>過去の記録の閲覧・更新</p></a>
       <a href="keiziban.html" class="quick-item"><div class="icon-circle icon-purple">📋</div><h3>掲示板</h3><p>様々な人と交流</p></a>
-      <a href="suuti.html" class="quick-item"><div class="icon-circle icon-gold">⌨</div><h3>数値入力</h3><p>目標値を設定</p></a>
+      <a href="suuti.html" class="quick-item" id="suuti-guide"><div class="icon-circle icon-gold">⌨</div><h3>数値入力</h3><p>今日の記録を入力</p></a>
       <a href="profile_setting.html" class="quick-item"><div class="icon-circle icon-dark">⚙️</div><h3>設定</h3><p>各種設定を変更</p></a>
     </div>
-  </section> </main>
+  </section> 
+
+  <div id="guide-modal" class="guide-modal">
+  <div class="guide-modal-bar">
+    <div class="guide-modal-bar-icon">📝</div>
+    <div class="guide-modal-bar-title">今日の記録が未入力です</div>
+  </div>
+  <div class="guide-modal-body">
+    <p>
+      今日の喫煙量・飲酒量がまだ入力されていません。<br>
+      「数値入力」から今日の記録を入力しましょう。
+    </p>
+    <button id="guide-ok-btn">OK、入力する</button>
+  </div>
+</div>
+
+  <div id="guide-overlay"></div>
+
+</main>
 
   <script src="../javascript/main.js"></script>
   <script src="../javascript/home.js"></script>
