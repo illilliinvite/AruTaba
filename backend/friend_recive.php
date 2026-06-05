@@ -47,13 +47,13 @@ $final = [];
 // user_id から profile の user_name を取得
 foreach ($rows as $r) {
     $stmt = $pdo->prepare("
-        SELECT user_name
+        SELECT user_name,user_id
         FROM profile
         WHERE user_id = :uid
     ");
     $stmt->bindParam(":uid", $r["user_id"]);
     $stmt->execute();
-    $p = $stmt->fetch(PDO::FETCH_ASSOC);
+    $p = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($p) {
         $final[] = [

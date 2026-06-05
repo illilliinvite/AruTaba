@@ -134,10 +134,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 data.friends.forEach(item => {
-                    const li = document.createElement("li");
-                    li.textContent = item.user_name ?? "(名前なし)";
-                    friendList.appendChild(li);
+                const li = document.createElement("li");
+
+                li.textContent = item.user_name ?? "(名前なし)";
+
+                // クリックでチャットページへ遷移
+                li.addEventListener("click", () => {
+                    window.location.href = `/friendchat.html?mail=${encodeURIComponent(item.mail_address)}`;
                 });
+
+                friendList.appendChild(li);
+});
             })
             .catch(err => {
                 console.error(err);

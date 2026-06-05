@@ -3,6 +3,11 @@
 // ===============================
 
 // iframe 内の DOM が読み込まれたら実行
+// ===============================
+// iframe 内の処理（chatview.js 相当）
+// ===============================
+
+// iframe 内の DOM が読み込まれたら実行
 function initIframeFunctions() {
     const frame = document.querySelector("iframe").contentWindow;
 
@@ -35,8 +40,12 @@ function initIframeFunctions() {
 
     // 過去ログ読み込み
     loadChatHistory();
+
+    // ★ 1秒ごとにチャット履歴を更新
+    setInterval(loadChatHistory, 1000);
 }
 
+setInterval(loadChatHistory, 1000);
 
 // ===============================
 // 過去ログを読み込む（getchat.php）

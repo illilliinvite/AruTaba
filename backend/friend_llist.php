@@ -68,7 +68,7 @@ foreach ($friends_from_receive as $f) {
 // ② 送った側（メールアドレス → user_name を取得）
 foreach ($friends_from_send as $f) {
     $stmt = $pdo->prepare("
-        SELECT user_name
+        SELECT user_name, mail_address
         FROM profile
         WHERE mail_address = :mail
     ");
@@ -77,8 +77,12 @@ foreach ($friends_from_send as $f) {
     $profile = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($profile) {
-        $final_friends[] = ["user_name" => $profile["user_name"]];
-    }
+    $final_friends[] = [
+        "user_name" => $profile["user_name"],
+        "mail_address" => $profile["mail_address"]
+    ];
+}
+
 }
 
 echo json_encode([
