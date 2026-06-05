@@ -1,116 +1,152 @@
-body{
-    margin:0;
-    font-family:"Segoe UI", sans-serif;
-    background:#d9e9ee;
+body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: #d9e9ee;
 }
 
 /* ===== ヘッダー ===== */
-.simple-header{
-    height:70px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:#d8e8ee;
-    border-bottom:1px solid #999;
+.simple-header {
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #d8e8ee;
+    border-bottom: 1px solid #999;
 }
 
-.simple-logo{
-    font-size:56px;
-    font-family:"Times New Roman", serif;
-    font-style:italic;
-    background:#edf5f8;
-    border:1px solid #aaa;
-    padding:0 25px;
+.simple-logo {
+    font-size: 56px;
+    font-family: "Times New Roman", serif;
+    font-style: italic;
+    background: #edf5f8;
+    border: 1px solid #aaa;
+    padding: 0 25px;
 }
 
 /* ===== メイン ===== */
-.input-main{
-    height:calc(100vh - 70px);
-    display:flex;
-    justify-content:center;
-    align-items:center;
+.input-main {
+    height: calc(100vh - 70px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* ===== ボックス ===== */
-.input-box{
-    width:400px;
-    background:white;
-    border-radius:12px;
-    box-shadow:0 4px 15px rgba(0,0,0,0.15);
-    padding:30px;
-    text-align:center;
+/* ===== カード ===== */
+.input-card {
+    width: 360px;
+    background: #fafaf9;
+    border-radius: 14px;
+    border: 1px solid #dddad5;
+    padding: 24px 20px;
 }
 
-/* ===== タブ ===== */
-.input-tabs{
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    margin-bottom:20px;
+/* ===== セクション ===== */
+.input-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.input-tab{
-    padding:10px 20px;
-    border:none;
-    border-radius:6px;
-    background:#e0e0e0;
-    cursor:pointer;
-    font-size:18px;
-    transition:0.25s;
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
 }
 
-.input-tab.active{
-    background:#1976d2;
-    color:white;
-    font-weight:bold;
+.section-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
 }
 
-.input-tab:hover{
-    background:#64b5f6;
-    color:white;
+.smoke-icon {
+    background: #f0e8d8;
 }
 
-/* ===== 入力フォーム ===== */
-.input-form{
-    display:flex;
-    flex-direction:column;
-    gap:15px;
-    margin-bottom:20px;
+.alc-icon {
+    background: #d8eaf0;
 }
 
-.input-form input{
-    padding:10px;
-    font-size:16px;
-    border:1px solid #aaa;
-    border-radius:6px;
-    transition:0.25s;
+.section-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
 }
 
-.input-form input:focus{
-    border-color:#1976d2;
-    box-shadow:0 0 5px rgba(25,118,210,0.5);
-    outline:none;
+/* ===== フィールド行 ===== */
+.field-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #e0ddd8;
+    border-radius: 8px;
+    padding: 0 14px;
+    height: 44px;
+    transition: border-color 0.2s;
 }
 
-/* ===== 結果表示 ===== */
-.input-result{
-    font-size:16px;
-    margin-bottom:20px;
+.field-row:focus-within {
+    border-color: #7aabca;
 }
 
-/* ===== ボタン ===== */
-.input-submit{
-    background:#1976d2;
-    color:white;
-    border:none;
-    padding:12px 25px;
-    font-size:18px;
-    border-radius:8px;
-    cursor:pointer;
-    transition:0.25s;
+.field-label {
+    font-size: 13px;
+    color: #888;
+    white-space: nowrap;
+    cursor: default;
+    flex-shrink: 0;
 }
 
-.input-submit:hover{
-    background:#1565c0;
-    transform:translateY(-2px);
+.field-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 14px;
+    color: #222;
+    text-align: right;
+    width: 60%;
+    font-family: inherit;
+}
+
+.field-input::placeholder {
+    color: #ccc;
+}
+
+/* ===== 区切り線 ===== */
+.section-divider {
+    border: none;
+    border-top: 1px solid #e8e5e0;
+    margin: 16px 0;
+}
+
+/* ===== 確定ボタン ===== */
+.input-submit {
+    display: block;
+    margin: 20px auto 0;
+    width: 360px;
+    padding: 13px;
+    font-size: 16px;
+    font-family: inherit;
+    color: #333;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.input-submit:hover {
+    background: #f0f0ee;
+    border-color: #aaa;
+}
+
+.input-submit:active {
+    transform: scale(0.98);
 }
