@@ -1,130 +1,96 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <!-- ヘッダー -->
-<header class="header">
     <meta charset="UTF-8" />
-    <!-- ハンバーガーメニュー -->
-    <div class="hamburger" id="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
-
-    <!-- タイトル -->
-    <div class="logo">AruTaba</div>
-
-</header>
-
-<!-- サイドメニュー -->
-<nav class="sidebar" id="sidebar">
-
-    <ul>
-        <li>🏠 ホーム</li>
-        <li>👥 フレンド</li>
-        <li>📅 カレンダー</li>
-        <li>📋 掲示板</li>
-        <li>⌨ 数値入力</li>
-        <li>🔔 お知らせ</li>
-        <li>⚙ プロフィール設定</li>
-    </ul>
-
-    <button class="logout">ログアウト</button>
-</nav>
-<link rel="stylesheet" href="../css/friendchat.css">
-<link rel="stylesheet" href="../css/header.css">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AruTaba - チャット</title>
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/friendchat.css">
 </head>
-
 <body>
 
-        <!-- 相手 -->
-<div class="message-row friend">
-    <div class="bubble friend-bubble">
-        お疲れ様！
-    </div>
-</div>
-
-<!-- 自分 -->
-<div class="message-row me">
-    <div class="bubble me-bubble">
-        お疲れ！今どこ？
-    </div>
-</div>
-
-
-    <!-- 入力エリア -->
-    <footer class="chat-input-area">
-        <button class="plus-btn">＋</button>
-
-        <input
-            type="text"
-            id="messageInput"
-            placeholder="メッセージを入力">
-
-        <button class="send-btn">送信</button>
-    </footer>
-
-    <script>
-function sendMessage() {
-
-    const input = document.getElementById("messageInput");
-    const message = input.value.trim();
-
-    if(message === ""){
-        return;
-    }
-
-    // 現在時刻取得
-    const now = new Date();
-    const time =
-        String(now.getHours()).padStart(2, "0")
-        + ":" +
-        String(now.getMinutes()).padStart(2, "0");
-
-    // メッセージ追加
-    const chatContainer =
-        document.getElementById("chatContainer");
-
-    chatContainer.innerHTML += `
-        <div class="message-row me">
-            <div class="message-content">
-                <div class="bubble">
-                    ${message}
-                </div>
-                <div class="time">
-                    ${time}
-                </div>
-            </div>
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
-    `;
+        <div class="logo">AruTaba</div>
+    </header>
 
-    // 入力欄クリア
-    input.value = "";
+    <!-- サイドメニュー -->
+    <nav class="sidebar" id="sidebar">
+        <ul>
+            <li>🏠 ホーム</li>
+            <li>👥 フレンド</li>
+            <li>📅 カレンダー</li>
+            <li>📋 掲示板</li>
+            <li>⌨ 数値入力</li>
+            <li>🔔 お知らせ</li>
+            <li>⚙ プロフィール設定</li>
+        </ul>
+        <button class="logout">ログアウト</button>
+    </nav>
 
-    // 一番下までスクロール
-    window.scrollTo(
-        0,
-        document.body.scrollHeight
+    <!-- オーバーレイ（サイドバー展開時） -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- チャットエリア -->
+    <main class="chat-wrapper">
+        <!-- 相手のヘッダー情報 -->
+        <div class="chat-header">
+            <div class="chat-header-icon">👤</div>
+            <div class="chat-header-name" id="friendName"></div>
+            <div class="chat-header-status">オンライン</div>
+        </div>
+
+        <!-- メッセージ一覧 -->
+        <div class="chat-container" id="chatContainer">
+            <!-- メッセージはJSで動的に追加 -->
+            <div class="loading-msg" id="loadingMsg">読み込み中…</div>
+        </div>
+
+        <!-- 入力エリア -->
+        <div class="chat-input-area">
+            <button class="plus-btn" title="ファイル添付">＋</button>
+            <input
+                type="text"
+                id="messageInput"
+                placeholder="メッセージを入力"
+                autocomplete="off"
+            >
+            <button class="send-btn" id="sendBtn" onclick="sendMessage()">送信</button>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer"></footer>
+
+    <script src="../javascript/main.js"></script>
+    <script src="../javascript/friendchat.js"></script>
+    <script>
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const friendMail = urlParams.get("mail");
+
+    //fetchが飛ばない！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+    const response = await fetch(
+    "../backend/friendchat_mail.php",
+    {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            mail: friendMail
+            })
+        }
     );
-}
-</script>
 
-<script>
-document
-.getElementById("messageInput")
-.addEventListener("keypress", function(e){
+    const result = await response.json();
 
-    if(e.key === "Enter"){
-        sendMessage();
-    }
-
-});
-</script>
-
-<!-- フッター -->
-<footer class="footer"></footer>
-<script src="../javascript/main.js"></script>
-<script src="../javascript/friendchat.js"></script>
+    console.log(result);
+    </script>
 </body>
-
+</html>
