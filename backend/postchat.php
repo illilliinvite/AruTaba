@@ -19,8 +19,19 @@ try {
 
 $day = date("Y-m-d");
 
-$user_name = $_POST["user_name"];
 $forum_history = $_POST["forum_history"];
+
+
+$stmt = $pdo->prepare("SELECT user_name FROM profile WHERE user_id = :user_id");
+$stmt->bindParam(':user_id', $_SESSION["user_id"], PDO::PARAM_STR);
+$stmt->execute();
+
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+$user_name = $user["user_name"];  // ← これで取り出せる
+
+// ★ 現在時刻を入れる（datetime 用）
+$day = date("Y-m-d H:i:s");
+
 
 $stmt = $pdo->prepare("insert into forum(user_name, forum_history, day) values(:user_name, :forum_history, :day)");
 

@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // チャット送信処理
 // ===============================
 function sendChat() {
-    const user = document.getElementById("user_name").value.trim();
+    const user = "me";
     const text = document.getElementById("forum_history").value.trim();
 
     if (user === "" || text === "") return;
@@ -98,7 +98,7 @@ function sendChat() {
     // iframe 内にメッセージを追加
     if (frame && typeof frame.addMessage === "function") {
         frame.addMessage({
-            user: user,
+            user: "me",
             text: text,
             side: "right"
         });

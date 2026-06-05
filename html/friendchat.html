@@ -31,25 +31,12 @@
 
     <button class="logout">ログアウト</button>
 </nav>
-<script src="../javascript/main.js"></script>
 <link rel="stylesheet" href="../css/friendchat.css">
 <link rel="stylesheet" href="../css/header.css">
 
 </head>
 
 <body>
-
-        <!-- 相手 -->
-        <div class="message-row friend">
-            <img src="img/profile.png" alt="icon" class="icon">
-
-            <div class="message-content">
-                <div class="bubble">
-                    お疲れ様！
-                </div>
-                <div class="time">10:30</div>
-            </div>
-        </div>
 
         <!-- 相手 -->
 <div class="message-row friend">
@@ -65,7 +52,6 @@
     </div>
 </div>
 
-    </main>
 
     <!-- 入力エリア -->
     <footer class="chat-input-area">
@@ -73,6 +59,7 @@
 
         <input
             type="text"
+            id="messageInput"
             placeholder="メッセージを入力">
 
         <button class="send-btn">送信</button>
@@ -135,8 +122,9 @@ document
 });
 </script>
 
-</body>
-
 <!-- フッター -->
 <footer class="footer"></footer>
-<link rel="stylesheet" href="../css/footer.css">
+<script src="../javascript/main.js"></script>
+<script src="../javascript/friendchat.js"></script>
+</body>
+
