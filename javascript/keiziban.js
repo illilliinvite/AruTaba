@@ -1,17 +1,15 @@
 // ===============================
-// iframe 内の処理（chatview.js 相当）
+// 新規チャットだけ追加するためのカウンタ
 // ===============================
+let lastCount = 0;
 
-// iframe 内の DOM が読み込まれたら実行
-// ===============================
-// iframe 内の処理（chatview.js 相当）
-// ===============================
 
-// iframe 内の DOM が読み込まれたら実行
+// ===============================
+// iframe 内の処理
+// ===============================
 function initIframeFunctions() {
     const frame = document.querySelector("iframe").contentWindow;
 
-    // iframe 内に関数を注入
     frame.addMessage = function(data) {
         const chatList = frame.document.getElementById("chat-list");
 
@@ -38,17 +36,16 @@ function initIframeFunctions() {
         });
     };
 
-    // 過去ログ読み込み
+    // 初回読み込み
     loadChatHistory();
 
-    // ★ 1秒ごとにチャット履歴を更新
+    // 1秒ごとに更新
     setInterval(loadChatHistory, 1000);
 }
 
-setInterval(loadChatHistory, 1000);
 
 // ===============================
-// 過去ログを読み込む（getchat.php）
+// 過去ログを読み込む（新規だけ追加）
 // ===============================
 function loadChatHistory() {
     fetch("../backend/getchat.php")
@@ -57,13 +54,22 @@ function loadChatHistory() {
             const list = data.forum_history_list;
             const frame = document.querySelector("iframe").contentWindow;
 
-            list.forEach(text => {
+            const myName = document.getElementById("session_user_name").value;
+
+            // ★ 新しいチャットだけ追加
+            for (let i = lastCount; i < list.length; i++) {
+                const msg = list[i];
+
+                const side = (msg.user_name === myName) ? "right" : "left";
+
                 frame.addMessage({
-                    user: "相手",
-                    text: text,
-                    side: "left"
+                    user: msg.user_name,
+                    text: msg.forum_history,
+                    side: side
                 });
-            });
+            }
+
+            lastCount = list.length;
 
             frame.scrollToBottom();
         })
@@ -74,65 +80,45 @@ function loadChatHistory() {
 
 
 // ===============================
-// 送信ボタンのイベント
-// ===============================
-document.addEventListener("DOMContentLoaded", () => {
-    const sendBtn = document.getElementById("sendBtn");
-
-    sendBtn.addEventListener("click", sendChat);
-
-    // Enterキーでも送信
-    document.getElementById("forum_history").addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-            sendChat();
-        }
-    });
-
-    // iframe が読み込まれたら関数を注入
-    document.querySelector("iframe").addEventListener("load", initIframeFunctions);
-});
-
-
-// ===============================
-// チャット送信処理
+// 送信処理
 // ===============================
 function sendChat() {
-    const user = "me";
+    const user = document.getElementById("session_user_name").value;
     const text = document.getElementById("forum_history").value.trim();
 
-    if (user === "" || text === "") return;
+    if (text === "") return;
 
     const frame = document.querySelector("iframe").contentWindow;
 
-    // iframe 内にメッセージを追加
-    if (frame && typeof frame.addMessage === "function") {
-        frame.addMessage({
-            user: "me",
-            text: text,
-            side: "right"
-        });
-    }
+    frame.addMessage({
+        user: user,
+        text: text,
+        side: "right"
+    });
 
-    // PHP に送信（$_POST 形式）
     const formData = new URLSearchParams();
     formData.append("user_name", user);
     formData.append("forum_history", text);
 
     fetch("../backend/postchat.php", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: formData.toString()
-    })
-    .then(res => res.text())
-    .then(data => {
-        console.log("送信成功:", data);
-    })
-    .catch(err => {
-        console.error("送信エラー:", err);
     });
 
-    // 入力欄をクリア
     document.getElementById("forum_history").value = "";
 }
+
+
+// ===============================
+// イベント設定
+// ===============================
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("sendBtn").addEventListener("click", sendChat);
+
+    document.getElementById("forum_history").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") sendChat();
+    });
+
+    document.querySelector("iframe").addEventListener("load", initIframeFunctions);
+});

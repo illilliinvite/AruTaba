@@ -15,11 +15,10 @@
             font-family: sans-serif;
         }
 
-        /* iframe を入れる領域 */
         .chat-frame-wrapper {
             width: 100%;
-            height: calc(100vh - 300px); /* 上のヘッダー + 下の入力欄を除いた高さ */
-            margin-top: 80px; /* ヘッダー分の余白 */
+            height: calc(100vh - 300px);
+            margin-top: 80px;
         }
 
         iframe {
@@ -28,7 +27,6 @@
             border: none;
         }
 
-        /* ====== 入力欄（画面下固定） ====== */
         .chat-input-area {
             position: fixed;
             bottom: 50px;
@@ -61,24 +59,14 @@
 
 <body>
 
-<!-- ヘッダー -->
 <header class="header">
-
-    <!-- ハンバーガーメニュー -->
     <div class="hamburger" id="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
     </div>
-
-    <!-- タイトル -->
     <div class="logo">AruTaba</div>
-
 </header>
 
-<!-- サイドメニュー -->
 <nav class="sidebar" id="sidebar">
-
     <ul>
         <li>🏠 ホーム</li>
         <li>👥 フレンド</li>
@@ -88,20 +76,19 @@
         <li>🔔 お知らせ</li>
         <li>⚙ プロフィール設定</li>
     </ul>
-
     <button class="logout">ログアウト</button>
 </nav>
-<script src="../javascript/main.js"></script>
-<link rel="stylesheet" href="../css/header.css">
 
-<!-- ▼ ここに iframe を追加 ▼ -->
+<script src="../javascript/main.js"></script>
+
 <div class="chat-frame-wrapper">
     <iframe src="chatview.html"></iframe>
 </div>
 
-<!-- 入力欄 -->
+<!-- ★ 自分のユーザー名を hidden で保持 -->
+<input type="hidden" id="session_user_name" value="">
+
 <div class="chat-input-area">
-    <input type="text" id="user_name" hidden value="me" placeholder="ユーザー名">
     <input type="text" id="forum_history" placeholder="メッセージを入力">
     <button id="sendBtn">送信</button>
 </div>
@@ -109,6 +96,29 @@
 <footer class="footer"></footer>
 
 <script src="../javascript/keiziban.js"></script>
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    // ★ user_name を取得して hidden にセット
+    fetch("../backend/getname.php")   // ← この PHP を作ったと仮定
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "ok") {
+                document.getElementById("session_user_name").value = data.user_name;
+            }
+        });
+
+    // 既存の処理
+    document.getElementById("sendBtn").addEventListener("click", sendChat);
+    document.getElementById("forum_history").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") sendChat();
+    });
+    document.querySelector("iframe").addEventListener("load", initIframeFunctions);
+});
+
+
+</script>
 
 </body>
 </html>
