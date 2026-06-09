@@ -53,7 +53,7 @@ foreach ($rows as $r) {
     ");
     $stmt->bindParam(":uid", $r["user_id"]);
     $stmt->execute();
-    $p = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $p = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($p) {
         $final[] = [

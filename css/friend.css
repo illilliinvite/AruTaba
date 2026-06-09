@@ -1,71 +1,304 @@
+/* ===== コンテナ ===== */
 .friend-container {
-    padding: 20px;
-    max-width: 600px;        /* 中央寄せの幅 */
-    margin: 0 auto;          /* 中央寄せ */
-    text-align: center;      /* 中央寄せ */
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-/* 検索欄 */
+/* ===== ヘッダー行（件数表示） ===== */
+.friend-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px 2px;
+}
+
+.friend-header-row .page-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    letter-spacing: 0.02em;
+}
+
+.friend-count-badge {
+    font-size: 11px;
+    color: #5a8ab0;
+    background: #ddeef8;
+    border: 1px solid #b8d8ee;
+    border-radius: 20px;
+    padding: 2px 10px;
+}
+
+/* ===== 検索欄 ===== */
 .search-box {
     display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 8px;
 }
 
 .search-box input {
-    width: 60%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #aaa;
+    flex: 1;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-family: inherit;
+    background: #ffffff;
+    border: 1px solid #dddad5;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.search-box input:focus {
+    border-color: #7aabca;
+}
+
+.search-box input::placeholder {
+    color: #bbb;
 }
 
 .search-box button {
-    padding: 10px 20px;
-    background: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-family: inherit;
+    background: #ffffff;
+    color: #444;
+    border: 1px solid #ccc;
+    border-radius: 8px;
     cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s;
 }
 
-/* タブ */
+.search-box button:hover {
+    background: #f0f0ee;
+}
+
+/* ===== タブ ===== */
 .friend-tabs {
     display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 15px;
+    background: #ffffff;
+    border: 1px solid #dddad5;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
 }
 
 .friend-tabs button {
-    padding: 10px 20px;
+    flex: 1;
+    padding: 9px 10px;
+    font-size: 13px;
+    font-family: inherit;
     border: none;
-    background: #ddd;
+    background: transparent;
+    color: #888;
     cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
+    transition: background 0.2s, color 0.2s;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.friend-tabs button:first-child {
+    border-right: 1px solid #dddad5;
 }
 
 .friend-tabs button.active {
-    background: #4CAF50;
-    color: white;
+    background: #f0f0ee;
+    color: #222;
+    font-weight: 600;
 }
 
-/* コンテンツ */
+.friend-tabs button:not(.active):hover {
+    background: #fafaf9;
+}
+
+/* タブのバッジ */
+.tab-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 9px;
+    line-height: 1;
+}
+
+.tab-badge.badge-normal {
+    background: #ddd;
+    color: #555;
+}
+
+.tab-badge.badge-alert {
+    background: #e07060;
+    color: #fff;
+}
+
+/* ===== タブコンテンツ ===== */
 .tab-content {
     display: none;
 }
 
 .tab-content.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.approve {
-    margin-left: 10px;
-    padding: 5px 10px;
-    background: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
+/* ===== セクションラベル ===== */
+.list-section-label {
+    font-size: 11px;
+    color: #999;
+    letter-spacing: 0.05em;
+    padding: 4px 2px 0;
+}
+
+/* ===== リストカード ===== */
+.friend-list-card {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+    border: 1px solid #dddad5;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.friend-list-card li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #222;
+    border-bottom: 1px solid #f0eeeb;
     cursor: pointer;
+    transition: background 0.15s;
+    gap: 10px;
+}
+
+.friend-list-card li:last-child {
+    border-bottom: none;
+}
+
+.friend-list-card li:hover {
+    background: #f5f4f2;
+}
+
+/* アバター */
+.friend-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+    letter-spacing: 0.02em;
+}
+
+/* アバターカラー（名前の頭文字に応じてJSで付与） */
+.avatar-blue   { background: #cce4f5; color: #2a6a9a; }
+.avatar-green  { background: #cde8cd; color: #2a7040; }
+.avatar-amber  { background: #f5e6cc; color: #8a6020; }
+.avatar-pink   { background: #f5cce0; color: #9a3060; }
+.avatar-teal   { background: #c8e8e0; color: #206860; }
+.avatar-purple { background: #ddd0f5; color: #5030a0; }
+
+.friend-name-block {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.friend-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #222;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.friend-mail {
+    font-size: 11px;
+    color: #aaa;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.friend-arrow {
+    font-size: 16px;
+    color: #ccc;
+    flex-shrink: 0;
+}
+
+/* 空メッセージ */
+.empty-message {
+    text-align: center;
+    color: #aaa;
+    font-size: 13px;
+    padding: 20px;
+    cursor: default !important;
+}
+
+.empty-message:hover {
+    background: transparent !important;
+}
+
+/* ===== 承認待ちリスト ===== */
+#request-list ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+    border: 1px solid #dddad5;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#request-list ul li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #222;
+    border-bottom: 1px solid #f0eeeb;
+    gap: 10px;
+}
+
+#request-list ul li:last-child {
+    border-bottom: none;
+}
+
+/* ===== 承認ボタン ===== */
+.approve {
+    padding: 5px 14px;
+    font-size: 12px;
+    font-family: inherit;
+    background: #ffffff;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.approve:hover {
+    background: #f0f0ee;
+    border-color: #aaa;
 }

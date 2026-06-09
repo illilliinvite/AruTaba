@@ -19,7 +19,6 @@
         <span></span>
         <span></span>
     </div>
-
     <div class="logo">AruTaba</div>
 </header>
 
@@ -40,30 +39,38 @@
 <!-- メインコンテンツ -->
 <main class="friend-container">
 
+    <!-- ヘッダー行 -->
+    <div class="friend-header-row">
+        <span class="page-title">フレンド</span>
+        <span class="friend-count-badge" id="friend-count-badge">0人</span>
+    </div>
+
     <!-- 検索欄 -->
     <div class="search-box">
-        <input type="text" id="friend-search" placeholder="メールアドレスでフレンド申請">  
-        <button id="search-btn">検索</button>
+        <input type="text" id="friend-search" placeholder="メールアドレスでフレンド申請">
+        <button id="search-btn">送る</button>
     </div>
 
     <!-- タブ切り替えボタン -->
     <div class="friend-tabs">
-        <button id="tab-friend" class="active">フレンド一覧</button>
-        <button id="tab-request">承認待ち</button>
+        <button id="tab-friend" class="active">
+            フレンド一覧
+            <span class="tab-badge badge-normal" id="badge-friend">0</span>
+        </button>
+        <button id="tab-request">
+            承認待ち
+            <span class="tab-badge badge-alert" id="badge-request" style="display:none;"></span>
+        </button>
     </div>
 
     <!-- フレンド一覧 -->
     <div id="friend-list" class="tab-content active">
-        <ul id="friend-list-ul">
-            <!-- PHP で取得するならここに JS で追加 -->
-        </ul>
+        <ul class="friend-list-card" id="friend-list-ul"></ul>
     </div>
 
     <!-- 承認待ち -->
     <div id="request-list" class="tab-content">
-        <ul>
-            <!-- JS で承認待ちを追加 -->
-        </ul>
+        <ul></ul>
     </div>
 
 </main>
@@ -74,96 +81,109 @@
 <script src="../javascript/main.js"></script>
 
 <script>
+// アバターカラーを名前から決定
+const AVATAR_COLORS = ['blue','green','amber','pink','teal','purple'];
+function getAvatarColor(name) {
+    let code = 0;
+    for (let i = 0; i < name.length; i++) code += name.charCodeAt(i);
+    return AVATAR_COLORS[code % AVATAR_COLORS.length];
+}
+
+// イニシャル取得（最大2文字）
+function getInitials(name) {
+    if (!name) return '?';
+    return name.slice(0, 2).toUpperCase();
+}
+
 // ============================
 // ページ読み込み時
 // ============================
 document.addEventListener("DOMContentLoaded", () => {
 
     // ============================
-    // フレンド検索
+    // フレンド検索・申請
     // ============================
-    const searchBtn = document.getElementById("search-btn");
-    const searchInput = document.getElementById("friend-search");
-
-    searchBtn.addEventListener("click", () => {
-        const friendId = searchInput.value.trim();
-
-        if (friendId === "") {
-            alert("検索ワードを入力してください");
-            return;
-        }
+    document.getElementById("search-btn").addEventListener("click", () => {
+        const friendId = document.getElementById("friend-search").value.trim();
+        if (friendId === "") { alert("検索ワードを入力してください"); return; }
 
         fetch("../backend/friend.send.php", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: new URLSearchParams({
-                friend_id: friendId
-            })
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({ friend_id: friendId })
         })
         .then(res => res.json())
         .then(data => {
-            console.log(data);
-
             if (data.status === "ok") {
                 alert("フレンド申請を送信しました");
+                document.getElementById("friend-search").value = "";
             } else {
                 alert("エラー：" + data.message);
             }
         })
-        .catch(err => {
-            console.error(err);
-            alert("通信エラー");
-        });
+        .catch(() => alert("通信エラー"));
     });
 
     // ============================
-// フレンド一覧の取得
-// ============================
+    // フレンド一覧の取得
+    // ============================
     function loadFriends() {
         fetch("../backend/friend_llist.php")
             .then(res => res.json())
             .then(data => {
-                const friendList = document.querySelector("#friend-list-ul");
-                friendList.innerHTML = "";
+                const ul = document.getElementById("friend-list-ul");
+                const badge = document.getElementById("badge-friend");
+                const countBadge = document.getElementById("friend-count-badge");
+                ul.innerHTML = "";
 
                 if (data.status !== "ok" || data.friends.length === 0) {
-                    friendList.innerHTML = "<li>フレンドはいません</li>";
+                    const li = document.createElement("li");
+                    li.className = "empty-message";
+                    li.textContent = "フレンドはいません";
+                    ul.appendChild(li);
+                    badge.textContent = "0";
+                    countBadge.textContent = "0人";
                     return;
                 }
 
+                const count = data.friends.length;
+                badge.textContent = count;
+                countBadge.textContent = count + "人";
+
                 data.friends.forEach(item => {
-                const li = document.createElement("li");
+                    const name = item.user_name ?? "(名前なし)";
+                    const mail = item.mail_address ?? "";
+                    const color = getAvatarColor(name);
 
-                li.textContent = item.user_name ?? "(名前なし)";
-
-                // クリックでチャットページへ遷移
-                li.addEventListener("click", () => {
-                    window.location.href = `/friendchat.html?mail=${encodeURIComponent(item.mail_address)}`;
+                    const li = document.createElement("li");
+                    li.innerHTML = `
+                        <div class="friend-avatar avatar-${color}">${getInitials(name)}</div>
+                        <div class="friend-name-block">
+                            <span class="friend-name">${name}</span>
+                            ${mail ? `<span class="friend-mail">${mail}</span>` : ""}
+                        </div>
+                        <span class="friend-arrow">›</span>
+                    `;
+                    li.addEventListener("click", () => {
+                        window.location.href = `/friendchat.html?mail=${encodeURIComponent(mail)}`;
+                    });
+                    ul.appendChild(li);
                 });
-
-                friendList.appendChild(li);
-});
             })
-            .catch(err => {
-                console.error(err);
-                alert("フレンド一覧の取得に失敗しました");
-            });
+            .catch(() => alert("フレンド一覧の取得に失敗しました"));
     }
 
     // ============================
     // タブ切り替え
     // ============================
-    const tabFriend = document.getElementById("tab-friend");
+    const tabFriend  = document.getElementById("tab-friend");
     const tabRequest = document.getElementById("tab-request");
-    const friendList = document.getElementById("friend-list");
+    const friendList  = document.getElementById("friend-list");
     const requestList = document.getElementById("request-list");
 
     tabFriend.addEventListener("click", () => {
         tabFriend.classList.add("active");
         tabRequest.classList.remove("active");
-
         friendList.classList.add("active");
         requestList.classList.remove("active");
     });
@@ -171,7 +191,6 @@ document.addEventListener("DOMContentLoaded", () => {
     tabRequest.addEventListener("click", () => {
         tabRequest.classList.add("active");
         tabFriend.classList.remove("active");
-
         requestList.classList.add("active");
         friendList.classList.remove("active");
     });
@@ -181,7 +200,6 @@ document.addEventListener("DOMContentLoaded", () => {
     loadFriends();
 });
 
-
 // ============================
 // 承認待ち一覧の取得
 // ============================
@@ -189,33 +207,36 @@ function loadRequests() {
     fetch("../backend/friend_recive.php")
         .then(res => res.json())
         .then(data => {
-            console.log(data);
-
-            const requestList = document.querySelector("#request-list ul");
-            requestList.innerHTML = ""; // 一旦クリア
+            const ul = document.querySelector("#request-list ul");
+            const badge = document.getElementById("badge-request");
+            ul.innerHTML = "";
 
             if (data.status !== "ok" || data.requests.length === 0) {
-                requestList.innerHTML = "<li>承認待ちはありません</li>";
+                ul.innerHTML = '<li style="text-align:center;color:#aaa;font-size:13px;padding:20px;cursor:default;">承認待ちはありません</li>';
+                badge.style.display = "none";
                 return;
             }
 
+            const count = data.requests.length;
+            badge.textContent = count;
+            badge.style.display = "inline-flex";
+
             data.requests.forEach(item => {
+                const name = item.user_name ?? "(名前なし)";
+                const color = getAvatarColor(name);
                 const li = document.createElement("li");
                 li.innerHTML = `
-                    ${item.user_name ?? "(名前なし)"} 
-                    <button class="approve" data-user-id="${item.user_id}">
-                        承認
-                    </button>
+                    <div class="friend-avatar avatar-${color}">${getInitials(name)}</div>
+                    <div class="friend-name-block">
+                        <span class="friend-name">${name}</span>
+                    </div>
+                    <button class="approve" data-user-id="${item.user_id}">承認</button>
                 `;
-                requestList.appendChild(li);
+                ul.appendChild(li);
             });
         })
-        .catch(err => {
-            console.error(err);
-            alert("承認待ちの取得に失敗しました");
-        });
+        .catch(() => alert("承認待ちの取得に失敗しました"));
 }
-
 
 // ============================
 // 承認ボタンの処理
@@ -223,26 +244,19 @@ function loadRequests() {
 document.addEventListener("click", function(e) {
     if (e.target.classList.contains("approve")) {
         const userId = e.target.dataset.userId;
-
         fetch(`../backend/firend_syounin.php?user_id=${encodeURIComponent(userId)}`)
             .then(res => res.json())
             .then(data => {
                 if (data.status === "ok") {
                     alert("承認しました");
-                    loadRequests(); // 再読み込み
+                    loadRequests();
                 } else {
                     alert("エラー：" + data.message);
                 }
             })
-            .catch(err => {
-                console.error(err);
-                alert("通信エラー");
-            });
+            .catch(() => alert("通信エラー"));
     }
 });
-
-
-
 </script>
 
 </body>
