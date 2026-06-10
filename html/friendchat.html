@@ -71,19 +71,20 @@
     <script src="../javascript/friendchat.js"></script>
     <script>
 
+(async () => {
+
     const urlParams = new URLSearchParams(window.location.search);
     const friendMail = urlParams.get("mail");
 
-    //fetchが飛ばない！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
     const response = await fetch(
-    "../backend/friendchat_mail.php",
-    {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            mail: friendMail
+        "../backend/friendchat_mail.php",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                mail: friendMail
             })
         }
     );
@@ -91,6 +92,9 @@
     const result = await response.json();
 
     console.log(result);
-    </script>
+
+})();
+</script>
+
 </body>
 </html>
