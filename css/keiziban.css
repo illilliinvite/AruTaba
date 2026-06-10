@@ -1,187 +1,202 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.chat-input-area {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #ffffff;
-    padding: 10px;
-    display: flex;
-    gap: 10px;
-    border-top: 1px solid #ccc;
-}
-
-.chat-input-area input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-.chat-input-area button {
-    padding: 10px 20px;
-    border: none;
-    background: #4CAF50;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-
 body {
-  background: #d8e6ec;
-  font-family: sans-serif;
-  min-height: 100vh;
-  padding: 30px 20px; /* ← 元に戻した */
+    margin: 0;
+    background: #d8e6ec;
+    font-family: sans-serif;
 }
 
-/* 全体 */
-.chat-container {
-  width: 100%;
-  max-width: 900px;
-  margin: 40px auto 0; /* チャットだけ下げる */
+.main-content {
+    padding-top: 50px;
+    padding-bottom: 40px;
+    max-width: 860px;
+    margin: 0 auto;
+    padding-left: 16px;
+    padding-right: 16px;
 }
 
-/* メッセージ共通 */
-.message {
-  display: flex;
-  align-items: flex-end;
-  margin-bottom: 25px;
+.wood-bg {
+    background-color: #8B5E3C;
+    background-image:
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 2px,
+            rgba(0,0,0,0.04) 2px,
+            rgba(0,0,0,0.04) 4px
+        ),
+        repeating-linear-gradient(
+            180deg,
+            transparent,
+            transparent 18px,
+            rgba(255,255,255,0.03) 18px,
+            rgba(255,255,255,0.03) 20px
+        );
+    border-radius: 12px;
+    padding: 20px 24px 28px;
+    border: 3px solid #5C3A1E;
 }
 
-/* 左 */
-.message.left {
-  justify-content: flex-start;
+.board-title {
+    text-align: center;
+    font-size: 35px;
+    font-weight: 500;
+    color: #FDF0DC;
+    margin: 0 0 20px;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    padding-bottom: 14px;
 }
 
-/* 右 */
-.message.right {
-  justify-content: flex-end;
+.pin {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #c0392b;
+    border: 2px solid #922b21;
+    display: inline-block;
+    flex-shrink: 0;
 }
 
-/* アイコン */
-.icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: #f5f5f5;
-  border: 1px solid #333;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  flex-shrink: 0;
-  position: relative;
+.post-card {
+    background: #FFFDF5;
+    border-radius: 4px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    border-left: 3px solid #BA7517;
 }
 
-/* 吹き出し */
-.bubble {
-  position: relative;
-  background: #f3f3f3;
-  border: 1px solid #333;
-  border-radius: 14px;
-  padding: 24px 32px;
-  min-width: 320px;
-  min-height: 64px;
-  margin: 0 14px;
-  font-size: 20px;
-}
-
-/* 左のしっぽ */
-.message.left .bubble::before {
-  content: "";
-  position: absolute;
-  left: -18px;
-  bottom: 12px;
-  width: 0;
-  height: 0;
-  border-top: 12px solid transparent;
-  border-bottom: 12px solid transparent;
-  border-right: 18px solid #333;
-}
-
-.message.left .bubble::after {
-  content: "";
-  position: absolute;
-  left: -16px;
-  bottom: 13px;
-  width: 0;
-  height: 0;
-  border-top: 11px solid transparent;
-  border-bottom: 11px solid transparent;
-  border-right: 17px solid #f3f3f3;
-}
-
-/* 右のしっぽ */
-.message.right .bubble::before {
-  content: "";
-  position: absolute;
-  right: -18px;
-  bottom: 12px;
-  width: 0;
-  height: 0;
-  border-top: 12px solid transparent;
-  border-bottom: 12px solid transparent;
-  border-left: 18px solid #333;
-}
-
-.message.right .bubble::after {
-  content: "";
-  position: absolute;
-  right: -16px;
-  bottom: 13px;
-  width: 0;
-  height: 0;
-  border-top: 11px solid transparent;
-  border-bottom: 11px solid transparent;
-  border-left: 17px solid #f3f3f3;
-}
-
-/* 入力欄 */
-.chat-input-area {
-  width: 100%;
-  max-width: 900px;
-  margin: 90px auto 0;
-}
-
-.chat-input-area input {
-  width: 100%;
-  padding: 14px;
-  font-size: 18px;
-  border: 1px solid #999;
-  outline: none;
-  background: #f3f3f3;
-}
-
-.chat-input-area {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #ffffff;
-    padding: 10px;
+.post-header {
     display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #EF9F27;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+    color: #412402;
+    flex-shrink: 0;
+}
+
+.post-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #3D2B1F;
+    margin: 0;
+}
+
+.post-time {
+    font-size: 11px;
+    color: #8B6A4E;
+    margin: 0 0 0 auto;
+}
+
+.post-body {
+    font-size: 13px;
+    color: #3D2B1F;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* 投稿リストをスクロール可能に */
+#post-list {
+    height: 420px;
+    overflow-y: auto;
+    margin-bottom: 12px;
+}
+
+/* 年月セレクター */
+.filter-row {
+    display: flex;
+    align-items: center;
     gap: 10px;
-    border-top: 1px solid #ccc;
+    margin-bottom: 14px;
 }
 
-.chat-input-area input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+.filter-select-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
 }
 
-.chat-input-area button {
-    padding: 10px 20px;
+.filter-select-wrap select {
+    appearance: none;
+    -webkit-appearance: none;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 6px 32px 6px 14px;
+    font-size: 13px;
+    color: #FDF0DC;
+    cursor: pointer;
+    outline: none;
+    transition: background 0.2s;
+}
+
+.filter-select-wrap select:hover {
+    background: rgba(255,255,255,0.25);
+}
+
+.filter-select-wrap select option {
+    background: #5C3A1E;
+    color: #FDF0DC;
+}
+
+.filter-icon {
+    position: absolute;
+    right: 10px;
+    font-size: 14px;
+    color: #FDF0DC;
+    pointer-events: none;
+}
+
+.input-card {
+    background: #FFFDF5;
+    border-radius: 4px;
+    padding: 14px 16px;
+    margin-top: 4px;
+    border-left: 3px solid #5DCAA5;
+}
+
+.input-card textarea {
+    width: 100%;
+    border: 1px solid #D3C4A8;
+    border-radius: 4px;
+    background: #FEFCF7;
+    font-size: 13px;
+    color: #3D2B1F;
+    resize: none;
+    outline: none;
+    height: 60px;
+    font-family: inherit;
+    line-height: 1.6;
+    box-sizing: border-box;
+    padding: 8px 10px;
+}
+
+.input-card textarea::placeholder {
+    color: #B09A80;
+}
+
+.submit-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+.submit-btn {
+    background: #854F0B;
+    color: #FAEEDA;
     border: none;
-    background: #4CAF50;
-    color: white;
-    border-radius: 6px;
+    border-radius: 4px;
+    padding: 7px 18px;
+    font-size: 12px;
     cursor: pointer;
 }

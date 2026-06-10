@@ -1,60 +1,12 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AruTaba 掲示板</title>
-
     <link rel="stylesheet" href="../css/header.css">
-    <link rel="stylesheet" href="../css/footer.css">
-
-    <style>
-        body {
-            margin: 0;
-            background: #f5f5f5;
-            font-family: sans-serif;
-        }
-
-        .chat-frame-wrapper {
-            width: 100%;
-            height: calc(100vh - 300px);
-            margin-top: 80px;
-        }
-
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .chat-input-area {
-            position: fixed;
-            bottom: 50px;
-            left: 0;
-            width: 100%;
-            background: #ffffff;
-            padding: 10px;
-            display: flex;
-            gap: 10px;
-            border-top: 1px solid #ccc;
-        }
-
-        .chat-input-area input {
-            flex: 1;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-        }
-
-        .chat-input-area button {
-            padding: 10px 20px;
-            border: none;
-            background: #4CAF50;
-            color: white;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="../css/keiziban.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 </head>
 
 <body>
@@ -79,45 +31,43 @@
     <button class="logout">ログアウト</button>
 </nav>
 
-<script src="../javascript/main.js"></script>
-
-<div class="chat-frame-wrapper">
-    <iframe src="chatview.html"></iframe>
-</div>
-
-<!-- ★ 自分のユーザー名を hidden で保持 -->
 <input type="hidden" id="session_user_name" value="">
 
-<div class="chat-input-area">
-    <input type="text" id="forum_history" placeholder="メッセージを入力">
-    <button id="sendBtn">送信</button>
-</div>
+<main class="main-content">
+    <div class="wood-bg">
+        <p class="board-title">掲示板</p>
+        <div class="filter-row">
+            <div class="filter-select-wrap">
+                <select id="year-select"></select>
+                <i class="ti ti-chevron-down filter-icon"></i>
+            </div>
+            <div class="filter-select-wrap">
+                <select id="month-select"></select>
+                <i class="ti ti-chevron-down filter-icon"></i>
+            </div>
+        </div>
+        <div id="post-list"></div>
+        <div class="input-card">
+            <textarea id="forum_history" placeholder="投稿する内容を入力..."></textarea>
+            <div class="submit-row">
+                <button id="sendBtn" class="submit-btn">投稿する</button>
+            </div>
+        </div>
+    </div>
+</main>
 
-<footer class="footer"></footer>
-
+<script src="../javascript/main.js"></script>
 <script src="../javascript/keiziban.js"></script>
 <script>
-
 document.addEventListener("DOMContentLoaded", () => {
-
-    // ★ user_name を取得して hidden にセット
-    fetch("../backend/getname.php")   // ← この PHP を作ったと仮定
+    fetch("../backend/getname.php")
         .then(res => res.json())
         .then(data => {
             if (data.status === "ok") {
                 document.getElementById("session_user_name").value = data.user_name;
             }
         });
-
-    // 既存の処理
-    document.getElementById("sendBtn").addEventListener("click", sendChat);
-    document.getElementById("forum_history").addEventListener("keydown", (e) => {
-        if (e.key === "Enter") sendChat();
-    });
-    document.querySelector("iframe").addEventListener("load", initIframeFunctions);
 });
-
-
 </script>
 
 </body>

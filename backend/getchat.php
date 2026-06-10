@@ -16,18 +16,11 @@ try {
     exit;
 }
 
-// 今日の日付
-$data = date("Y-m-d");
-
-// 今日のチャットを新しい順に取得
 $stmt = $pdo->prepare("
-    SELECT forum_history, user_name
+    SELECT forum_history, user_name, day
     FROM forum
-    WHERE DATE(day) = :data
     ORDER BY day ASC
 ");
-
-$stmt->bindParam(':data', $data, PDO::PARAM_STR);
 $stmt->execute();
 
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -35,6 +28,4 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 echo json_encode([
     "forum_history_list" => $rows
 ], JSON_UNESCAPED_UNICODE);
-
-
 ?>
