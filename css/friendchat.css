@@ -21,9 +21,8 @@ body {
 .chat-wrapper {
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    /* ヘッダー分を上に確保（header.cssのヘッダー高さに合わせる） */
-    padding-top: 60px;
+    height: calc(100vh - 60px);
+    margin-top: 60px;
 }
 
 /* ===========================
