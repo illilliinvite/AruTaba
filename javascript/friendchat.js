@@ -1,76 +1,40 @@
-// ===========================
-// 定数・設定
-// ===========================
 const POLLING_INTERVAL = 3000;
 let lastMessageId = 0;
 let pollingTimer = null;
 
-// ===========================
-// 初期化
-// ===========================
 document.addEventListener("DOMContentLoaded", async () => {
-    await fetchUserByMail(); // ← async 関数内なら await が使える
     await loadMessages(true);
 
-    document.getElementById("messageInput")
-        .addEventListener("keypress", (e) => {
-            if (e.key === "Enter") {
-                sendMessage();
-            }
-        });
+    document.getElementById("messageInput").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            sendMessage();
+        }
+    });
+
+    document.getElementById("sendBtn").addEventListener("click", () => {
+        sendMessage();
+    });
 
     pollingTimer = setInterval(() => {
         loadMessages(false);
     }, POLLING_INTERVAL);
 });
 
-
-
-// ===========================
-// URLパラメータ mail を取得
-// ===========================
 function getMailFromUrl() {
     const params = new URLSearchParams(window.location.search);
     return params.get("mail");
 }
 
-// ===========================
-// mail を PHP に送信してユーザー情報取得
-// ===========================
-async function fetchUserByMail() {
-    const mail = getMailFromUrl();
-    if (!mail) {
-        console.warn("mail パラメータがありません");
-        return;
-    }
-
-    try {
-        const response = await fetch("../backend/friendchat_load.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ mail: mail })
-        });
-
-        const result = await response.json();
-        console.log("ユーザー情報:", result);
-
-        if (result.success && result.user) {
-            // 必要ならここでユーザー情報を画面に反映できる
-            console.log("ログインユーザー:", result.user);
-        }
-
-    } catch (error) {
-        console.error("ユーザー取得エラー:", error);
-    }
-}
-
-// ===========================
-// メッセージ読み込み
-// ===========================
 async function loadMessages(isInitial) {
     try {
+        const mail = getMailFromUrl();
+
+        if (!mail) {
+            throw new Error("mail パラメータがありません");
+        }
+
         const response = await fetch(
-            `../backend/friendchat_load.php?last_id=${lastMessageId}`
+            `../backend/friendchat_load.php?last_id=${lastMessageId}&mail=${encodeURIComponent(mail)}`
         );
 
         if (!response.ok) {
@@ -88,7 +52,6 @@ async function loadMessages(isInitial) {
 
         const chatContainer = document.getElementById("chatContainer");
         const myUserId = getMyUserId();
-
         let lastDate = getLastDisplayedDate();
 
         messages.forEach((msg) => {
@@ -128,8 +91,8 @@ async function loadMessages(isInitial) {
                 );
             }
 
-            if (parseInt(msg.message_id) > lastMessageId) {
-                lastMessageId = parseInt(msg.message_id);
+            if (parseInt(msg.message_id, 10) > lastMessageId) {
+                lastMessageId = parseInt(msg.message_id, 10);
             }
         });
 
@@ -148,15 +111,18 @@ async function loadMessages(isInitial) {
     }
 }
 
-// ===========================
-// メッセージ送信
-// ===========================
 async function sendMessage() {
     const input = document.getElementById("messageInput");
     const sendBtn = document.getElementById("sendBtn");
     const message = input.value.trim();
+    const mail = getMailFromUrl();
 
     if (message === "") return;
+
+    if (!mail) {
+        alert("送信先が取得できませんでした。");
+        return;
+    }
 
     sendBtn.disabled = true;
 
@@ -164,7 +130,10 @@ async function sendMessage() {
         const response = await fetch("../backend/friendchat_send.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: message })
+            body: JSON.stringify({
+                message: message,
+                mail: mail
+            })
         });
 
         if (!response.ok) {
@@ -174,7 +143,8 @@ async function sendMessage() {
         const result = await response.json();
 
         if (!result.success) {
-            alert("送信に失敗しました。もう一度お試しください。");
+            alert(result.error || "送信に失敗しました。もう一度お試しください。");
+            console.log(result);
             return;
         }
 
@@ -184,16 +154,12 @@ async function sendMessage() {
     } catch (error) {
         console.error("送信エラー:", error);
         alert("通信エラーが発生しました。");
-
     } finally {
         sendBtn.disabled = false;
         input.focus();
     }
 }
 
-// ===========================
-// ユーティリティ
-// ===========================
 function getMyUserId() {
     const meta = document.querySelector('meta[name="user-id"]');
     return meta ? meta.getAttribute("content") : null;
@@ -213,11 +179,7 @@ function formatDate(datetimeStr) {
 }
 
 function formatTime(datetimeStr) {
-    if (!datetimeStr) {
-        const now = new Date();
-        return String(now.getHours()).padStart(2, "0") + ":" +
-               String(now.getMinutes()).padStart(2, "0");
-    }
+    if (!datetimeStr) return "";
     const d = new Date(datetimeStr);
     if (isNaN(d)) return "";
     return String(d.getHours()).padStart(2, "0") + ":" +
