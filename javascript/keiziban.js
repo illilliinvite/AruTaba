@@ -61,7 +61,7 @@ function renderPosts() {
     }
 
     // 新しい順に並べて5件ずつ表示
-    const sorted = [...filtered].reverse();
+    const sorted = [...filtered];
     const display = sorted.slice(0, 5);
 
     display.forEach(msg => {
@@ -110,6 +110,7 @@ function renderPosts() {
             board.appendChild(card);
         });
     }
+    board.scrollTop = board.scrollHeight;
 }
 
 function sendPost() {
