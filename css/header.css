@@ -28,6 +28,11 @@ body{
     background:#edf5f8;
 }
 
+.logo a{
+  text-decoration: none;
+  color: inherit;
+}
+
 /* ===== ハンバーガー ===== */
 .hamburger{
     position:absolute;
