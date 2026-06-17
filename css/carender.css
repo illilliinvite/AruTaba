@@ -18,7 +18,7 @@ body {
 /* ===== カレンダー全体 ===== */
 
 .calendar-container {
-  width: min(95%, 900px);
+  width: min(95%, 1000px);
   background: white;
   border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
