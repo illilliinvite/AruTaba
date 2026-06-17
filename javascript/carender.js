@@ -16,8 +16,16 @@ const nextBtn        = document.getElementById("next");
 
 const warningModal    = document.getElementById("warning-modal");
 const warningMessage  = document.getElementById("warning-message");
+const warningLevelBadge = document.getElementById("warning-level-badge");
+const warningGaugeArc    = document.getElementById("warning-gauge-arc");
+const breakdownBarSmoke  = document.getElementById("breakdown-bar-smoke");
+const breakdownBarAlcohol = document.getElementById("breakdown-bar-alcohol");
+const breakdownSmokePercent  = document.getElementById("breakdown-smoke-percent");
+const breakdownAlcoholPercent = document.getElementById("breakdown-alcohol-percent");
 const warningImage    = document.getElementById("warning-image");
 const warningImage2   = document.getElementById("warning-image2");
+const warningVideo    = document.getElementById("warning-video");
+const warningVideoWrap = document.getElementById("warning-video-wrap");
 const warningCloseBtn = document.getElementById("warning-close-btn");
 
 warningModal.style.display = "none";
@@ -45,36 +53,131 @@ async function fetchCalendarData() {
 }
 
 /* ===== 月間スコア判定 ===== */
+/* ===== 警告レベルのしきい値 ===== */
+const SCORE_LEVEL_CAUTION = 30000; // 注意
+const SCORE_LEVEL_WARNING = 50000; // 警告
+const SCORE_LEVEL_DANGER  = 80000; // 危険
+
 function checkMonthlyScore() {
 
   const year  = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
-  // 現在表示中の月のキー（例: "2026-06"）を作成
   const currentMonthPrefix =
     `${year}-${String(month + 1).padStart(2, '0')}`;
 
-  let totalScore = 0;
+  let totalScore   = 0;
+  let smokeScore   = 0;
+  let alcoholScore = 0;
 
   for (const date in calendarData) {
 
-    // 現在の月のデータだけを合計する
     if (date.startsWith(currentMonthPrefix)) {
 
-      totalScore += Number(calendarData[date].score) || 0;
+      const d = calendarData[date];
+
+      const sScore = (Number(d.smoke) || 0) * 400;
+      const aScore = (Number(d.alcohol) || 0) * (Number(d.degree) || 1);
+
+      smokeScore   += sScore;
+      alcoholScore += aScore;
+      totalScore   += Number(d.score) || 0;
     }
   }
 
-  if (totalScore >= 50000) {
-
-    warningMessage.textContent =
-    "喫煙や飲酒量が増えています。肺や血管への負担が大きくなる可能性があります。";
-
-    warningImage.src  = "../image/warning_smoke.jpg";
-    warningImage2.src = "../image/warning_alcohol.jpg";
-
-    warningModal.style.display = "flex";
+  if (totalScore < SCORE_LEVEL_CAUTION) {
+    return; // 基準未満なら警告なし
   }
+
+  /* ----- レベル判定 ----- */
+  let levelKey, levelLabel, levelColor;
+
+  if (totalScore >= SCORE_LEVEL_DANGER) {
+    levelKey   = "danger";
+    levelLabel = "危険";
+    levelColor = "#d32f2f";
+  } else if (totalScore >= SCORE_LEVEL_WARNING) {
+    levelKey   = "warning";
+    levelLabel = "警告";
+    levelColor = "#f57c00";
+  } else {
+    levelKey   = "caution";
+    levelLabel = "注意";
+    levelColor = "#fbc02d";
+  }
+
+  /* ----- 内訳判定 ----- */
+  const smokeRatio = totalScore > 0
+    ? Math.round((smokeScore / totalScore) * 100)
+    : 0;
+
+  const alcoholRatio = 100 - smokeRatio;
+
+  let mainCause;
+
+  if (smokeRatio >= 60) {
+    mainCause = "特にタバコの量が多くなっています。";
+  } else if (alcoholRatio >= 60) {
+    mainCause = "特にお酒の量が多くなっています。";
+  } else {
+    mainCause = "タバコ・お酒どちらも増えています。";
+  }
+
+  /* ----- レベルごとの本文 ----- */
+  let bodyMessage;
+
+  if (levelKey === "danger") {
+    bodyMessage = "このままの生活を続けると、深刻な健康被害につながる可能性が高い状態です。早めの見直しを強くおすすめします。";
+  } else if (levelKey === "warning") {
+    bodyMessage = "肺や血管への負担が大きくなる可能性があります。生活習慣を見直すタイミングです。";
+  } else {
+    bodyMessage = "今のペースが続くと負担が大きくなる可能性があります。少し意識してみましょう。";
+  }
+
+  /* ----- 表示反映 ----- */
+  warningLevelBadge.textContent = `${levelLabel}`;
+  warningLevelBadge.style.background = levelColor;
+  warningLevelBadge.style.color = "#fff";
+  warningLevelBadge.style.padding = "4px 10px";
+  warningLevelBadge.style.borderRadius = "12px";
+  warningLevelBadge.style.fontSize = "12px";
+
+  // ゲージの円弧（円周 = 2πr ≒ 314、スコアに応じて0〜100%を描画。100000で満タン扱い）
+  const gaugeRatio = Math.min(totalScore / 100000, 1);
+  const circumference = 2 * Math.PI * 50; // r=50
+  warningGaugeArc.style.stroke = levelColor;
+  warningGaugeArc.setAttribute(
+    "stroke-dasharray",
+    `${circumference * gaugeRatio} ${circumference}`
+  );
+
+  // 内訳バー
+  breakdownBarSmoke.style.width   = `${smokeRatio}%`;
+  breakdownBarAlcohol.style.width = `${alcoholRatio}%`;
+  breakdownSmokePercent.textContent   = `${smokeRatio}%`;
+  breakdownAlcoholPercent.textContent = `${alcoholRatio}%`;
+
+  warningMessage.textContent =
+    `今月の喫煙・飲酒スコアが${levelLabel}基準に達しました。${mainCause}${bodyMessage}`;
+
+  warningImage.src  = "../image/warning_smoke.jpg";
+  warningImage2.src = "../image/warning_alcohol.jpg";
+
+  // 動画ID（後で差し替えやすいようにまとめておく）
+  const VIDEO_ID_SMOKE   = "7z88JgOQoKY"; // タバコ用
+  const VIDEO_ID_ALCOHOL = "0GIZIhurBYE"; // アルコール用
+
+  const videoId = (smokeRatio >= 60) ? VIDEO_ID_SMOKE : VIDEO_ID_ALCOHOL;
+
+  if (videoId) {
+    warningVideoWrap.style.display = "block";
+    warningVideo.src = `https://www.youtube.com/embed/${videoId}`;
+  } else {
+    warningVideoWrap.style.display = "none";
+    warningVideo.src = "";
+  }
+
+  warningModal.style.display = "flex";
 }
 
 /* ===== カレンダー描画 ===== */
@@ -236,6 +339,7 @@ closeBtn.addEventListener("click", () => {
 warningCloseBtn.addEventListener("click", () => {
 
   warningModal.style.display = "none";
+  warningVideo.src = "";
 });
 
 /* ===== 前月 / 次月 ===== */
@@ -251,6 +355,21 @@ nextBtn.addEventListener("click", () => {
   currentDate.setMonth(currentDate.getMonth() + 1);
 
   renderCalendar();
+});
+
+/* ===== 警告モーダル タブ切り替え ===== */
+document.querySelectorAll(".warning-tab").forEach((tab) => {
+
+  tab.addEventListener("click", () => {
+
+    document.querySelectorAll(".warning-tab").forEach((t) => t.classList.remove("active"));
+    document.querySelectorAll(".warning-tab-panel").forEach((p) => p.classList.add("hidden"));
+
+    tab.classList.add("active");
+
+    const panel = document.querySelector(`.warning-tab-panel[data-panel="${tab.dataset.tab}"]`);
+    panel.classList.remove("hidden");
+  });
 });
 
 /* ===== 初回描画 ===== */

@@ -120,40 +120,69 @@
 <!-- 警告モーダル -->
 <div id="warning-modal" class="modal hidden">
 
-    <div class="modal-content">
+    <div class="modal-content warning-modal-content">
 
-        <h2>⚠ 健康警告</h2>
+        <div class="warning-top">
 
-        <p id="warning-message"></p>
+            <div class="warning-gauge">
+                <svg viewBox="0 0 120 120" class="warning-gauge-svg">
+                    <circle cx="60" cy="60" r="50" class="gauge-track"></circle>
+                    <circle id="warning-gauge-arc" cx="60" cy="60" r="50" class="gauge-arc"></circle>
+                </svg>
+                <div class="warning-gauge-center">
+                    <span id="warning-level-badge" class="warning-level-badge"></span>
+                </div>
+            </div>
 
-        <!-- ↓ この div で囲む -->
-        <div id="warning-image-scroll" style="
-            max-height: 300px;
-            overflow-y: scroll;
-            border-radius: 10px;
-            margin-top: 15px;
-        ">
-
-            <img
-                id="warning-image"
-                src=""
-                alt="warning"
-                style="width:100%; border-radius:10px;"
-            >
-
-            <img
-                id="warning-image2"
-                src=""
-                alt="warning2"
-                style="width:100%; border-radius:10px; margin-top:10px;"
-            >
+            <div class="warning-summary">
+                <h2>⚠ 健康警告</h2>
+                <p id="warning-message"></p>
+            </div>
 
         </div>
 
+        <div class="warning-breakdown">
+            <div class="breakdown-row">
+                <span class="breakdown-label">🚬 タバコ</span>
+                <div class="breakdown-bar-track">
+                    <div id="breakdown-bar-smoke" class="breakdown-bar-fill smoke"></div>
+                </div>
+                <span id="breakdown-smoke-percent" class="breakdown-percent"></span>
+            </div>
+            <div class="breakdown-row">
+                <span class="breakdown-label">🍺 アルコール</span>
+                <div class="breakdown-bar-track">
+                    <div id="breakdown-bar-alcohol" class="breakdown-bar-fill alcohol"></div>
+                </div>
+                <span id="breakdown-alcohol-percent" class="breakdown-percent"></span>
+            </div>
+        </div>
+
+        <div class="warning-tabs">
+            <button class="warning-tab active" data-tab="image">参考画像</button>
+            <button class="warning-tab" data-tab="video">解説動画</button>
+        </div>
+
+        <div class="warning-tab-panel" data-panel="image">
+            <div id="warning-image-scroll">
+                <img id="warning-image" src="" alt="warning">
+                <img id="warning-image2" src="" alt="warning2">
+            </div>
+        </div>
+
+        <div class="warning-tab-panel hidden" data-panel="video">
+            <div id="warning-video-wrap">
+                <iframe
+                    id="warning-video"
+                    src=""
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                ></iframe>
+            </div>
+        </div>
+
         <div class="modal-buttons">
-            <button id="warning-close-btn">
-                閉じる
-            </button>
+            <button id="warning-close-btn">閉じる</button>
         </div>
 
     </div>
