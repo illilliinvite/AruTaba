@@ -11,7 +11,6 @@ try {
         "arutaba"
     );
 } catch (Exception $e) {
-
     echo json_encode([]);
     exit;
 }
@@ -23,7 +22,9 @@ $stmt = $pdo->prepare("
         osake_drinking,
         alcohol_consumption,
         ciggarette_consumption,
-        score
+        score,
+        brand,
+        alcohol_degree
     FROM calender
     WHERE user_id = :user_id
 ");
@@ -40,7 +41,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $data[$date] = [
         "smoke"   => $row["ciggarette_consumption"],
         "alcohol" => $row["alcohol_consumption"],
-        "score" => $row["score"]
+        "score"   => $row["score"],
+        "brand"   => $row["brand"],
+        "degree"  => $row["alcohol_degree"],
     ];
 }
 

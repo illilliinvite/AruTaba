@@ -235,3 +235,63 @@ body {
     font-size: 12px;
   }
 }
+
+/* ===== モーダル内 数値入力デザイン ===== */
+
+.input-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.input-section {
+  padding: 8px 0;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.section-icon {
+  font-size: 20px;
+}
+
+.section-label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.field-row {
+  margin-bottom: 10px;
+}
+
+.field-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 15px;
+  border: none;
+  border-radius: 10px;
+  background: #f0f4f8;
+  box-sizing: border-box;
+  outline: none;
+  color: #333;
+}
+
+.field-input:focus {
+  background: #e0ecff;
+}
+
+.field-input::placeholder {
+  color: #aaa;
+}
+
+.section-divider {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 8px 0;
+}

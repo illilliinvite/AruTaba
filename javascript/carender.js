@@ -6,6 +6,8 @@ const modal          = document.getElementById("modal");
 const selectedDateText = document.getElementById("selected-date");
 const smokeInput     = document.getElementById("smoke-input");
 const alcoholInput   = document.getElementById("alcohol-input");
+const brandInput     = document.getElementById("brand-input");
+const degreeInput    = document.getElementById("degree-input");
 const saveBtn        = document.getElementById("save-btn");
 const deleteBtn      = document.getElementById("delete-btn");
 const closeBtn       = document.getElementById("close-btn");
@@ -135,11 +137,15 @@ function renderCalendar() {
     if (data) {
 
       const smokeLine = document.createElement("div");
-      smokeLine.textContent = `🚬 ${data.smoke}本`;
+      smokeLine.textContent = data.brand
+          ? `🚬 ${data.smoke}本（${data.brand}）`
+          : `🚬 ${data.smoke}本`;
       record.appendChild(smokeLine);
 
       const alcoholLine = document.createElement("div");
-      alcoholLine.textContent = `🍺 ${data.alcohol}ml`;
+      alcoholLine.textContent = data.degree
+          ? `🍺 ${data.alcohol}ml（${data.degree}%）`
+          : `🍺 ${data.alcohol}ml`;
       record.appendChild(alcoholLine);
     }
 
@@ -157,10 +163,16 @@ function renderCalendar() {
       const saved = calendarData[dateKey];
 
       smokeInput.value =
-        saved ? saved.smoke : "";
+          saved ? saved.smoke : "";
 
       alcoholInput.value =
-        saved ? saved.alcohol : "";
+          saved ? saved.alcohol : "";
+
+      brandInput.value =
+          saved ? (saved.brand ?? "") : "";
+
+      degreeInput.value =
+          saved ? (saved.degree ?? "") : "";
 
       modal.classList.remove("hidden");
     });
@@ -172,14 +184,18 @@ function renderCalendar() {
 /* ===== 保存 ===== */
 saveBtn.addEventListener("click", async () => {
 
-  const smoke   = parseInt(smokeInput.value) || 0;
+  const smoke   = parseInt(smokeInput.value)   || 0;
   const alcohol = parseInt(alcoholInput.value) || 0;
+  const brand   = brandInput.value;
+  const degree  = degreeInput.value;
 
   const formData = new FormData();
 
-  formData.append("date", selectedDate);
-  formData.append("smoke", smoke);
+  formData.append("date",    selectedDate);
+  formData.append("smoke",   smoke);
   formData.append("alcohol", alcohol);
+  formData.append("brand",   brand);
+  formData.append("degree",  degree);
 
   await fetch("../backend/save_carender.php", {
     method: "POST",

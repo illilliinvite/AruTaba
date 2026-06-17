@@ -14,31 +14,19 @@ try {
         "root",
         "arutaba"
     );
-
-    echo "DB接続OK\n";
-
 } catch (Exception $e) {
-
     die("DB接続失敗\n");
 }
-
-echo "SESSION確認\n";
-
-var_dump($_SESSION);
-
-echo "\nPOST確認\n";
-
-var_dump($_POST);
 
 $user_id = $_SESSION["user_id"];
 
 $date    = $_POST["date"];
 $smoke   = $_POST["smoke"];
 $alcohol = $_POST["alcohol"];
+$brand   = $_POST["brand"]  ?? null;
+$degree  = $_POST["degree"] ?? null;
 
 $score = ($alcohol * 1) + ($smoke * 400);
-
-echo "\nSQL実行前\n";
 
 $stmt = $pdo->prepare("
     INSERT INTO calender (
@@ -47,7 +35,9 @@ $stmt = $pdo->prepare("
         smoke_day,
         alcohol_consumption,
         ciggarette_consumption,
-        score
+        score,
+        brand,
+        alcohol_degree
     )
     VALUES (
         :user_id,
@@ -55,29 +45,34 @@ $stmt = $pdo->prepare("
         :date,
         :alcohol,
         :smoke,
-        :score
+        :score,
+        :brand,
+        :alcohol_degree
     )
-
     ON DUPLICATE KEY UPDATE
-        alcohol_consumption = :alcohol_update,
+        alcohol_consumption    = :alcohol_update,
         ciggarette_consumption = :smoke_update,
-        score = :score_update
+        score                  = :score_update,
+        brand                  = :brand_update,
+        alcohol_degree         = :alcohol_degree_update
 ");
 
 try {
 
-    $result = $stmt->execute([
-        ':user_id'        => $user_id,
-        ':date'           => $date,
-        ':alcohol'        => $alcohol,
-        ':smoke'          => $smoke,
-        ':score'          => $score,
-        ':alcohol_update' => $alcohol,
-        ':smoke_update'   => $smoke,
-        ':score_update'   => $score
+    $stmt->execute([
+        ':user_id'               => $user_id,
+        ':date'                  => $date,
+        ':alcohol'               => $alcohol,
+        ':smoke'                 => $smoke,
+        ':score'                 => $score,
+        ':brand'                 => $brand  ?: null,
+        ':alcohol_degree'        => $degree ?: null,
+        ':alcohol_update'        => $alcohol,
+        ':smoke_update'          => $smoke,
+        ':score_update'          => $score,
+        ':brand_update'          => $brand  ?: null,
+        ':alcohol_degree_update' => $degree ?: null,
     ]);
-
-    echo "SQL成功";
 
 } catch (PDOException $e) {
 
