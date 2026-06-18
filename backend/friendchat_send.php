@@ -62,6 +62,16 @@ try {
     }
 
 
+<<<<<<< HEAD
+    $stmt = $pdo->prepare("
+    INSERT INTO friend_chat (user_id, receiver_id, chat_history)
+    VALUES (:user_id, :receiver_id, :chat_history)
+    ");
+    $stmt->bindValue(':user_id', $my_user_id, PDO::PARAM_STR);
+    $stmt->bindValue(':receiver_id', $friend_user_id, PDO::PARAM_STR);
+    $stmt->bindValue(':chat_history', $message, PDO::PARAM_STR);
+    $stmt->execute();
+=======
 $message_id = uniqid('msg_', true); // ← これを追加
 
 $stmt = $pdo->prepare("
@@ -73,6 +83,7 @@ $stmt->bindValue(':message_id', $message_id, PDO::PARAM_STR);
 $stmt->bindValue(':chat_history', $message, PDO::PARAM_STR);
 $stmt->execute();
 
+>>>>>>> da5f1b22fc7044d6a23ef54444085b09c4523381
 
     echo json_encode([
         'success' => true,
@@ -81,5 +92,5 @@ $stmt->execute();
 
 } catch (PDOException $e) {
     error_log('friendchat_send.php error: ' . $e->getMessage());
-    echo $e;
+    echo json_encode(['success' => false, 'error' => '送信に失敗しました']);
 }

@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <span class="friend-arrow">›</span>
                     `;
                     li.addEventListener("click", () => {
-                        window.location.href = `/friendchat.html?mail=${encodeURIComponent(mail)}`;
+                        window.location.href = `friendchat.php?mail=${encodeURIComponent(mail)}`;
                     });
                     ul.appendChild(li);
                 });

@@ -9,6 +9,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const message = document.getElementById("message");
   const profileForm = document.getElementById("profileForm");
 
+  // 削除関連の要素
+  const openDeleteModalBtn = document.getElementById("openDeleteModalBtn");
+  const deleteModalOverlay = document.getElementById("deleteModalOverlay");
+  const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+  const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+  const deleteConfirmPassword = document.getElementById("deleteConfirmPassword");
+
   // メッセージ表示の共通処理
   function showMessage(text, isSuccess) {
     message.textContent = text;
@@ -126,6 +133,83 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       showMessage("更新失敗", false);
       console.error(error);
+    }
+  });
+
+
+  // ==========================================
+  // アカウント削除処理
+  // ==========================================
+
+  function openDeleteModal() {
+    deleteConfirmPassword.value = "";
+    deleteModalOverlay.classList.add("show");
+  }
+
+  function closeDeleteModal() {
+    deleteModalOverlay.classList.remove("show");
+    deleteConfirmPassword.value = "";
+  }
+
+  openDeleteModalBtn.addEventListener("click", () => {
+    openDeleteModal();
+  });
+
+  cancelDeleteBtn.addEventListener("click", () => {
+    closeDeleteModal();
+  });
+
+  // モーダルの外側をクリックしたら閉じる
+  deleteModalOverlay.addEventListener("click", (e) => {
+    if (e.target === deleteModalOverlay) {
+      closeDeleteModal();
+    }
+  });
+
+  confirmDeleteBtn.addEventListener("click", async () => {
+
+    const password = deleteConfirmPassword.value;
+
+    if (!password) {
+      showMessage("パスワードを入力してください", false);
+      return;
+    }
+
+    // 二重送信防止
+    confirmDeleteBtn.disabled = true;
+
+    const formData = new FormData();
+    formData.append("action", "delete_account");
+    formData.append("password", password);
+
+    try {
+      const response = await fetch("../backend/profile_setting.php", {
+        method: "POST",
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error("通信失敗");
+      }
+
+      const result = await response.json();
+
+      if (result.status === "success") {
+        closeDeleteModal();
+        showMessage("アカウントを削除しました", true);
+        // セッションが破棄されているのでログイン画面等へ遷移
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 1500);
+      } else {
+        showMessage(result.message || "削除に失敗しました", false);
+      }
+
+    } catch (error) {
+      showMessage("削除に失敗しました", false);
+      console.error(error);
+    } finally {
+      confirmDeleteBtn.disabled = false;
     }
   });
 
