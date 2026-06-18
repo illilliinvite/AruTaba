@@ -52,6 +52,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     try {
 
+        // 前のユーザーネーム取得
+        $sql = "select user_name from profile where user_id = :user_id";
+
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->bindParam(":user_id", $_SESSION["user_id"], PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $user_name_before = $result["user_name"];
+
+
+        //フレンド一覧名前変更sql
+        $sql = "update friend set user_name = :user_name where user_name = :user_name_before";
+
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->bindParam(":user_name", $user_name, PDO::PARAM_STR);
+        $stmt->bindParam(":user_name_before", $user_name_before, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+
+
+
+        //掲示板名前変更sql
+        $sql = "update forum set user_name = :user_name where user_name = :user_name_before";
+
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->bindParam(":user_name", $user_name, PDO::PARAM_STR);
+        $stmt->bindParam(":user_name_before", $user_name_before, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+
+
+
+
         // profileテーブル更新
         $sql = "UPDATE profile
                 SET
@@ -143,6 +184,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         echo "更新成功";
+
+
 
     } catch(PDOException $e) {
 
