@@ -2,40 +2,37 @@ console.log("friend.js 読み込まれた");
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    const searchBtn = document.getElementById("search-btn");
 
-        const searchBtn = document.getElementById("search-btn");
+    searchBtn.addEventListener("click", () => {
+        const friendId = document.getElementById("friend-search").value;
 
-        searchBtn.addEventListener("click", () => {
-            const friendId = document.getElementById("friend-search").value;
-
-            
-
-            // PHP に friend_id を送信
-            fetch("../backend/friend_kensaku.php", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: new URLSearchParams({
-                    friend_id: friendId
-                })
+        fetch("../backend/friend_kensaku.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({
+                friend_id: friendId
             })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
 
-                if (data.status === "ok") {
-                    alert("フレンド申請を送りました！");
-                } else {
-                    alert("エラー：" + data.message);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert("通信エラー");
-            });
+            if (data.status === "ok") {
+                alert("フレンド申請を送りました！");
+            } else {
+                alert("エラー：" + data.message);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("通信エラー");
         });
-        // ============================
+    });
+
+    // ============================
     // タブ切り替え
     // ============================
     const tabFriend = document.getElementById("tab-friend");
@@ -60,11 +57,29 @@ document.addEventListener("DOMContentLoaded", () => {
         friendList.classList.remove("active");
     });
 
-
-    // ============================
-    // フレンド検索 → PHP へ送信
-    // ============================
-
-
 });
 
+/* ============================
+   フレンド削除処理
+============================ */
+document.addEventListener("click", function(e) {
+
+    if (e.target.classList.contains("delete-friend")) {
+        const mail = e.target.dataset.mail;
+
+        if (!confirm(`${mail} をフレンドから削除しますか？`)) return;
+
+        fetch(`../backend/friend_delete.php?mail=${encodeURIComponent(mail)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "ok") {
+                    alert("削除しました");
+                    location.reload();
+                } else {
+                    alert("エラー：" + data.message);
+                }
+            })
+            .catch(() => alert("通信エラー"));
+    }
+
+});

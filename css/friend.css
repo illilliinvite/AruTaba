@@ -151,14 +151,6 @@
     gap: 6px;
 }
 
-/* ===== セクションラベル ===== */
-.list-section-label {
-    font-size: 11px;
-    color: #999;
-    letter-spacing: 0.05em;
-    padding: 4px 2px 0;
-}
-
 /* ===== リストカード ===== */
 .friend-list-card {
     list-style: none;
@@ -178,9 +170,8 @@
     font-size: 14px;
     color: #222;
     border-bottom: 1px solid #f0eeeb;
-    cursor: pointer;
-    transition: background 0.15s;
     gap: 10px;
+    transition: background 0.15s;
 }
 
 .friend-list-card li:last-child {
@@ -205,7 +196,7 @@
     letter-spacing: 0.02em;
 }
 
-/* アバターカラー（名前の頭文字に応じてJSで付与） */
+/* アバターカラー */
 .avatar-blue   { background: #cce4f5; color: #2a6a9a; }
 .avatar-green  { background: #cde8cd; color: #2a7040; }
 .avatar-amber  { background: #f5e6cc; color: #8a6020; }
@@ -238,10 +229,20 @@
     text-overflow: ellipsis;
 }
 
-.friend-arrow {
-    font-size: 16px;
-    color: #ccc;
+/* 削除ボタン */
+.delete-friend {
+    padding: 5px 10px;
+    font-size: 12px;
+    background: #fff;
+    border: 1px solid #d88;
+    color: #c33;
+    border-radius: 6px;
+    cursor: pointer;
     flex-shrink: 0;
+}
+
+.delete-friend:hover {
+    background: #f8e5e5;
 }
 
 /* 空メッセージ */
@@ -250,11 +251,6 @@
     color: #aaa;
     font-size: 13px;
     padding: 20px;
-    cursor: default !important;
-}
-
-.empty-message:hover {
-    background: transparent !important;
 }
 
 /* ===== 承認待ちリスト ===== */
@@ -287,15 +283,11 @@
 .approve {
     padding: 5px 14px;
     font-size: 12px;
-    font-family: inherit;
     background: #ffffff;
     color: #333;
     border: 1px solid #ccc;
     border-radius: 6px;
     cursor: pointer;
-    transition: background 0.15s;
-    flex-shrink: 0;
-    white-space: nowrap;
 }
 
 .approve:hover {
