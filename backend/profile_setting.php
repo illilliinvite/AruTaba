@@ -25,8 +25,165 @@ try {
 }
 
 
-// POST確認
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+// action振り分け（未指定の場合は従来通りプロフィール更新として扱う）
+$action = $_POST["action"] ?? "update_profile";
+
+
+// ==========================================
+// アイコン画像アップロード処理
+// ==========================================
+if ($action === "upload_icon") {
+
+    header("Content-Type: application/json; charset=utf-8");
+
+    if (!isset($_SESSION["user_id"])) {
+        echo json_encode(["status" => "error", "message" => "未ログイン"]);
+        exit;
+    }
+
+    $user_id = $_SESSION["user_id"];
+
+    if (!isset($_FILES["icon_image"]) || $_FILES["icon_image"]["error"] !== UPLOAD_ERR_OK) {
+        echo json_encode(["status" => "error", "message" => "ファイルが選択されていません"]);
+        exit;
+    }
+
+    $file = $_FILES["icon_image"];
+
+    // 許可する画像形式
+    $allowed_types = [
+        "image/jpeg" => "jpg",
+        "image/png"  => "png",
+        "image/gif"  => "gif",
+        "image/webp" => "webp",
+    ];
+
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mime_type = finfo_file($finfo, $file["tmp_name"]);
+    finfo_close($finfo);
+
+    if (!isset($allowed_types[$mime_type])) {
+        echo json_encode(["status" => "error", "message" => "対応していない画像形式です"]);
+        exit;
+    }
+
+    // ファイルサイズ上限（5MB）
+    $max_size = 5 * 1024 * 1024;
+
+    if ($file["size"] > $max_size) {
+        echo json_encode(["status" => "error", "message" => "ファイルサイズが大きすぎます（5MBまで）"]);
+        exit;
+    }
+
+    // 保存先ディレクトリ（backendの一つ上の階層にuploads/iconsを作成）
+    $upload_dir = __DIR__ . "/../uploads/icons/";
+
+    if (!is_dir($upload_dir)) {
+        mkdir($upload_dir, 0755, true);
+    }
+
+    $extension = $allowed_types[$mime_type];
+    $filename = "user_" . $user_id . "_" . time() . "." . $extension;
+    $destination = $upload_dir . $filename;
+
+    if (!move_uploaded_file($file["tmp_name"], $destination)) {
+        echo json_encode(["status" => "error", "message" => "ファイル保存に失敗しました"]);
+        exit;
+    }
+
+    // クライアントから見えるパス（profile_setting.htmlは /html/ 配下にある想定）
+    $icon_path_for_client = "../uploads/icons/" . $filename;
+    // DBに保存するパス（プロジェクトルートからの相対パス）
+    $icon_path_for_db = "uploads/icons/" . $filename;
+
+    try {
+
+        // 古いアイコンファイルを取得（容量節約のため後で削除）
+        $sql = "SELECT icon_path FROM profile WHERE user_id = :user_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+        $stmt->execute();
+        $old = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $sql = "UPDATE profile
+                SET icon_path = :icon_path
+                WHERE user_id = :user_id";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":icon_path", $icon_path_for_db, PDO::PARAM_STR);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+        $stmt->execute();
+
+        if ($old && !empty($old["icon_path"])) {
+            $old_file = __DIR__ . "/../" . $old["icon_path"];
+            if (is_file($old_file)) {
+                unlink($old_file);
+            }
+        }
+
+        echo json_encode([
+            "status" => "success",
+            "icon_path" => $icon_path_for_client
+        ]);
+
+    } catch (PDOException $e) {
+
+        echo json_encode(["status" => "error", "message" => "DB更新失敗"]);
+    }
+
+    exit;
+}
+
+
+// ==========================================
+// プロフィール取得処理（アイコン表示用）
+// ==========================================
+if ($action === "get_profile") {
+
+    header("Content-Type: application/json; charset=utf-8");
+
+    if (!isset($_SESSION["user_id"])) {
+        echo json_encode(["status" => "error", "message" => "未ログイン"]);
+        exit;
+    }
+
+    $user_id = $_SESSION["user_id"];
+
+    try {
+
+        $sql = "SELECT icon_path FROM profile WHERE user_id = :user_id";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $icon_path = null;
+
+        if ($result && !empty($result["icon_path"])) {
+            // HTMLは /html/ 配下にある想定なので、相対パスを ../ に変換
+            $icon_path = "../" . $result["icon_path"];
+        }
+
+        echo json_encode([
+            "status" => "success",
+            "icon_path" => $icon_path
+        ]);
+
+    } catch (PDOException $e) {
+
+        echo json_encode(["status" => "error", "message" => "取得失敗"]);
+    }
+
+    exit;
+}
+
+
+// ==========================================
+// プロフィール更新処理（既存処理）
+// ==========================================
+if ($action === "update_profile" && $_SERVER["REQUEST_METHOD"] == "POST") {
 
     // フォーム取得
     $user_name = $_POST["user_name"];
