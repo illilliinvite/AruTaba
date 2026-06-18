@@ -7,14 +7,16 @@ body{
 /* ===== ヘッダー ===== */
 .header{
     height:70px;
-    background:#d8e8ee;
-    border-bottom:1px solid #999;
+    background:#4f7285;
+     color:white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* 下方向にうっすらと優しい影を落とす */
 
     display:flex;
     justify-content:center;
     align-items:center;
 
     position:relative;
+    z-index: 101; /* サイドバー（z-index:100）より少し上に重ねる */
 }
 
 /* タイトル */
@@ -23,9 +25,7 @@ body{
     font-family:"Times New Roman", serif;
     font-style:italic;
 
-    border:1px solid #aaa;
     padding:0 25px;
-    background:#edf5f8;
 }
 
 .logo a{
@@ -46,7 +46,7 @@ body{
     display:block;
     height:3px;
     margin:6px 0;
-    background:black;
+    background:#ffffff;
 }
 
 /* ===== 右上ボタン ===== */
@@ -74,55 +74,98 @@ body{
 }
 
 /* ===== サイドバー ===== */
-.sidebar{
-    position:fixed;
-    top:70px;
-    left:-220px;
+.sidebar {
+    position: fixed;
+    top: 70px;
+    left: -220px;
 
-    width:220px;
-    height:calc(100vh - 70px);
+    width: 220px;
+    height: calc(100vh - 70px);
 
-    background:#f4f4f4;
-    border-right:1px solid #999;
+    background: #eef7f9; 
+    /* ★強い線を消し、うっすらとした右側の影（シャドウ）で立体感を出す */
+    border-right: none;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
 
-    transition:0.3s;
+    transition: 0.3s ease;
 
     z-index: 100;
     
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 /* 開いた状態 */
-.sidebar.active{
-    left:0;
+.sidebar.active {
+    left: 0;
 }
 
 /* メニュー */
-.sidebar ul{
-    list-style:none;
-    padding:0;
-    margin:0;
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
-.sidebar li{
-    padding:18px;
-    border-bottom:1px solid #ccc;
-    cursor:pointer;
-    background:white;
+/* サイドバー */
+.sidebar li {
+    display: flex;
+    align-items: center;
+    padding: 18px 24px;
+    font-weight: 500;
 }
 
-.sidebar li:hover{
-    background:#e8e8e8;
+/* アイコン単体の設定*/
+.sidebar li i {
+    width: 24px;
+    margin-right: 12px;
+    font-size: 18px;
+    
+    color: #5c7882; 
 }
 
-/* ログアウト */
-.logout{
-    background:red;
-    color:white;
-    border:none;
-    padding:15px;
-    font-size:16px;
-    cursor:pointer;
+/* ホバー時（マウスを乗せたとき） */
+.sidebar li:hover {
+    background: rgba(0, 0, 0, 0.05); /* ほんのり暗くするだけ */
+}
+/* 強制変更 */
+#sidebar ul a:link, 
+#sidebar ul a:visited{
+    color: #333 !important;
+    text-decoration: none !important; 
+}
+
+/* ===== ログアウト ===== */
+.logout,
+.logout:visited {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #ff3b30; 
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    
+    margin: 15px 15px 20px 15px;
+    border-radius: 8px;
+    transition: background 0.2s;
+
+        color: #ffffff !important;
+    text-decoration: none !important;
+}
+
+.logout a,
+.logout a:visited{
+    color: #ffffff !important;
+    text-decoration: none !important;
+}
+
+.logout:hover {
+    background: #e02e24; 
+    color: #ffffff !important;
 }
