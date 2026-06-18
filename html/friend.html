@@ -19,9 +19,8 @@
         <span></span>
         <span></span>
     </div>
-    <!-- タイトル -->
     <div class="logo">
-      <a href="home.html">AruTaba</a>
+        <a href="home.html">AruTaba</a>
     </div>
 </header>
 
@@ -42,19 +41,16 @@
 <!-- メインコンテンツ -->
 <main class="friend-container">
 
-    <!-- ヘッダー行 -->
     <div class="friend-header-row">
         <span class="page-title">フレンド</span>
         <span class="friend-count-badge" id="friend-count-badge">0人</span>
     </div>
 
-    <!-- 検索欄 -->
     <div class="search-box">
         <input type="text" id="friend-search" placeholder="メールアドレスでフレンド申請">
         <button id="search-btn">送る</button>
     </div>
 
-    <!-- タブ切り替えボタン -->
     <div class="friend-tabs">
         <button id="tab-friend" class="active">
             フレンド一覧
@@ -66,223 +62,20 @@
         </button>
     </div>
 
-    <!-- フレンド一覧 -->
     <div id="friend-list" class="tab-content active">
         <ul class="friend-list-card" id="friend-list-ul"></ul>
     </div>
 
-    <!-- 承認待ち -->
     <div id="request-list" class="tab-content">
         <ul></ul>
     </div>
 
 </main>
 
-<!-- フッター -->
 <footer class="footer"></footer>
 
 <script src="../javascript/main.js"></script>
-
-<script>
-// アバターカラーを名前から決定
-const AVATAR_COLORS = ['blue','green','amber','pink','teal','purple'];
-function getAvatarColor(name) {
-    let code = 0;
-    for (let i = 0; i < name.length; i++) code += name.charCodeAt(i);
-    return AVATAR_COLORS[code % AVATAR_COLORS.length];
-}
-
-// イニシャル取得（最大2文字）
-function getInitials(name) {
-    if (!name) return '?';
-    return name.slice(0, 2).toUpperCase();
-}
-
-// ============================
-// ページ読み込み時
-// ============================
-document.addEventListener("DOMContentLoaded", () => {
-
-    // ============================
-    // フレンド検索・申請
-    // ============================
-    document.getElementById("search-btn").addEventListener("click", () => {
-        const friendId = document.getElementById("friend-search").value.trim();
-        if (friendId === "") { alert("検索ワードを入力してください"); return; }
-
-        fetch("../backend/friend.send.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({ friend_id: friendId })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === "ok") {
-                alert("フレンド申請を送信しました");
-                document.getElementById("friend-search").value = "";
-            } else {
-                alert("エラー：" + data.message);
-            }
-        })
-        .catch(() => alert("通信エラー"));
-    });
-
-    // ============================
-    // フレンド一覧の取得
-    // ============================
-    function loadFriends() {
-        fetch("../backend/friend_llist.php")
-            .then(res => res.json())
-            .then(data => {
-                const ul = document.getElementById("friend-list-ul");
-                const badge = document.getElementById("badge-friend");
-                const countBadge = document.getElementById("friend-count-badge");
-                ul.innerHTML = "";
-
-                if (data.status !== "ok" || data.friends.length === 0) {
-                    const li = document.createElement("li");
-                    li.className = "empty-message";
-                    li.textContent = "フレンドはいません";
-                    ul.appendChild(li);
-                    badge.textContent = "0";
-                    countBadge.textContent = "0人";
-                    return;
-                }
-
-                const count = data.friends.length;
-                badge.textContent = count;
-                countBadge.textContent = count + "人";
-
-                data.friends.forEach(item => {
-                    const name = item.user_name ?? "(名前なし)";
-                    const mail = item.mail_address ?? "";
-                    const color = getAvatarColor(name);
-
-                    const li = document.createElement("li");
-                    li.innerHTML = `
-                        <div class="friend-avatar avatar-${color}">${getInitials(name)}</div>
-                        <div class="friend-name-block">
-                            <span class="friend-name">${name}</span>
-                            ${mail ? `<span class="friend-mail">${mail}</span>` : ""}
-                        </div>
-                        <button class="delete-friend" data-mail="${mail}">削除</button>
-                    `;
-
-                    li.addEventListener("click", () => {
-                        window.location.href = `friendchat.php?mail=${encodeURIComponent(mail)}`;
-                    });
-                    ul.appendChild(li);
-                });
-            })
-            .catch(() => alert("フレンド一覧の取得に失敗しました"));
-    }
-
-    // ============================
-    // タブ切り替え
-    // ============================
-    const tabFriend  = document.getElementById("tab-friend");
-    const tabRequest = document.getElementById("tab-request");
-    const friendList  = document.getElementById("friend-list");
-    const requestList = document.getElementById("request-list");
-
-    tabFriend.addEventListener("click", () => {
-        tabFriend.classList.add("active");
-        tabRequest.classList.remove("active");
-        friendList.classList.add("active");
-        requestList.classList.remove("active");
-    });
-
-    tabRequest.addEventListener("click", () => {
-        tabRequest.classList.add("active");
-        tabFriend.classList.remove("active");
-        requestList.classList.add("active");
-        friendList.classList.remove("active");
-    });
-
-    // 初回ロード
-    loadRequests();
-    loadFriends();
-});
-
-// ============================
-// 承認待ち一覧の取得
-// ============================
-function loadRequests() {
-    fetch("../backend/friend_recive.php")
-        .then(res => res.json())
-        .then(data => {
-            const ul = document.querySelector("#request-list ul");
-            const badge = document.getElementById("badge-request");
-            ul.innerHTML = "";
-
-            if (data.status !== "ok" || data.requests.length === 0) {
-                ul.innerHTML = '<li style="text-align:center;color:#aaa;font-size:13px;padding:20px;cursor:default;">承認待ちはありません</li>';
-                badge.style.display = "none";
-                return;
-            }
-
-            const count = data.requests.length;
-            badge.textContent = count;
-            badge.style.display = "inline-flex";
-
-            data.requests.forEach(item => {
-                const name = item.user_name ?? "(名前なし)";
-                const color = getAvatarColor(name);
-                const li = document.createElement("li");
-                li.innerHTML = `
-                    <div class="friend-avatar avatar-${color}">${getInitials(name)}</div>
-                    <div class="friend-name-block">
-                        <span class="friend-name">${name}</span>
-                    </div>
-                    <button class="approve" data-user-id="${item.user_id}">承認</button>
-                `;
-                ul.appendChild(li);
-            });
-        })
-        .catch(() => alert("承認待ちの取得に失敗しました"));
-}
-
-// ============================
-// 承認ボタン & 削除ボタン
-// ============================
-document.addEventListener("click", function(e) {
-
-    // 承認
-    if (e.target.classList.contains("approve")) {
-        const userId = e.target.dataset.userId;
-        fetch(`../backend/firend_syounin.php?user_id=${encodeURIComponent(userId)}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === "ok") {
-                    alert("承認しました");
-                    loadRequests();
-                } else {
-                    alert("エラー：" + data.message);
-                }
-            })
-            .catch(() => alert("通信エラー"));
-    }
-
-    // 削除
-    if (e.target.classList.contains("delete-friend")) {
-        const mail = e.target.dataset.mail;
-
-        if (!confirm(`${mail} をフレンドから削除しますか？`)) return;
-
-        fetch(`../backend/friend_delete.php?mail=${encodeURIComponent(mail)}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === "ok") {
-                    alert("削除しました");
-                    location.reload();
-                } else {
-                    alert("エラー：" + data.message);
-                }
-            })
-            .catch(() => alert("通信エラー"));
-    }
-});
-</script>
+<script src="../javascript/friend.js"></script>
 
 </body>
 </html>
