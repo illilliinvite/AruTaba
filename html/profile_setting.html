@@ -117,7 +117,107 @@
   z-index: 2000;
 }
 
-    
+    /* アカウント削除セクション */
+    .danger-zone {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(0, 0, 0, 0.15);
+    }
+
+    .danger-zone .delete-account-btn {
+      padding: 8px 20px;
+      background: #fff;
+      border: 0.5px solid #c0392b;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #c0392b;
+      cursor: pointer;
+    }
+
+    .danger-zone .delete-account-btn:hover {
+      background: #fdecea;
+    }
+
+    /* 削除確認モーダル */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 3000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #fff;
+      border-radius: 10px;
+      padding: 24px;
+      width: 280px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .modal-box h3 {
+      margin: 0;
+      font-size: 16px;
+      color: #222;
+    }
+
+    .modal-box p {
+      margin: 0;
+      font-size: 13px;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .modal-box input {
+      padding: 8px 10px;
+      border: 0.5px solid rgba(0, 0, 0, 0.25);
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .modal-actions button {
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .modal-cancel-btn {
+      background: #fff;
+      border: 0.5px solid rgba(0, 0, 0, 0.2);
+      color: #222;
+    }
+
+    .modal-cancel-btn:hover {
+      background: #f0f0f0;
+    }
+
+    .modal-confirm-btn {
+      background: #c0392b;
+      border: none;
+      color: #fff;
+    }
+
+    .modal-confirm-btn:hover {
+      background: #a93226;
+    }
+
   </style>
 </head>
 
@@ -199,12 +299,29 @@
 
             <button type="submit">登録</button>
 
+            <div class="danger-zone">
+              <button type="button" class="delete-account-btn" id="openDeleteModalBtn">アカウントを削除</button>
+            </div>
+
 
       </form>
 
     </div>
   </div>
   <div id="message"></div>
+
+  <!-- 削除確認モーダル -->
+  <div class="modal-overlay" id="deleteModalOverlay">
+    <div class="modal-box">
+      <h3>本当にアカウントを削除しますか？</h3>
+      <p>この操作は取り消せません。プロフィール・カレンダー記録・フレンド・掲示板の投稿などすべてのデータが削除されます。続けるにはパスワードを入力してください。</p>
+      <input type="password" id="deleteConfirmPassword" placeholder="パスワード">
+      <div class="modal-actions">
+        <button type="button" class="modal-cancel-btn" id="cancelDeleteBtn">キャンセル</button>
+        <button type="button" class="modal-confirm-btn" id="confirmDeleteBtn">削除する</button>
+      </div>
+    </div>
+  </div>
 
   <!-- フッター -->
   <footer class="footer"></footer>

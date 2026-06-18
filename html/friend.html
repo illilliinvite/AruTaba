@@ -167,6 +167,10 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
                         <button class="delete-friend" data-mail="${mail}">削除</button>
                     `;
+
+                    li.addEventListener("click", () => {
+                        window.location.href = `friendchat.php?mail=${encodeURIComponent(mail)}`;
+                    });
                     ul.appendChild(li);
                 });
             })
