@@ -181,6 +181,140 @@ if ($action === "get_profile") {
 
 
 // ==========================================
+// アカウント削除処理
+// ==========================================
+if ($action === "delete_account") {
+
+    header("Content-Type: application/json; charset=utf-8");
+
+    if (!isset($_SESSION["user_id"])) {
+        echo json_encode(["status" => "error", "message" => "未ログイン"]);
+        exit;
+    }
+
+    $user_id = $_SESSION["user_id"];
+
+    // パスワード確認（本人確認のため再入力必須）
+    $password = $_POST["password"] ?? "";
+
+    if ($password === "") {
+        echo json_encode(["status" => "error", "message" => "パスワードを入力してください"]);
+        exit;
+    }
+
+    try {
+
+        // パスワード一致確認
+        $sql = "SELECT password FROM login WHERE user_id = :user_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+        $stmt->execute();
+        $login_row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$login_row || $login_row["password"] !== $password) {
+            echo json_encode(["status" => "error", "message" => "パスワードが正しくありません"]);
+            exit;
+        }
+
+        // friend / forum は user_name で紐づいているため、先に user_name を取得
+        $sql = "SELECT user_name FROM profile WHERE user_id = :user_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+        $stmt->execute();
+        $profile_row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $user_name = $profile_row["user_name"] ?? null;
+
+        // 削除前にアイコンファイルパスを取得（DB削除後にファイル削除するため）
+        $sql = "SELECT icon_path FROM profile WHERE user_id = :user_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+        $stmt->execute();
+        $icon_row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $icon_path = $icon_row["icon_path"] ?? null;
+
+        // ここからトランザクション開始（途中で失敗したら全部ロールバック）
+        $pdo->beginTransaction();
+
+        // calender テーブル（user_id）
+        $sql = "DELETE FROM calender WHERE user_id = :user_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+        $stmt->execute();
+
+        // friend_chat テーブル（user_id・receiver_idの両方に存在しうるため両方条件で削除）
+        $sql = "DELETE FROM friend_chat WHERE user_id = :user_id OR receiver_id = :receiver_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+        $stmt->bindParam(":receiver_id", $user_id, PDO::PARAM_STR);
+        $stmt->execute();
+
+        // goal_value テーブル（user_id）
+        $sql = "DELETE FROM goal_value WHERE user_id = :user_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+        $stmt->execute();
+
+        // friend テーブル（user_name）
+        if ($user_name !== null) {
+            $sql = "DELETE FROM friend WHERE user_name = :user_name";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(":user_name", $user_name, PDO::PARAM_STR);
+            $stmt->execute();
+        }
+
+        // forum テーブル（user_name）
+        if ($user_name !== null) {
+            $sql = "DELETE FROM forum WHERE user_name = :user_name";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(":user_name", $user_name, PDO::PARAM_STR);
+            $stmt->execute();
+        }
+
+        // profile テーブル（user_id）
+        $sql = "DELETE FROM profile WHERE user_id = :user_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+        $stmt->execute();
+
+        // login テーブル（user_id、主キー）最後に削除
+        $sql = "DELETE FROM login WHERE user_id = :user_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+        $stmt->execute();
+
+        // すべて成功したらコミット
+        $pdo->commit();
+
+        // DB削除が成功した後にアイコンファイルを削除（DB削除より後に行うことで、
+        // ファイル削除が先に成功してDB側が失敗する事態を避ける）
+        if (!empty($icon_path)) {
+            $icon_file = __DIR__ . "/../" . $icon_path;
+            if (is_file($icon_file)) {
+                unlink($icon_file);
+            }
+        }
+
+        // セッション破棄
+        $_SESSION = [];
+        session_destroy();
+
+        echo json_encode(["status" => "success", "message" => "アカウントを削除しました"]);
+
+    } catch (PDOException $e) {
+
+        // トランザクション中であればロールバック
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+
+        echo json_encode(["status" => "error", "message" => "削除失敗: " . $e->getMessage()]);
+    }
+
+    exit;
+}
+
+
+// ==========================================
 // プロフィール更新処理（既存処理）
 // ==========================================
 if ($action === "update_profile" && $_SERVER["REQUEST_METHOD"] == "POST") {
