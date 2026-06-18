@@ -165,11 +165,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             <span class="friend-name">${name}</span>
                             ${mail ? `<span class="friend-mail">${mail}</span>` : ""}
                         </div>
-                        <span class="friend-arrow">›</span>
+                        <button class="delete-friend" data-mail="${mail}">削除</button>
                     `;
-                    li.addEventListener("click", () => {
-                        window.location.href = `/friendchat.php?mail=${encodeURIComponent(mail)}`;
-                    });
                     ul.appendChild(li);
                 });
             })
@@ -242,9 +239,11 @@ function loadRequests() {
 }
 
 // ============================
-// 承認ボタンの処理
+// 承認ボタン & 削除ボタン
 // ============================
 document.addEventListener("click", function(e) {
+
+    // 承認
     if (e.target.classList.contains("approve")) {
         const userId = e.target.dataset.userId;
         fetch(`../backend/firend_syounin.php?user_id=${encodeURIComponent(userId)}`)
@@ -253,6 +252,25 @@ document.addEventListener("click", function(e) {
                 if (data.status === "ok") {
                     alert("承認しました");
                     loadRequests();
+                } else {
+                    alert("エラー：" + data.message);
+                }
+            })
+            .catch(() => alert("通信エラー"));
+    }
+
+    // 削除
+    if (e.target.classList.contains("delete-friend")) {
+        const mail = e.target.dataset.mail;
+
+        if (!confirm(`${mail} をフレンドから削除しますか？`)) return;
+
+        fetch(`../backend/friend_delete.php?mail=${encodeURIComponent(mail)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "ok") {
+                    alert("削除しました");
+                    location.reload();
                 } else {
                     alert("エラー：" + data.message);
                 }
