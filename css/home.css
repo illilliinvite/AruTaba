@@ -5,6 +5,10 @@ main {
   padding: 24px;
 }
 
+h2 i{
+  color: #4f7285;
+}
+
 /* 共通カードデザイン */
 .card {
   background-color: #ffffff;
