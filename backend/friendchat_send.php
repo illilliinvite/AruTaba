@@ -64,11 +64,11 @@ try {
     $friend_user_id = (string)$friend['user_id'];
 
     $stmt = $pdo->prepare("
-        INSERT INTO friend_chat (user_id, message_id, chat_history)
-        VALUES (:user_id, :friend_user_id, :chat_history)
+    INSERT INTO friend_chat (user_id, receiver_id, chat_history)
+    VALUES (:user_id, :receiver_id, :chat_history)
     ");
     $stmt->bindValue(':user_id', $my_user_id, PDO::PARAM_STR);
-    $stmt->bindValue(':friend_user_id', $friend_user_id, PDO::PARAM_STR);
+    $stmt->bindValue(':receiver_id', $friend_user_id, PDO::PARAM_STR);
     $stmt->bindValue(':chat_history', $message, PDO::PARAM_STR);
     $stmt->execute();
 
@@ -79,5 +79,5 @@ try {
 
 } catch (PDOException $e) {
     error_log('friendchat_send.php error: ' . $e->getMessage());
-    echo $e;
+    echo json_encode(['success' => false, 'error' => '送信に失敗しました']);
 }
