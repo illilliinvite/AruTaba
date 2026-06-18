@@ -61,16 +61,18 @@ try {
         exit;
     }
 
-    $friend_user_id = (string)$friend['user_id'];
 
-    $stmt = $pdo->prepare("
-        INSERT INTO friend_chat (user_id, message_id, chat_history)
-        VALUES (:user_id, :friend_user_id, :chat_history)
-    ");
-    $stmt->bindValue(':user_id', $my_user_id, PDO::PARAM_STR);
-    $stmt->bindValue(':friend_user_id', $friend_user_id, PDO::PARAM_STR);
-    $stmt->bindValue(':chat_history', $message, PDO::PARAM_STR);
-    $stmt->execute();
+$message_id = uniqid('msg_', true); // ← これを追加
+
+$stmt = $pdo->prepare("
+    INSERT INTO friend_chat (user_id, message_id, chat_history)
+    VALUES (:user_id, :message_id, :chat_history)
+");
+$stmt->bindValue(':user_id', $my_user_id, PDO::PARAM_STR);
+$stmt->bindValue(':message_id', $message_id, PDO::PARAM_STR);
+$stmt->bindValue(':chat_history', $message, PDO::PARAM_STR);
+$stmt->execute();
+
 
     echo json_encode([
         'success' => true,
