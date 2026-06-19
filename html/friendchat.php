@@ -68,7 +68,7 @@ session_start();
                 placeholder="メッセージを入力"
                 autocomplete="off"
             >
-            <button class="send-btn" id="sendBtn" onclick="sendMessage()">送信</button>
+            <button class="send-btn" id="sendBtn">送信</button>
         </div>
     </main>
 
