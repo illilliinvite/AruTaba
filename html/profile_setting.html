@@ -4,221 +4,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <title>Chat UI</title>
 
   <link rel="stylesheet" href="../css/header.css">
   <link rel="stylesheet" href="../css/profile_setting.css" />
   <link rel="stylesheet" href="../css/footer.css">
-
-  <style>
-    /* 中央要素 */
-    .container {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 40px 20px;
-  padding-top: 80px; /* ← ヘッダーの高さ分だけ追加 */
-}
-
-    .card {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-start;
-      gap: 24px;
-    }
-
-    /* アイコン */
-    .icon {
-      width: 96px;
-      height: 96px;
-      border-radius: 50%;
-      border: 1.5px solid #222;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      color: #555;
-      flex-shrink: 0;
-      cursor: pointer;
-      overflow: hidden;
-      position: relative;
-      background: #fff;
-    }
-
-    .icon .icon-overlay {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.35);
-      color: #fff;
-      font-size: 12px;
-      opacity: 0;
-      transition: opacity 0.15s ease;
-    }
-
-    .icon:hover .icon-overlay {
-      opacity: 1;
-    }
-
-    /* フォーム */
-    .form {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .form input {
-      width: 180px;
-      padding: 8px 10px;
-      border: 0.5px solid rgba(0, 0, 0, 0.25);
-      border-radius: 8px;
-      background: #fff;
-      color: #222;
-      font-size: 14px;
-      outline: none;
-    }
-
-    .form input:focus {
-      border-color: rgba(0, 0, 0, 0.4);
-      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.06);
-    }
-
-    .form button[type="submit"] {
-      margin-top: 4px;
-      padding: 8px 20px;
-      background: #fff;
-      border: 0.5px solid rgba(0, 0, 0, 0.2);
-      border-radius: 8px;
-      font-size: 14px;
-      color: #222;
-      cursor: pointer;
-      align-self: flex-start;
-    }
-
-    .form button[type="submit"]:hover {
-      background: #f0f0f0;
-    }
-
-    #message {
-  display: none; /* 最初は非表示 */
-  position: fixed;
-  top: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 20px;
-  background: white;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: bold;
-  z-index: 2000;
-}
-
-    /* アカウント削除セクション */
-    .danger-zone {
-      margin-top: 24px;
-      padding-top: 16px;
-      border-top: 1px solid rgba(0, 0, 0, 0.15);
-    }
-
-    .danger-zone .delete-account-btn {
-      padding: 8px 20px;
-      background: #fff;
-      border: 0.5px solid #c0392b;
-      border-radius: 8px;
-      font-size: 14px;
-      color: #c0392b;
-      cursor: pointer;
-    }
-
-    .danger-zone .delete-account-btn:hover {
-      background: #fdecea;
-    }
-
-    /* 削除確認モーダル */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.4);
-      z-index: 3000;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal-overlay.show {
-      display: flex;
-    }
-
-    .modal-box {
-      background: #fff;
-      border-radius: 10px;
-      padding: 24px;
-      width: 280px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .modal-box h3 {
-      margin: 0;
-      font-size: 16px;
-      color: #222;
-    }
-
-    .modal-box p {
-      margin: 0;
-      font-size: 13px;
-      color: #555;
-      line-height: 1.5;
-    }
-
-    .modal-box input {
-      padding: 8px 10px;
-      border: 0.5px solid rgba(0, 0, 0, 0.25);
-      border-radius: 8px;
-      font-size: 14px;
-      outline: none;
-    }
-
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-      margin-top: 4px;
-    }
-
-    .modal-actions button {
-      padding: 6px 16px;
-      border-radius: 8px;
-      font-size: 13px;
-      cursor: pointer;
-    }
-
-    .modal-cancel-btn {
-      background: #fff;
-      border: 0.5px solid rgba(0, 0, 0, 0.2);
-      color: #222;
-    }
-
-    .modal-cancel-btn:hover {
-      background: #f0f0f0;
-    }
-
-    .modal-confirm-btn {
-      background: #c0392b;
-      border: none;
-      color: #fff;
-    }
-
-    .modal-confirm-btn:hover {
-      background: #a93226;
-    }
-
-  </style>
 </head>
 
 <body>
@@ -244,16 +36,32 @@
   <nav class="sidebar" id="sidebar">
 
     <ul>
-      <li>🏠 ホーム</li>
-      <li>👥 フレンド</li>
-      <li>📅 カレンダー</li>
-      <li>📋 掲示板</li>
-      <li>⌨ 数値入力</li>
-      <li>🔔 お知らせ</li>
-      <li>⚙ プロフィール設定</li>
-    </ul>
+        <a href="home.html">
+          <li><i class="fa-solid fa-house"></i> ホーム</li>
+        </a>  
+        <a href="friend.html">
+          <li><i class="fa-solid fa-users"></i> フレンド</li>
+        </a>
+        <a href="carender.html">  
+          <li><i class="fa-solid fa-calendar-days"></i> カレンダー</li>
+        </a>  
+        <a href="keiziban.html">
+          <li><i class="fa-solid fa-clipboard-list"></i> 掲示板</li>
+        </a>  
+        <a href="suuti.html">
+          <li><i class="fa-solid fa-keyboard"></i> 数値入力</li>
+        </a>  
+        <a href="notice.html">
+          <li><i class="fa-solid fa-bell"></i> お知らせ</li>
+        </a>  
+        <a href="profile_setting.html">
+          <li><i class="fa-solid fa-gear"></i> プロフィール設定</li>
+        </a>  
+      </ul>
 
-    <button class="logout">ログアウト</button>
+      <a href="login.html" class="logout">
+        <i class="fa-solid fa-right-from-bracket"></i> ログアウト
+      </a>
   </nav>
 
   <!-- 中央要素 -->
@@ -261,48 +69,86 @@
     <div class="card">
 
       <!-- アイコン（クリックで画像選択 → 選択時に即アップロード） -->
-      <div class="icon" id="iconWrapper">
-        <img id="iconImage" src="" alt="" style="display:none;">
-        <span id="iconPlaceholder">アイコン</span>
-        <div class="icon-overlay">変更</div>
-        <input type="file"
-               id="iconInput"
-               name="icon_image"
-               accept="image/png, image/jpeg, image/gif, image/webp"
-               style="display:none;">
+      <div class="icon-section">
+        <div class="icon" id="iconWrapper" tabindex="0" role="button" aria-label="プロフィール写真を変更">
+          <img id="iconImage" src="" alt="" style="display:none;">
+          <span id="iconPlaceholder"><i class="fa-solid fa-user"></i></span>
+          <div class="icon-overlay">
+            <i class="fa-solid fa-camera"></i>
+            <span>変更</span>
+          </div>
+          <input type="file"
+                 id="iconInput"
+                 name="icon_image"
+                 accept="image/png, image/jpeg, image/gif, image/webp"
+                 style="display:none;">
+        </div>
+        <p class="icon-hint">タップして写真を変更</p>
       </div>
 
+      <form class="form" id="profileForm" method="post" action="profile_setting.php">
 
-<form class="form" id="profileForm" method="post" action="profile_setting.php">
+        <div class="form-section">
+          <h2 class="section-title"><i class="fa-solid fa-user"></i> プロフィール</h2>
 
-            <input type="text"
-                  name="user_name"
-                  placeholder="名前">
-
-            <input type="email"
-                  name="mail_address"
-                  placeholder="メールアドレス">
-
-            <input type="password"
-                  name="password"
-                  placeholder="パスワード">
-
-            <input type="number"
-                  name="smoking_limit"
-                  placeholder="喫煙上限（本/日）"
-                  min="0">
-
-            <input type="number"
-                  name="drinking_limit"
-                  placeholder="飲酒上限（杯/日）"
-                  min="0">
-
-            <button type="submit">登録</button>
-
-            <div class="danger-zone">
-              <button type="button" class="delete-account-btn" id="openDeleteModalBtn">アカウントを削除</button>
+          <div class="field">
+            <span class="field-label">名前</span>
+            <div class="input-wrap">
+              <i class="fa-solid fa-user field-icon"></i>
+              <input type="text" name="user_name" placeholder="山田 太郎">
             </div>
+          </div>
 
+          <div class="field">
+            <span class="field-label">メールアドレス</span>
+            <div class="input-wrap">
+              <i class="fa-solid fa-envelope field-icon"></i>
+              <input type="email" name="mail_address" placeholder="you@example.com">
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="field-label">パスワード</span>
+            <div class="input-wrap">
+              <i class="fa-solid fa-lock field-icon"></i>
+              <input type="password" name="password" id="passwordInput" placeholder="変更する場合のみ入力">
+              <i class="fa-regular fa-eye toggle-icon" id="togglePassword" role="button" aria-label="パスワードを表示"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2 class="section-title accent"><i class="fa-solid fa-heart-pulse"></i> 生活習慣の上限</h2>
+          <p class="section-desc">1日あたりの目標を設定すると、超えたときにお知らせします</p>
+
+          <div class="field">
+            <span class="field-label">喫煙上限（本/日）</span>
+            <div class="input-wrap">
+              <i class="fa-solid fa-smoking field-icon"></i>
+              <input type="number" name="smoking_limit" placeholder="5" min="0">
+              <span class="unit">本/日</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="field-label">飲酒上限（mL/日）</span>
+            <div class="input-wrap">
+              <i class="fa-solid fa-wine-glass field-icon"></i>
+              <input type="number" name="drinking_limit" placeholder="350" min="0">
+              <span class="unit">mL/日</span>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit"><i class="fa-solid fa-check"></i> 登録する</button>
+
+        <div class="danger-zone">
+          <p class="danger-title">アカウントの削除</p>
+          <p class="danger-desc">削除するとすべてのデータが完全に失われ、元に戻すことはできません</p>
+          <button type="button" class="delete-account-btn" id="openDeleteModalBtn">
+            <i class="fa-solid fa-trash"></i> アカウントを削除
+          </button>
+        </div>
 
       </form>
 
@@ -327,8 +173,6 @@
   <footer class="footer"></footer>
   <script src="../javascript/profile_setting.js"></script>
   <script src="../javascript/main.js"></script>
- 
-  
 
 </body>
 </html>

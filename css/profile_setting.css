@@ -1,13 +1,15 @@
+/* ==========================================
+   ベース（背景色・フォント・ヘッダー位置は変更なし）
+   ========================================== */
 body {
   margin: 0;
   background: #dbe8ee;
   font-family: sans-serif;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-/* ヘッダー固定 */
 .header {
   position: fixed;
   top: 0;
@@ -16,43 +18,70 @@ body {
   z-index: 1000;
 }
 
-/* コンテナ中央配置 */
+/* ==========================================
+   配色トークン（プロフィール画面用）
+   ========================================== */
+:root {
+  --ps-accent: #4d7180;       /* ヘッダーと同系の濃いブルーグレー */
+  --ps-accent-dark: #3d5c69;
+  --ps-accent-soft: #e8eff1;  /* アクセントの淡色背景 */
+  --ps-amber: #c08a3e;        /* プロフィールセクションの差し色 */
+  --ps-border: #dde6e9;
+  --ps-text: #2d3436;
+  --ps-text-soft: #8d9396;
+  --ps-text-faint: #aab2b5;
+  --ps-danger: #c0392b;
+  --ps-danger-soft: #fdecea;
+  --ps-danger-border: #ecbcb9;
+}
+
+/* ==========================================
+   中央要素
+   ========================================== */
 .container {
   flex: 1;
   display: flex;
   justify-content: center;
-  align-items: center;
-  gap: 40px;
-  margin-top: 60px; /* ヘッダー分の余白 */
+  align-items: flex-start;
+  padding: 40px 20px;
+  padding-top: 100px; /* ヘッダーの高さ分の余白 */
 }
 
-/* アイコン */
-.icon {
-  width: 100px;
-  height: 100px;
-  border: 1px solid black;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  background: white;
-  overflow: hidden;
-}
-
-.icon::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 0;
+.card {
   width: 100%;
-  height: 1px;
-  background: black;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid rgba(20, 30, 33, 0.06);
+  box-shadow: 0 8px 28px rgba(20, 40, 50, 0.08);
+  padding: 32px 28px 28px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* 画像が設定されている場合は横線を消す */
-.icon.has-image::before {
-  display: none;
+/* ==========================================
+   アイコン
+   ========================================== */
+.icon-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.icon {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 1px solid var(--ps-border);
+  background: var(--ps-accent-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
 .icon img {
@@ -63,37 +92,352 @@ body {
   z-index: 1;
 }
 
-.icon span {
-  position: relative;
-  z-index: 1;
-  background: white;
-  padding: 2px 6px;
-  font-size: 12px;
+.icon #iconPlaceholder {
+  font-size: 36px;
+  color: #a3b0b4;
 }
 
-/* フォーム */
+.icon .icon-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: rgba(20, 30, 33, 0.5);
+  color: #fff;
+  font-size: 11px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.icon .icon-overlay i {
+  font-size: 16px;
+}
+
+.icon:hover .icon-overlay,
+.icon:focus-visible .icon-overlay {
+  opacity: 1;
+}
+
+.icon-hint {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  color: var(--ps-text-soft);
+}
+
+/* ==========================================
+   フォーム / セクション
+   ========================================== */
 .form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
-.form input {
-  width: 180px;
-  height: 28px;
-  border: 1px solid #bbb;
-  background: #f5f5f5;
-  padding-left: 8px;
+.form-section + .form-section {
+  margin-top: 26px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: var(--ps-amber);
+}
+
+.section-title.accent {
+  color: var(--ps-accent);
+}
+
+.section-desc {
+  margin: 0 0 16px;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--ps-text-faint);
+}
+
+.section-title + .field {
+  margin-top: 14px;
+}
+
+/* ==========================================
+   入力フィールド
+   ========================================== */
+.field {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 11.5px;
+  color: var(--ps-text-soft);
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.field-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #b6bfc2;
+  pointer-events: none;
+}
+
+.input-wrap input {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px 0 40px;
+  border: 1px solid var(--ps-border);
+  border-radius: 11px;
+  background: #fff;
+  color: var(--ps-text);
+  font-size: 14px;
+  font-family: sans-serif;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input-wrap input::placeholder {
+  color: #b6bfc2;
+}
+
+.input-wrap input:focus {
+  border-color: var(--ps-accent);
+  box-shadow: 0 0 0 3px rgba(77, 113, 128, 0.12);
+}
+
+.input-wrap input[type="number"]::-webkit-inner-spin-button,
+.input-wrap input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.input-wrap input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.toggle-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 15px;
+  color: #b6bfc2;
+  cursor: pointer;
+}
+
+.unit {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: var(--ps-text-faint);
+  pointer-events: none;
+}
+
+.input-wrap input[name="smoking_limit"],
+.input-wrap input[name="drinking_limit"] {
+  padding-right: 50px;
+}
+
+/* ==========================================
+   ボタン
+   ========================================== */
+.form > button[type="submit"] {
+  margin-top: 24px;
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 12px;
+  background: var(--ps-accent);
+  color: #fff;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.15s ease;
+}
+
+.form > button[type="submit"]:hover {
+  background: var(--ps-accent-dark);
+}
+
+/* ==========================================
+   アカウント削除セクション
+   ========================================== */
+.danger-zone {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #eef0f1;
+}
+
+.danger-title {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ps-danger);
+}
+
+.danger-desc {
+  margin: 0 0 14px;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--ps-text-faint);
+}
+
+.danger-zone .delete-account-btn {
+  width: 100%;
+  height: 46px;
+  background: #fff;
+  border: 1.3px solid var(--ps-danger-border);
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ps-danger);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: background 0.15s ease;
+}
+
+.danger-zone .delete-account-btn:hover {
+  background: var(--ps-danger-soft);
+}
+
+/* ==========================================
+   トーストメッセージ
+   ========================================== */
+#message {
+  display: none;
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 22px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(20, 40, 50, 0.15);
+  font-size: 13.5px;
+  font-weight: 600;
+  z-index: 2000;
+}
+
+/* ==========================================
+   削除確認モーダル
+   ========================================== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 30, 33, 0.45);
+  z-index: 3000;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.show {
+  display: flex;
+}
+
+.modal-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 26px 24px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 16px 40px rgba(20, 40, 50, 0.2);
+}
+
+.modal-box h3 {
+  margin: 0;
+  font-size: 16px;
+  color: var(--ps-text);
+}
+
+.modal-box p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ps-text-soft);
+  line-height: 1.6;
+}
+
+.modal-box input {
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--ps-border);
+  border-radius: 10px;
   font-size: 14px;
   outline: none;
+  box-sizing: border-box;
 }
 
-.form button {
-  width: 190px;
-  height: 32px;
-  border: none;
-  border-radius: 4px;
-  background: #7ea1b2;
-  color: white;
+.modal-box input:focus {
+  border-color: var(--ps-accent);
+  box-shadow: 0 0 0 3px rgba(77, 113, 128, 0.12);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.modal-actions button {
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
+  border: none;
+}
+
+.modal-cancel-btn {
+  background: #f1f3f4;
+  color: var(--ps-text);
+}
+
+.modal-cancel-btn:hover {
+  background: #e6e9ea;
+}
+
+.modal-confirm-btn {
+  background: var(--ps-danger);
+  color: #fff;
+}
+
+.modal-confirm-btn:hover {
+  background: #a93226;
+}
+
+/* ==========================================
+   レスポンシブ
+   ========================================== */
+@media (max-width: 480px) {
+  .card {
+    padding: 26px 20px 22px;
+    border-radius: 14px;
+  }
+  .container {
+    padding-top: 88px;
+  }
 }

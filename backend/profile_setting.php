@@ -136,7 +136,8 @@ if ($action === "upload_icon") {
 
 
 // ==========================================
-// プロフィール取得処理（アイコン表示用）
+// プロフィール取得処理（フォームの初期表示用）
+// アイコンに加えて、名前・メール・喫煙/飲酒上限も返す
 // ==========================================
 if ($action === "get_profile") {
 
@@ -151,24 +152,34 @@ if ($action === "get_profile") {
 
     try {
 
-        $sql = "SELECT icon_path FROM profile WHERE user_id = :user_id";
-
+        // プロフィール情報（名前・メール・アイコン）
+        $sql = "SELECT user_name, mail_address, icon_path FROM profile WHERE user_id = :user_id";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
         $stmt->execute();
+        $profile = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        // 喫煙・飲酒の上限値（goal_valueにまだ行が無いユーザーもいる）
+        $sql = "SELECT ciggarette_limit, alcohol_limit FROM goal_value WHERE user_id = :user_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+        $stmt->execute();
+        $goal = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $icon_path = null;
 
-        if ($result && !empty($result["icon_path"])) {
+        if ($profile && !empty($profile["icon_path"])) {
             // HTMLは /html/ 配下にある想定なので、相対パスを ../ に変換
-            $icon_path = "../" . $result["icon_path"];
+            $icon_path = "../" . $profile["icon_path"];
         }
 
         echo json_encode([
             "status" => "success",
-            "icon_path" => $icon_path
+            "icon_path" => $icon_path,
+            "user_name" => $profile ? $profile["user_name"] : null,
+            "mail_address" => $profile ? $profile["mail_address"] : null,
+            "smoking_limit" => $goal ? $goal["ciggarette_limit"] : null,
+            "drinking_limit" => $goal ? $goal["alcohol_limit"] : null
         ]);
 
     } catch (PDOException $e) {
@@ -316,21 +327,21 @@ if ($action === "delete_account") {
 
 // ==========================================
 // プロフィール更新処理（既存処理）
+// パスワードは「変更する場合のみ入力」のため必須にしない
 // ==========================================
 if ($action === "update_profile" && $_SERVER["REQUEST_METHOD"] == "POST") {
 
     // フォーム取得
     $user_name = $_POST["user_name"];
     $mail_address = $_POST["mail_address"];
-    $password = $_POST["password"];
+    $password = $_POST["password"]; // 空欄なら今回は変更しない
     $smoking_limit = $_POST["smoking_limit"];
     $drinking_limit = $_POST["drinking_limit"];
 
-    // 空欄チェック
+    // 空欄チェック（パスワードは対象外）
     if (
         empty($user_name) ||
         empty($mail_address) ||
-        empty($password) ||
         $smoking_limit === "" ||
         $drinking_limit === ""
     ) {
@@ -400,23 +411,43 @@ if ($action === "update_profile" && $_SERVER["REQUEST_METHOD"] == "POST") {
 
         $stmt->execute();
 
-        // loginテーブル更新
-        $sql = "UPDATE login
-                SET
-                    user_name = :user_name,
-                    mail_address = :mail_address,
-                    password = :password
-                WHERE
-                    user_id = :user_id";
+        // loginテーブル更新（パスワードが入力されている場合のみ更新）
+        if ($password !== "") {
 
-        $stmt = $pdo->prepare($sql);
+            $sql = "UPDATE login
+                    SET
+                        user_name = :user_name,
+                        mail_address = :mail_address,
+                        password = :password
+                    WHERE
+                        user_id = :user_id";
 
-        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
-        $stmt->bindParam(":user_name", $user_name, PDO::PARAM_STR);
-        $stmt->bindParam(":mail_address", $mail_address, PDO::PARAM_STR);
-        $stmt->bindParam(":password", $password, PDO::PARAM_STR);
+            $stmt = $pdo->prepare($sql);
 
-        $stmt->execute();
+            $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+            $stmt->bindParam(":user_name", $user_name, PDO::PARAM_STR);
+            $stmt->bindParam(":mail_address", $mail_address, PDO::PARAM_STR);
+            $stmt->bindParam(":password", $password, PDO::PARAM_STR);
+
+            $stmt->execute();
+
+        } else {
+
+            $sql = "UPDATE login
+                    SET
+                        user_name = :user_name,
+                        mail_address = :mail_address
+                    WHERE
+                        user_id = :user_id";
+
+            $stmt = $pdo->prepare($sql);
+
+            $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+            $stmt->bindParam(":user_name", $user_name, PDO::PARAM_STR);
+            $stmt->bindParam(":mail_address", $mail_address, PDO::PARAM_STR);
+
+            $stmt->execute();
+        }
 
         // goal_valueテーブルにuser_idが存在するか確認
         $sql = "SELECT COUNT(*)
