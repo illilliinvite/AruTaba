@@ -61,6 +61,7 @@ session_start();
         <!-- 入力エリア -->
         <div class="chat-input-area">
             <button class="plus-btn" title="ファイル添付">＋</button>
+            <input type="file" id="fileInput" accept="image/*,video/*" hidden>
             <input
                 type="text"
                 id="messageInput"

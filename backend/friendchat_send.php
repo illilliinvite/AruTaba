@@ -55,35 +55,29 @@ try {
 
     if (!$friend) {
         echo json_encode([
-            'success' => false,
-            'error' => '相手が存在しません'
+            'friend_mail' => $friend_mail,
+    'friend' => $friend,
+    'friend_user_id' => $friend['user_id'] ?? null
         ]);
         exit;
     }
+    $friend_user_id = $friend['user_id'];
 
+    $message_id = uniqid('msg_', true);
 
-<<<<<<< HEAD
     $stmt = $pdo->prepare("
-    INSERT INTO friend_chat (user_id, receiver_id, chat_history)
-    VALUES (:user_id, :receiver_id, :chat_history)
+        INSERT INTO friend_chat
+        (user_id, receiver_id, message_id, message_type, chat_history, is_read)
+        VALUES
+        (:user_id, :receiver_id, :message_id, 'text', :chat_history, 0)
     ");
-    $stmt->bindValue(':user_id', $my_user_id, PDO::PARAM_STR);
-    $stmt->bindValue(':receiver_id', $friend_user_id, PDO::PARAM_STR);
-    $stmt->bindValue(':chat_history', $message, PDO::PARAM_STR);
-    $stmt->execute();
-=======
-$message_id = uniqid('msg_', true); // ← これを追加
 
-$stmt = $pdo->prepare("
-    INSERT INTO friend_chat (user_id, message_id, chat_history)
-    VALUES (:user_id, :message_id, :chat_history)
-");
-$stmt->bindValue(':user_id', $my_user_id, PDO::PARAM_STR);
-$stmt->bindValue(':message_id', $message_id, PDO::PARAM_STR);
-$stmt->bindValue(':chat_history', $message, PDO::PARAM_STR);
-$stmt->execute();
-
->>>>>>> da5f1b22fc7044d6a23ef54444085b09c4523381
+    $stmt->execute([
+        ':user_id' => $my_user_id,
+        ':receiver_id' => $friend_user_id,
+        ':message_id' => $message_id,
+        ':chat_history' => $message
+    ]);
 
     echo json_encode([
         'success' => true,
@@ -91,6 +85,8 @@ $stmt->execute();
     ]);
 
 } catch (PDOException $e) {
-    error_log('friendchat_send.php error: ' . $e->getMessage());
-    echo json_encode(['success' => false, 'error' => '送信に失敗しました']);
+    echo json_encode([
+        'success' => false,
+        'error' => $e->getMessage()
+    ]);
 }

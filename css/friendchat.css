@@ -282,6 +282,21 @@ body {
     background: #d0edd8;
 }
 
+.chat-image {
+    max-width: 220px;
+    max-height: 220px;
+    border-radius: 8px;
+    display: block;
+    cursor: pointer;
+}
+
+.chat-video {
+    max-width: 260px;
+    max-height: 260px;
+    border-radius: 8px;
+    display: block;
+}
+
 /* 送信ボタン */
 .send-btn {
     height: 42px;
@@ -320,3 +335,11 @@ body {
     border-radius: 8px;
     margin: 8px 0;
 }
+
+.read-status{
+    margin-left:6px;
+    font-size:11px;
+    color:#999;
+}
+
+
