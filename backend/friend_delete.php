@@ -49,7 +49,7 @@ $my_id = $_SESSION["user_id"];
 // ---------------------------
 // メールから friend_id を取得
 // ---------------------------
-$sql = "SELECT user_id FROM profile WHERE mail_address = ?";
+$sql = "SELECT user_name FROM profile WHERE mail_address = ?";
 $stmt = $pdo->prepare($sql);
 $stmt->bindParam(1, $friend_mail, PDO::PARAM_STR);
 $stmt->execute();
@@ -60,17 +60,17 @@ if (!$row) {
     exit;
 }
 
-$friend_id = $row["user_id"];
+$user_name = $row["user_name"];
 
 // ---------------------------
 // フレンド削除（両方向）
 // ---------------------------
 $sql = "DELETE FROM friend 
-        WHERE friend_id = :friend_id";
+        WHERE user_name = :user_name and friend = 1";
 
 $stmt = $pdo->prepare($sql);
 
-$stmt->bindParam(":friend_id", $friend_mail, PDO::PARAM_STR);
+$stmt->bindParam(":user_name", $user_name, PDO::PARAM_STR);
 
 
 $result = $stmt->execute();
