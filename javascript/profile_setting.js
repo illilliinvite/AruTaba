@@ -16,6 +16,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
   const deleteConfirmPassword = document.getElementById("deleteConfirmPassword");
 
+  // パスワード表示切り替え関連の要素
+  const passwordInput = document.getElementById("passwordInput");
+  const togglePassword = document.getElementById("togglePassword");
+
   // メッセージ表示の共通処理
   function showMessage(text, isSuccess) {
     message.textContent = text;
@@ -35,8 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
     iconWrapper.classList.add("has-image");
   }
 
-  // ページ読み込み時：既存のアイコンがあれば表示する
-  async function loadCurrentIcon() {
+  // ページ読み込み時：登録済みのプロフィール情報をフォームに反映する
+  // （アイコン・名前・メールアドレス・喫煙/飲酒上限）
+  // パスワードのみ、セキュリティ上の理由で取得・表示せず空欄のままにする
+  async function loadCurrentProfile() {
     try {
       const formData = new FormData();
       formData.append("action", "get_profile");
@@ -54,16 +60,40 @@ document.addEventListener("DOMContentLoaded", () => {
         setIconPreview(data.icon_path);
       }
 
+      if (data.user_name !== undefined && data.user_name !== null) {
+        profileForm.elements["user_name"].value = data.user_name;
+      }
+
+      if (data.mail_address !== undefined && data.mail_address !== null) {
+        profileForm.elements["mail_address"].value = data.mail_address;
+      }
+
+      if (data.smoking_limit !== undefined && data.smoking_limit !== null) {
+        profileForm.elements["smoking_limit"].value = data.smoking_limit;
+      }
+
+      if (data.drinking_limit !== undefined && data.drinking_limit !== null) {
+        profileForm.elements["drinking_limit"].value = data.drinking_limit;
+      }
+
     } catch (error) {
-      console.error("アイコン取得失敗", error);
+      console.error("プロフィール取得失敗", error);
     }
   }
 
-  loadCurrentIcon();
+  loadCurrentProfile();
 
   // アイコンクリックでファイル選択を開く
   iconWrapper.addEventListener("click", () => {
     iconInput.click();
+  });
+
+  // キーボード操作（Enter / Space）でもファイル選択を開けるようにする
+  iconWrapper.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      iconInput.click();
+    }
   });
 
   // ファイル選択時：即アップロード
@@ -135,6 +165,25 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(error);
     }
   });
+
+
+  // ==========================================
+  // パスワード表示切り替え
+  // ==========================================
+
+  if (passwordInput && togglePassword) {
+    togglePassword.addEventListener("click", () => {
+      const willShow = passwordInput.type === "password";
+      passwordInput.type = willShow ? "text" : "password";
+
+      togglePassword.classList.toggle("fa-eye", !willShow);
+      togglePassword.classList.toggle("fa-eye-slash", willShow);
+      togglePassword.setAttribute(
+        "aria-label",
+        willShow ? "パスワードを非表示" : "パスワードを表示"
+      );
+    });
+  }
 
 
   // ==========================================
