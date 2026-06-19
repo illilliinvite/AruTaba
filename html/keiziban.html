@@ -11,17 +11,34 @@
 
 <body>
 
+<!-- ヘッダー -->
 <header class="header">
+
+    <!-- ハンバーガーメニュー -->
     <div class="hamburger" id="hamburger">
-        <span></span><span></span><span></span>
+        <span></span>
+        <span></span>
+        <span></span>
     </div>
+
     <!-- タイトル -->
     <div class="logo">
-      <a href="home.html">AruTaba</a>
+        <a href="home.html">AruTaba</a>
     </div>
+
+    <!-- ユーザー情報 -->
+    <div class="user-info">
+        <a href="../html/profile_setting.html">
+            <img id="headerIcon" src="" alt="ユーザーアイコン" class="user-icon">
+        </a>
+        <span class="user-name" id="userName"></span>
+    </div>
+
 </header>
 
+<!-- サイドメニュー -->
 <nav class="sidebar" id="sidebar">
+
     <ul>
         <li>🏠 ホーム</li>
         <li>👥 フレンド</li>
@@ -31,8 +48,12 @@
         <li>🔔 お知らせ</li>
         <li>⚙ プロフィール設定</li>
     </ul>
+
     <button class="logout">ログアウト</button>
 </nav>
+
+<script src="../javascript/main.js"></script>
+<link rel="stylesheet" href="../css/header.css">
 
 <input type="hidden" id="session_user_name" value="">
 

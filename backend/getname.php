@@ -3,6 +3,7 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 require_once "session.php";
+header('Content-Type: application/json; charset=utf-8');
 
 try {
     $pdo = new PDO(
