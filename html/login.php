@@ -24,7 +24,7 @@
 
             <input type="password" name="password" placeholder="パスワード" required>
 
-            <a href="pass_rename.html" class="forgot-password">
+            <a href="pass_rename.php" class="forgot-password">
                 パスワードを忘れた方
             </a>
 
@@ -32,7 +32,7 @@
                 ログイン
             </button>
 
-            <a href="register.html" class="register-link">
+            <a href="register.php" class="register-link">
                 アカウント新規登録
             </a>
 

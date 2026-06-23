@@ -74,5 +74,5 @@ $stmt->bindParam(':alcohol_degree_update',  $alcohol_dosuu);
 
 $stmt->execute();
 
-header("Location: ../html/carender.html");
+header("Location: ../html/carender.php");
 exit;

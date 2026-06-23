@@ -64,7 +64,7 @@
 
         $pdo->commit();
 
-        header("Location: ../html/login.html");
+        header("Location: ../html/login.php");
         exit;
 
     }catch(PDOException $e){
