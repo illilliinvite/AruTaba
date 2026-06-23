@@ -248,7 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showMessage("アカウントを削除しました", true);
         // セッションが破棄されているのでログイン画面等へ遷移
         setTimeout(() => {
-          window.location.href = "login.html";
+          window.location.href = "login.php";
         }, 1500);
       } else {
         showMessage(result.message || "削除に失敗しました", false);

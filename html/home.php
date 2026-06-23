@@ -11,53 +11,7 @@
 
 <body>
 
-  <!-- ヘッダー -->
-  <header class="header">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-      <!-- ハンバーガーメニュー -->
-      <div class="hamburger" id="hamburger">
-          <span></span>
-          <span></span>
-          <span></span>
-      </div>
-      <!-- タイトル -->
-      <div class="logo">
-        <a href="home.html">AruTaba</a>
-      </div>
-
-  </header>
-
-  <!-- サイドメニュー -->
-  <nav class="sidebar" id="sidebar">
-      <ul>
-        <a href="home.html">
-          <li><i class="fa-solid fa-house"></i> ホーム</li>
-        </a>  
-        <a href="friend.html">
-          <li><i class="fa-solid fa-users"></i> フレンド</li>
-        </a>
-        <a href="carender.html">  
-          <li><i class="fa-solid fa-calendar-days"></i> カレンダー</li>
-        </a>  
-        <a href="keiziban.html">
-          <li><i class="fa-solid fa-clipboard-list"></i> 掲示板</li>
-        </a>  
-        <a href="suuti.html">
-          <li><i class="fa-solid fa-keyboard"></i> 数値入力</li>
-        </a>  
-        <a href="notice.html">
-          <li><i class="fa-solid fa-bell"></i> お知らせ</li>
-        </a>  
-        <a href="profile_setting.html">
-          <li><i class="fa-solid fa-gear"></i> プロフィール設定</li>
-        </a>  
-      </ul>
-
-      <a href="login.html" class="logout">
-        <i class="fa-solid fa-right-from-bracket"></i> ログアウト
-      </a>
-  </nav>
-
+<?php include "header.php" ?>
 
 <main>
   <div class="top-row">
@@ -90,7 +44,7 @@
       <section class="card notice-card">
         <h2>
           <i class="fa-solid fa-bell"></i> 
-          <a href="notice.html" class="notice-link">
+          <a href="notice.php" class="notice-link">
              お知らせ
           </a>
         </h2>
@@ -115,11 +69,11 @@
   </div> <section class="card quick-access-card">
     <h2><i class="fa-solid fa-thumbtack"></i> メニュー</h2>
     <div class="quick-grid">
-      <a href="friend.html" class="quick-item"><div class="icon-circle icon-green"><i class="fa-solid fa-users"></i></div><h3>フレンド一覧</h3><p>フレンドを確認</p></a>
-      <a href="carender.html" class="quick-item"><div class="icon-circle icon-blue"><i class="fa-solid fa-calendar-days"></i></div><h3>カレンダー</h3><p>過去の記録の閲覧・更新</p></a>
-      <a href="keiziban.html" class="quick-item"><div class="icon-circle icon-purple"><i class="fa-solid fa-clipboard-list"></i></div><h3>掲示板</h3><p>様々な人と交流</p></a>
-      <a href="suuti.html" class="quick-item" id="suuti-guide"><div class="icon-circle icon-gold"><i class="fa-solid fa-keyboard"></i></div><h3>数値入力</h3><p>今日の記録を入力</p></a>
-      <a href="profile_setting.html" class="quick-item"><div class="icon-circle icon-dark"><i class="fa-solid fa-gear"></i></div><h3>設定</h3><p>各種設定を変更</p></a>
+      <a href="friend.php" class="quick-item"><div class="icon-circle icon-green"><i class="fa-solid fa-users"></i></div><h3>フレンド一覧</h3><p>フレンドを確認</p></a>
+      <a href="carender.php" class="quick-item"><div class="icon-circle icon-blue"><i class="fa-solid fa-calendar-days"></i></div><h3>カレンダー</h3><p>過去の記録の閲覧・更新</p></a>
+      <a href="keiziban.php" class="quick-item"><div class="icon-circle icon-purple"><i class="fa-solid fa-clipboard-list"></i></div><h3>掲示板</h3><p>様々な人と交流</p></a>
+      <a href="suuti.php" class="quick-item" id="suuti-guide"><div class="icon-circle icon-gold"><i class="fa-solid fa-keyboard"></i></div><h3>数値入力</h3><p>今日の記録を入力</p></a>
+      <a href="profile_setting.php" class="quick-item"><div class="icon-circle icon-dark"><i class="fa-solid fa-gear"></i></div><h3>設定</h3><p>各種設定を変更</p></a>
     </div>
   </section> 
 
