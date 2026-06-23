@@ -14,22 +14,7 @@
 
 <body>
 
-  <!-- ヘッダー -->
-  <header class="header">
-
-    <!-- ハンバーガーメニュー -->
-    <div class="hamburger" id="hamburger">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-
-    <!-- タイトル -->
-    <div class="logo">
-      <a href="home.html">AruTaba</a>
-    </div>
-
-  </header>
+  <?php include "header.php" ?>
 
   <!-- サイドメニュー -->
   <nav class="sidebar" id="sidebar">
