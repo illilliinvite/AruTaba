@@ -11,32 +11,7 @@
 
 <body>
 
-    <!-- ヘッダー -->
-    <header class="header">
-        <div class="hamburger" id="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <!-- タイトル -->
-        <div class="logo">
-            <a href="home.html">AruTaba</a>
-        </div>
-    </header>
-
-    <!-- サイドメニュー -->
-    <nav class="sidebar" id="sidebar">
-        <ul>
-            <li>🏠 ホーム</li>
-            <li>👥 フレンド</li>
-            <li>📅 カレンダー</li>
-            <li>📋 掲示板</li>
-            <li>⌨ 数値入力</li>
-            <li>🔔 お知らせ</li>
-            <li>⚙ プロフィール設定</li>
-        </ul>
-        <button class="logout">ログアウト</button>
-    </nav>
+    <?php include "header.php" ?>
 
     <!-- メイン -->
     <main class="input-main">
