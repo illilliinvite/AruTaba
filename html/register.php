@@ -32,7 +32,7 @@
                 登録
             </button>
 
-            <a href="login.html" class="login-link">
+            <a href="login.php" class="login-link">
                 ログイン画面へ
             </a>
 

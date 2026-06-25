@@ -48,7 +48,7 @@ $stmt->bindParam(':password', $password);
 $stmt->bindParam(':mail_address', $mail_address);
 
 if($stmt->execute()){
-    header("Location: ../html/login.html");
+    header("Location: ../html/login.php");
     exit;
 }else{
     echo "パスワード変更に失敗しました";
