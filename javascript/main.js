@@ -51,9 +51,24 @@ document.addEventListener("DOMContentLoaded", async () => {
  
     const data = await response.json();
  
-    if (data.icon_path) {
-      headerProfileImage.src = data.icon_path;
-    }
+    const headerProfileDefault =
+    document.getElementById("headerProfileDefault");
+
+if (data.icon_path) {
+
+  // 画像あり
+  headerProfileImage.src = data.icon_path;
+  headerProfileImage.style.display = "block";
+
+  headerProfileDefault.style.display = "none";
+
+} else {
+
+  // 画像なし
+  headerProfileImage.style.display = "none";
+
+  headerProfileDefault.style.display = "block";
+}
  
   } catch (error) {
     console.error(error);
