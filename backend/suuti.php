@@ -18,14 +18,14 @@ try {
 
 // POST 受け取り
 $tobacco_brand  = $_POST["tobacco_brand"]  ?? null;
-$tobacco_amount = $_POST["tobacco_amount"] ?? 0;
-$alcohol_dosuu  = $_POST["alcohol_dosuu"]  ?? null;
-$alcohol_amount = $_POST["alcohol_amount"] ?? 0;
+$tobacco_amount = (int)($_POST["tobacco_amount"] ?? 0);
+$alcohol_dosuu  = (float)($_POST["alcohol_dosuu"] ?? 0);
+$alcohol_amount = (int)($_POST["alcohol_amount"] ?? 0);
 
 $today = date("Y-m-d");
 
 // スコア計算
-$score = ($alcohol_amount * $alcohol_dosuu) + ($tobacco_amount * 400);
+$score = (int)(($alcohol_amount * $alcohol_dosuu) + ($tobacco_amount * 400));
 
 $user_id = $_SESSION["user_id"];
 
