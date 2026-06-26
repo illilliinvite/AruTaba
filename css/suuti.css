@@ -1,31 +1,12 @@
 body {
     margin: 0;
     font-family: "Segoe UI", sans-serif;
-    background: #d9e9ee;
-}
-
-/* ===== ヘッダー ===== */
-.simple-header {
-    height: 70px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #d8e8ee;
-    border-bottom: 1px solid #999;
-}
-
-.simple-logo {
-    font-size: 56px;
-    font-family: "Times New Roman", serif;
-    font-style: italic;
-    background: #edf5f8;
-    border: 1px solid #aaa;
-    padding: 0 25px;
+    background: #dcecef;
 }
 
 /* ===== メイン ===== */
 .input-main {
-    height: calc(100vh - 70px);
+    min-height: calc(100vh - 70px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -33,18 +14,19 @@ body {
 
 /* ===== カード ===== */
 .input-card {
-    width: 360px;
-    background: #fafaf9;
-    border-radius: 14px;
-    border: 1px solid #dddad5;
-    padding: 24px 20px;
+    width: 440px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e8e8e8;
+    padding: 32px 32px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
 }
 
 /* ===== セクション ===== */
 .input-section {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
 .section-header {
@@ -55,26 +37,26 @@ body {
 }
 
 .section-icon {
-    width: 26px;
-    height: 26px;
-    border-radius: 6px;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 16px;
     flex-shrink: 0;
 }
 
 .smoke-icon {
-    background: #f0e8d8;
+    background: #fdf6e8;
 }
 
 .alc-icon {
-    background: #d8eaf0;
+    background: #e8f4fd;
 }
 
 .section-label {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
     color: #333;
 }
@@ -84,35 +66,40 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #ffffff;
-    border: 1px solid #e0ddd8;
-    border-radius: 8px;
-    padding: 0 14px;
-    height: 44px;
-    transition: border-color 0.2s;
+    background: #f7fafb;
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    padding: 0 18px;
+    height: 52px;
+    cursor: text; /* 行全体をクリック可能に見せる */
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .field-row:focus-within {
     border-color: #7aabca;
+    box-shadow: 0 2px 8px rgba(79,114,133,0.12);
+    background: #ffffff;
 }
 
+/* labelをflex伸縮させてクリック領域を広げる */
 .field-label {
-    font-size: 13px;
+    font-size: 14px;
     color: #888;
     white-space: nowrap;
-    cursor: default;
     flex-shrink: 0;
+    cursor: text;
 }
 
 .field-input {
     border: none;
     outline: none;
     background: transparent;
-    font-size: 14px;
+    font-size: 15px;
     color: #222;
     text-align: right;
-    width: 60%;
+    flex: 1; /* width固定をやめてflex伸縮に変更 */
     font-family: inherit;
+    cursor: text;
 }
 
 .field-input::placeholder {
@@ -122,29 +109,30 @@ body {
 /* ===== 区切り線 ===== */
 .section-divider {
     border: none;
-    border-top: 1px solid #e8e5e0;
-    margin: 16px 0;
+    border-top: 1px solid #f0f0f0;
+    margin: 22px 0;
 }
 
 /* ===== 確定ボタン ===== */
 .input-submit {
     display: block;
-    margin: 20px auto 0;
-    width: 360px;
-    padding: 13px;
+    margin: 24px auto 0;
+    width: 440px;
+    padding: 15px;
     font-size: 16px;
     font-family: inherit;
-    color: #333;
-    background: #ffffff;
-    border: 1px solid #ccc;
+    color: #ffffff;
+    background: #4f7285;
+    border: none;
     border-radius: 10px;
     cursor: pointer;
-    transition: background 0.2s, border-color 0.2s;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: opacity 0.2s;
 }
 
 .input-submit:hover {
-    background: #f0f0ee;
-    border-color: #aaa;
+    opacity: 0.88;
 }
 
 .input-submit:active {

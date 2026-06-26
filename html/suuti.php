@@ -32,7 +32,7 @@
                     </div>
                     <div class="field-row">
                         <label class="field-label" for="tobacco_amount">本数</label>
-                        <input class="field-input" type="number" id="tobacco_amount" name="tobacco_amount" placeholder="0" min="0">
+                        <input class="field-input" type="number" id="tobacco_amount" name="tobacco_amount" placeholder="0" min="0" max="100000" required>
                     </div>
                 </div>
 
@@ -50,7 +50,7 @@
                     </div>
                     <div class="field-row">
                         <label class="field-label" for="alcohol_amount">量（ml）</label>
-                        <input class="field-input" type="number" id="alcohol_amount" name="alcohol_amount" placeholder="0" min="0">
+                        <input class="field-input" type="number" id="alcohol_amount" name="alcohol_amount" placeholder="0" min="0" max="100000" required>
                     </div>
                 </div>
 
@@ -63,7 +63,29 @@
     </main>
 
     <!-- JS 読み込み -->
-    <script src="../javascript/main.js"></script>
+    <script>
+        document.getElementById("tobacco_amount").addEventListener("invalid", (e) => {
+            if (e.target.validity.valueMissing) {
+                e.target.setCustomValidity("本数を入力してください");
+            } else if (e.target.validity.rangeOverflow) {
+                e.target.setCustomValidity("本数は100000以下で入力してください");
+            }
+        });
+        document.getElementById("tobacco_amount").addEventListener("input", (e) => {
+            e.target.setCustomValidity("");
+        });
+
+        document.getElementById("alcohol_amount").addEventListener("invalid", (e) => {
+            if (e.target.validity.valueMissing) {
+                e.target.setCustomValidity("量を入力してください");
+            } else if (e.target.validity.rangeOverflow) {
+                e.target.setCustomValidity("量は100000以下で入力してください");
+            }
+        });
+        document.getElementById("alcohol_amount").addEventListener("input", (e) => {
+            e.target.setCustomValidity("");
+        });
+    </script>
 
 </body>
 </html>
