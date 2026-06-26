@@ -9,7 +9,7 @@ let pollingTimer = null;
 // 初期化
 // ===========================
 document.addEventListener("DOMContentLoaded", async () => {
-    await fetchUserByMail(); // ← async 関数内なら await が使える
+    await fetchUserByMail();
     await loadMessages(true);
 
     document.getElementById("messageInput")
@@ -18,6 +18,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 sendMessage();
             }
         });
+
+    document.getElementById("sendBtn")
+        .addEventListener("click", sendMessage);
 
     pollingTimer = setInterval(() => {
         loadMessages(false);
@@ -31,6 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 // ===========================
 function getMailFromUrl() {
     const params = new URLSearchParams(window.location.search);
+    console.log(params.get("mail"));
     return params.get("mail");
 }
 
@@ -40,16 +44,17 @@ function getMailFromUrl() {
 async function fetchUserByMail() {
     const mail = getMailFromUrl();
     if (!mail) {
-        console.warn("mail パラメータがありません");
+        console.log("mail パラメータがありません");
         return;
     }
 
     try {
-        const response = await fetch("../backend/friendchat_load.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ mail: mail })
-        });
+        const response = await fetch(
+    `../backend/friendchat_load.php?mail=${encodeURIComponent(mail)}`,
+    {
+        method: "GET"
+    }
+);
 
         const result = await response.json();
         console.log("ユーザー情報:", result);
@@ -69,8 +74,11 @@ async function fetchUserByMail() {
 // ===========================
 async function loadMessages(isInitial) {
     try {
+
+        const mail = getMailFromUrl();
+
         const response = await fetch(
-            `../backend/friendchat_load.php?last_id=${lastMessageId}`
+        `../backend/friendchat_load.php?mail=${encodeURIComponent(mail)}&last_id=${lastMessageId}`
         );
 
         if (!response.ok) {
@@ -136,7 +144,7 @@ async function loadMessages(isInitial) {
         chatContainer.scrollTop = chatContainer.scrollHeight;
 
     } catch (error) {
-        console.error("メッセージ読み込みエラー:", Merror);
+        console.error("メッセージ読み込みエラー:", error);
 
         if (isInitial) {
             const loadingMsg = document.getElementById("loadingMsg");
@@ -161,10 +169,17 @@ async function sendMessage() {
     sendBtn.disabled = true;
 
     try {
+        const mail = getMailFromUrl();
+
         const response = await fetch("../backend/friendchat_send.php", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: message })
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                mail: mail,
+                message: message
+            })
         });
 
         if (!response.ok) {
