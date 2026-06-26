@@ -136,7 +136,7 @@ async function loadMessages(isInitial) {
         chatContainer.scrollTop = chatContainer.scrollHeight;
 
     } catch (error) {
-        console.error("メッセージ読み込みエラー:", error);
+        console.error("メッセージ読み込みエラー:", Merror);
 
         if (isInitial) {
             const loadingMsg = document.getElementById("loadingMsg");

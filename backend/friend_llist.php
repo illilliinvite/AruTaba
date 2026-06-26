@@ -59,7 +59,8 @@ $addedMails = [];
 $stmt = $pdo->prepare("
     SELECT
         p.user_name,
-        p.mail_address
+        p.mail_address,
+        p.icon_path
     FROM friend f
     INNER JOIN profile p
         ON f.user_id = p.user_id
@@ -79,7 +80,8 @@ foreach ($receiveFriends as $f) {
 
         $final_friends[] = [
             "user_name"    => $f["user_name"],
-            "mail_address" => $f["mail_address"]
+            "mail_address" => $f["mail_address"],
+            "icon_path" => !empty($f["icon_path"]) ? "../" . $f["icon_path"] : null
         ];
 
         $addedMails[] = $f["mail_address"];
@@ -93,7 +95,8 @@ foreach ($receiveFriends as $f) {
 $stmt = $pdo->prepare("
     SELECT
         p.user_name,
-        p.mail_address
+        p.mail_address,
+        p.icon_path
     FROM friend f
     INNER JOIN profile p
         ON f.friend_id = p.mail_address
@@ -113,7 +116,8 @@ foreach ($sendFriends as $f) {
 
         $final_friends[] = [
             "user_name"    => $f["user_name"],
-            "mail_address" => $f["mail_address"]
+            "mail_address" => $f["mail_address"],
+            "icon_path" => !empty($f["icon_path"]) ? "../" . $f["icon_path"] : null
         ];
 
         $addedMails[] = $f["mail_address"];
@@ -124,3 +128,4 @@ echo json_encode([
     "status" => "ok",
     "friends" => $final_friends
 ], JSON_UNESCAPED_UNICODE);
+?>

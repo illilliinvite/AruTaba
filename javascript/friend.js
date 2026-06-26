@@ -38,13 +38,14 @@ function loadFriends() {
             data.friends.forEach(item => {
                 const name  = item.user_name    ?? "(名前なし)";
                 const mail  = item.mail_address ?? "";
+                const icon_path = item.icon_path;
                 const color = getAvatarColor(name);
 
                 const li = document.createElement("li");
                 li.style.cursor = "pointer";
 
                 li.innerHTML = `
-                    <div class="friend-avatar avatar-${color}">${getInitials(name)}</div>
+                    <img src="${icon_path || '../image/default_icon.png'}" class="friend-avatar">
                     <div class="friend-name-block">
                         <span class="friend-name">${name}</span>
                         ${mail ? `<span class="friend-mail">${mail}</span>` : ""}
