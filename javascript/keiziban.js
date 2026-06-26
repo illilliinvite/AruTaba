@@ -63,7 +63,6 @@ function renderPosts() {
     // 新しい順に並べて5件ずつ表示
     const sorted = [...filtered];
     const display = sorted.slice(0, 5);
-
     display.forEach(msg => {
         const initials = msg.user_name.slice(0, 2);
         const date = new Date(msg.day);
@@ -74,7 +73,8 @@ function renderPosts() {
         card.innerHTML = `
             <div class="post-header">
                 <span class="pin"></span>
-                <div class="avatar">${initials}</div>
+                <img src="${msg.icon_path ? '../' + msg.icon_path : '../img/default_icon.png'}" 
+                style="width:36px; height:36px; border-radius:50%; object-fit:cover;">
                 <p class="post-name">${msg.user_name}</p>
                 <p class="post-time">${timeStr}</p>
             </div>
@@ -101,7 +101,8 @@ function renderPosts() {
             card.innerHTML = `
                 <div class="post-header">
                     <span class="pin"></span>
-                    <div class="avatar">${initials}</div>
+                    <img src="${msg.icon_path ? '../' + msg.icon_path : '../img/default_icon.png'}" 
+                    style="width:36px; height:36px; border-radius:50%; object-fit:cover;">
                     <p class="post-name">${msg.user_name}</p>
                     <p class="post-time">${timeStr}</p>
                 </div>

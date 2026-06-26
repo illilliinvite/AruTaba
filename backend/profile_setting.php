@@ -1,5 +1,7 @@
 <?php
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 session_start();
 
 // DB接続
@@ -17,7 +19,7 @@ try {
     );
 
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+    
 } catch(PDOException $e) {
 
     echo "更新失敗";
@@ -83,7 +85,7 @@ if ($action === "upload_icon") {
     }
 
     $extension = $allowed_types[$mime_type];
-    $filename = "user_" . $user_id . "_" . time() . "." . $extension;
+    $filename = $user_id . "_" . time() . "." . $extension;
     $destination = $upload_dir . $filename;
 
     if (!move_uploaded_file($file["tmp_name"], $destination)) {
@@ -112,6 +114,32 @@ if ($action === "upload_icon") {
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(":icon_path", $icon_path_for_db, PDO::PARAM_STR);
         $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+        $stmt->execute();
+
+
+
+        $sql = "SELECT user_name FROM profile WHERE user_id = :user_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);  // $user_id に修正
+        $stmt->execute();
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $user_name = $row["user_name"];  // 配列から文字列を取り出す
+
+        // forum テーブル更新
+        $sql = "UPDATE forum SET icon_path = :icon_path WHERE user_name = :user_name";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":icon_path", $icon_path_for_db, PDO::PARAM_STR);
+        $stmt->bindParam(":user_name", $user_name, PDO::PARAM_STR);
+        $stmt->execute();
+
+        //掲示板名前変更sql
+
+
+        $sql = "update forum set icon_path = :icon_path where user_name = :user_name";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":icon_path", $icon_path_for_db, PDO::PARAM_STR);
+        $stmt->bindParam(":user_name", $user_name, PDO::PARAM_STR);
         $stmt->execute();
 
         if ($old && !empty($old["icon_path"])) {
@@ -329,7 +357,7 @@ if ($action === "delete_account") {
 // プロフィール更新処理（既存処理）
 // パスワードは「変更する場合のみ入力」のため必須にしない
 // ==========================================
-if ($action === "update_profile" && $_SERVER["REQUEST_METHOD"] == "POST") {
+if ($action === "update_profile" && $_SERVER["REQUEST_METHOD"] === "POST") {
 
     // フォーム取得
     $user_name = $_POST["user_name"];
@@ -379,9 +407,6 @@ if ($action === "update_profile" && $_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
 
 
-
-
-        //掲示板名前変更sql
         $sql = "update forum set user_name = :user_name where user_name = :user_name_before";
 
         $stmt = $pdo->prepare($sql);
@@ -391,9 +416,7 @@ if ($action === "update_profile" && $_SERVER["REQUEST_METHOD"] == "POST") {
 
         $stmt->execute();
 
-
-
-
+        
 
         // profileテーブル更新
         $sql = "UPDATE profile

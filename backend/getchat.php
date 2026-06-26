@@ -17,7 +17,7 @@ try {
 }
 
 $stmt = $pdo->prepare("
-    SELECT forum_history, user_name, day
+    SELECT forum_history, user_name, day, icon_path
     FROM forum
     ORDER BY day ASC
 ");

@@ -1,213 +1,231 @@
+// ===========================
+// 定数・設定
+// ===========================
 const POLLING_INTERVAL = 3000;
 let lastMessageId = 0;
+let pollingTimer = null;
 
+// ===========================
+// 初期化
+// ===========================
 document.addEventListener("DOMContentLoaded", async () => {
-
+    await fetchUserByMail(); // ← async 関数内なら await が使える
     await loadMessages(true);
 
-    document.getElementById("messageInput").addEventListener("keypress", (e) => {
-        if (e.key === "Enter") sendMessage();
-    });
+    document.getElementById("messageInput")
+        .addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                sendMessage();
+            }
+        });
 
-    document.getElementById("sendBtn").addEventListener("click", sendMessage);
-
-    // ＋ボタンでファイル選択を開く
-    document.querySelector(".plus-btn").addEventListener("click", () => {
-        document.getElementById("fileInput").click();
-    });
-
-    // ファイルが選択されたらアップロード
-    document.getElementById("fileInput").addEventListener("change", async (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            await sendFile(file);
-            e.target.value = "";
-        }
-    });
-
-    setInterval(async () => {
-        await loadMessages(false);
+    pollingTimer = setInterval(() => {
+        loadMessages(false);
     }, POLLING_INTERVAL);
 });
 
+
+
+// ===========================
+// URLパラメータ mail を取得
+// ===========================
 function getMailFromUrl() {
     const params = new URLSearchParams(window.location.search);
     return params.get("mail");
 }
 
-async function loadMessages(isInitial) {
-
+// ===========================
+// mail を PHP に送信してユーザー情報取得
+// ===========================
+async function fetchUserByMail() {
     const mail = getMailFromUrl();
-
-    const res = await fetch(
-        `../backend/friendchat_load.php?last_id=${lastMessageId}&mail=${encodeURIComponent(mail)}`
-    );
-
-    const messages = await res.json();
-
-    if (!Array.isArray(messages)) return;
-
-    const chatContainer = document.getElementById("chatContainer");
-    const myUserId = getMyUserId();
-
-    if (isInitial) {
-        document.getElementById("loadingMsg")?.remove();
-    }
-
-    // 新しいメッセージを追加する前に、現在「下付近」にいるか判定しておく
-    const SCROLL_THRESHOLD = 80; // px の許容誤差
-    const wasNearBottom =
-        chatContainer.scrollHeight - chatContainer.scrollTop - chatContainer.clientHeight < SCROLL_THRESHOLD;
-
-    let appendedAny = false;
-
-    messages.forEach(msg => {
-
-        const isMe = String(msg.user_id) === String(myUserId);
-        const time = formatTime(msg.sent_at);
-        const bubbleContent = renderBubbleContent(msg);
-
-        const html = isMe
-            ? `
-            <div class="message-row me" data-message-id="${msg.message_id}">
-                <div class="message-content">
-                    <div class="bubble">${bubbleContent}</div>
-                    <div class="time">
-                        ${time}
-                        ${msg.is_read == 1 ? '<span class="read-status">既読</span>' : ''}
-                    </div>
-                </div>
-            </div>`
-            : `
-            <div class="message-row friend" data-message-id="${msg.message_id}" data-read="${msg.is_read == 1 ? '1' : '0'}">
-                <div class="friend-icon">👤</div>
-                <div class="message-content">
-                    <div class="bubble">${bubbleContent}</div>
-                    <div class="time">${time}</div>
-                </div>
-            </div>`;
-
-        const temp = document.createElement("div");
-        temp.innerHTML = html.trim();
-        const node = temp.firstElementChild;
-
-        chatContainer.appendChild(node);
-        appendedAny = true;
-
-        if (!isMe) {
-            observer.observe(node);
-        }
-
-        lastMessageId = Math.max(lastMessageId, Number(msg.message_id));
-    });
-
-    // 初回表示時、または「もともと下付近にいた」場合のみ自動スクロール
-    if (appendedAny && (isInitial || wasNearBottom)) {
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-}
-
-function renderBubbleContent(msg) {
-    const basePath = "../"; // html/ から AruTaba直下へ
-
-    switch (msg.message_type) {
-        case "image":
-            return `<img src="${basePath}${escapeHtml(msg.file_path)}" class="chat-image" loading="lazy">`;
-        case "video":
-            return `<video src="${basePath}${escapeHtml(msg.file_path)}" class="chat-video" controls></video>`;
-        default:
-            return escapeHtml(msg.chat_history);
-    }
-}
-
-async function sendMessage() {
-
-    const input = document.getElementById("messageInput");
-    const mail = getMailFromUrl();
-    const message = input.value.trim();
-
-    if (!message) return;
-
-    await fetch("../backend/friendchat_send.php", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ message, mail })
-    });
-
-    input.value = "";
-    await loadMessages(false);
-}
-
-async function sendFile(file) {
-
-    const mail = getMailFromUrl();
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("mail", mail);
-
-    const res = await fetch("../backend/friendchat_upload.php", {
-        method: "POST",
-        body: formData
-    });
-
-    const result = await res.json();
-
-    if (!result.success) {
-        alert(result.error || "送信に失敗しました");
+    if (!mail) {
+        console.warn("mail パラメータがありません");
         return;
     }
 
-    await loadMessages(false);
+    try {
+        const response = await fetch("../backend/friendchat_load.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ mail: mail })
+        });
+
+        const result = await response.json();
+        console.log("ユーザー情報:", result);
+
+        if (result.success && result.user) {
+            // 必要ならここでユーザー情報を画面に反映できる
+            console.log("ログインユーザー:", result.user);
+        }
+
+    } catch (error) {
+        console.error("ユーザー取得エラー:", error);
+    }
 }
 
+// ===========================
+// メッセージ読み込み
+// ===========================
+async function loadMessages(isInitial) {
+    try {
+        const response = await fetch(
+            `../backend/friendchat_load.php?last_id=${lastMessageId}`
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const messages = await response.json();
+
+        if (isInitial) {
+            const loadingMsg = document.getElementById("loadingMsg");
+            if (loadingMsg) loadingMsg.remove();
+        }
+
+        if (!Array.isArray(messages) || messages.length === 0) return;
+
+        const chatContainer = document.getElementById("chatContainer");
+        const myUserId = getMyUserId();
+
+        let lastDate = getLastDisplayedDate();
+
+        messages.forEach((msg) => {
+            const msgDate = formatDate(msg.sent_at);
+
+            if (msgDate !== lastDate) {
+                chatContainer.insertAdjacentHTML(
+                    "beforeend",
+                    `<div class="date-divider">${msgDate}</div>`
+                );
+                lastDate = msgDate;
+            }
+
+            const isMe = (String(msg.user_id) === String(myUserId));
+            const time = formatTime(msg.sent_at);
+
+            if (isMe) {
+                chatContainer.insertAdjacentHTML(
+                    "beforeend",
+                    `<div class="message-row me" data-date="${msgDate}">
+                        <div class="message-content">
+                            <div class="bubble">${escapeHtml(msg.chat_history)}</div>
+                            <div class="time">${time}</div>
+                        </div>
+                    </div>`
+                );
+            } else {
+                chatContainer.insertAdjacentHTML(
+                    "beforeend",
+                    `<div class="message-row friend" data-date="${msgDate}">
+                        <div class="friend-icon">👤</div>
+                        <div class="message-content">
+                            <div class="bubble">${escapeHtml(msg.chat_history)}</div>
+                            <div class="time">${time}</div>
+                        </div>
+                    </div>`
+                );
+            }
+
+            if (parseInt(msg.message_id) > lastMessageId) {
+                lastMessageId = parseInt(msg.message_id);
+            }
+        });
+
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+    } catch (error) {
+        console.error("メッセージ読み込みエラー:", error);
+
+        if (isInitial) {
+            const loadingMsg = document.getElementById("loadingMsg");
+            if (loadingMsg) {
+                loadingMsg.textContent = "メッセージの読み込みに失敗しました";
+                loadingMsg.style.color = "#e74c3c";
+            }
+        }
+    }
+}
+
+// ===========================
+// メッセージ送信
+// ===========================
+async function sendMessage() {
+    const input = document.getElementById("messageInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const message = input.value.trim();
+
+    if (message === "") return;
+
+    sendBtn.disabled = true;
+
+    try {
+        const response = await fetch("../backend/friendchat_send.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: message })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (!result.success) {
+            alert("送信に失敗しました。もう一度お試しください。");
+            return;
+        }
+
+        input.value = "";
+        await loadMessages(false);
+
+    } catch (error) {
+        console.error("送信エラー:", error);
+        alert("通信エラーが発生しました。");
+
+    } finally {
+        sendBtn.disabled = false;
+        input.focus();
+    }
+}
+
+// ===========================
+// ユーティリティ
+// ===========================
 function getMyUserId() {
-    return document.querySelector('meta[name="user-id"]')?.content;
+    const meta = document.querySelector('meta[name="user-id"]');
+    return meta ? meta.getAttribute("content") : null;
+}
+
+function getLastDisplayedDate() {
+    const dividers = document.querySelectorAll(".date-divider");
+    if (dividers.length === 0) return null;
+    return dividers[dividers.length - 1].textContent;
+}
+
+function formatDate(datetimeStr) {
+    if (!datetimeStr) return "";
+    const d = new Date(datetimeStr);
+    if (isNaN(d)) return "";
+    return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+}
+
+function formatTime(datetimeStr) {
+    if (!datetimeStr) {
+        const now = new Date();
+        return String(now.getHours()).padStart(2, "0") + ":" +
+               String(now.getMinutes()).padStart(2, "0");
+    }
+    const d = new Date(datetimeStr);
+    if (isNaN(d)) return "";
+    return String(d.getHours()).padStart(2, "0") + ":" +
+           String(d.getMinutes()).padStart(2, "0");
 }
 
 function escapeHtml(str) {
     const div = document.createElement("div");
     div.textContent = str;
     return div.innerHTML;
-}
-
-function formatTime(datetimeStr) {
-    const d = new Date(datetimeStr);
-    return String(d.getHours()).padStart(2, "0") + ":" +
-           String(d.getMinutes()).padStart(2, "0");
-}
-
-const observer = new IntersectionObserver(async (entries) => {
-    for (const entry of entries) {
-
-        if (!entry.isIntersecting) continue;
-
-        const el = entry.target;
-
-        const messageId = el.dataset.messageId;
-        if (!messageId) continue;
-
-        if (el.dataset.read === "1") continue;
-
-        el.dataset.read = "1";
-
-        markAsReadSingle(messageId);
-
-        observer.unobserve(el);
-    }
-}, {
-    threshold: 0.8
-});
-
-async function markAsReadSingle(messageId) {
-
-    await fetch("../backend/mark_read_single.php", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            message_id: messageId
-        })
-    });
 }
