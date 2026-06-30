@@ -22,6 +22,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("sendBtn")
         .addEventListener("click", sendMessage);
 
+    // ＋ボタン → ファイル選択ダイアログを開く
+    document.querySelector(".plus-btn")
+        .addEventListener("click", () => {
+            document.getElementById("fileInput").click();
+        });
+
+    // ファイルが選択されたら送信
+    document.getElementById("fileInput")
+        .addEventListener("change", async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            await sendFile(file);
+            e.target.value = ""; // 同じファイルを連続で選んでも change が発火するようにリセット
+        });
+
     pollingTimer = setInterval(() => {
         loadMessages(false);
     }, POLLING_INTERVAL);
@@ -118,7 +133,7 @@ async function loadMessages(isInitial) {
                     "beforeend",
                     `<div class="message-row me" data-date="${msgDate}">
                         <div class="message-content">
-                            <div class="bubble">${escapeHtml(msg.chat_history)}</div>
+                            <div class="bubble">${renderBubbleContent(msg)}</div>
                             <div class="time">${time}</div>
                         </div>
                     </div>`
@@ -129,7 +144,7 @@ async function loadMessages(isInitial) {
                     `<div class="message-row friend" data-date="${msgDate}">
                         <div class="friend-icon">👤</div>
                         <div class="message-content">
-                            <div class="bubble">${escapeHtml(msg.chat_history)}</div>
+                            <div class="bubble">${renderBubbleContent(msg)}</div>
                             <div class="time">${time}</div>
                         </div>
                     </div>`
@@ -157,7 +172,23 @@ async function loadMessages(isInitial) {
 }
 
 // ===========================
-// メッセージ送信
+// バブルの中身を組み立てる（テキスト/画像/動画）
+// ===========================
+function renderBubbleContent(msg) {
+    // 画像・動画は file_path に保存されている（DBのルート相対パス）
+    if (msg.message_type === "image") {
+        const src = "../" + msg.file_path;
+        return `<img src="${escapeHtml(src)}" class="chat-image" alt="${escapeHtml(msg.file_name || "image")}">`;
+    }
+    if (msg.message_type === "video") {
+        const src = "../" + msg.file_path;
+        return `<video src="${escapeHtml(src)}" class="chat-video" controls></video>`;
+    }
+    return escapeHtml(msg.chat_history);
+}
+
+// ===========================
+// メッセージ送信（テキスト）
 // ===========================
 async function sendMessage() {
     const input = document.getElementById("messageInput");
@@ -203,6 +234,46 @@ async function sendMessage() {
     } finally {
         sendBtn.disabled = false;
         input.focus();
+    }
+}
+
+// ===========================
+// ファイル送信（画像・動画）
+// ===========================
+async function sendFile(file) {
+    const mail = getMailFromUrl();
+    const sendBtn = document.getElementById("sendBtn");
+    sendBtn.disabled = true;
+
+    try {
+        const formData = new FormData();
+        formData.append("mail", mail);
+        formData.append("file", file);
+
+        const response = await fetch("../backend/friendchat_upload.php", {
+            method: "POST",
+            body: formData
+            // Content-Type は付けない（ブラウザが自動でboundary付きmultipartにする）
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (!result.success) {
+            alert("ファイル送信に失敗しました: " + (result.error || ""));
+            return;
+        }
+
+        await loadMessages(false);
+
+    } catch (error) {
+        console.error("ファイル送信エラー:", error);
+        alert("通信エラーが発生しました。");
+    } finally {
+        sendBtn.disabled = false;
     }
 }
 

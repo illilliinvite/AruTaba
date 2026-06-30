@@ -22,7 +22,7 @@ body {
     display: flex;
     flex-direction: column;
     height: calc(100vh - 60px);
-    overflow: hidden; /* ← これを追加 */
+    overflow: hidden;
 }
 
 
@@ -35,7 +35,7 @@ body {
     gap: 10px;
     background: #ffffff;
     padding: 10px 16px;
-    border-bottom: 1px solid #d0dde3;
+    border-bottom: 2px solid #d6ecfa;
     flex-shrink: 0;
 }
 
@@ -58,7 +58,7 @@ body {
 
 .chat-header-status {
     font-size: 12px;
-    color: #06c755;
+    color: #3b7ea3;
     margin-left: 4px;
 }
 
@@ -72,7 +72,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    /* スクロールバーを細く */
     scrollbar-width: thin;
     scrollbar-color: #b0c4ce #dbe8ee;
 }
@@ -88,7 +87,6 @@ body {
     border-radius: 3px;
 }
 
-/* 読み込み中テキスト */
 .loading-msg {
     text-align: center;
     color: #999;
@@ -107,12 +105,10 @@ body {
     gap: 8px;
 }
 
-/* 相手：左寄せ */
 .message-row.friend {
     justify-content: flex-start;
 }
 
-/* 自分：右寄せ */
 .message-row.me {
     justify-content: flex-end;
 }
@@ -142,12 +138,10 @@ body {
     max-width: 70%;
 }
 
-/* 自分のコンテンツは右寄せ */
 .message-row.me .message-content {
     align-items: flex-end;
 }
 
-/* 相手のコンテンツは左寄せ */
 .message-row.friend .message-content {
     align-items: flex-start;
 }
@@ -215,18 +209,16 @@ body {
 .date-divider {
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
     margin: 16px 0 8px;
-    color: #888;
+    color: #3b7ea3;
     font-size: 12px;
-}
-
-.date-divider::before,
-.date-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: #c5d8e0;
+    font-weight: bold;
+    background: #d6ecfa;
+    padding: 4px 14px;
+    border-radius: 12px;
+    width: fit-content;
+    align-self: center;
 }
 
 /* ===========================
@@ -235,7 +227,7 @@ body {
 .chat-input-area {
     flex-shrink: 0;
     background: #ffffff;
-    border-top: 1px solid #d0dde3;
+    border-top: 2px solid #d6ecfa;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -257,7 +249,7 @@ body {
 }
 
 .chat-input-area input:focus {
-    border-color: #06c755;
+    border-color: #62b8e8;
 }
 
 /* ＋ボタン */
@@ -266,19 +258,24 @@ body {
     height: 42px;
     border: none;
     border-radius: 50%;
-    background: #e8f5ec;
-    color: #06c755;
+    background: linear-gradient(135deg, #aee0f7 0%, #62b8e8 100%);
+    color: #ffffff;
     font-size: 22px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    transition: background 0.2s;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 3px 8px rgba(98, 184, 232, 0.35);
 }
 
 .plus-btn:hover {
-    background: #d0edd8;
+    transform: scale(1.08) rotate(8deg);
+}
+
+.plus-btn:active {
+    transform: scale(0.94);
 }
 
 .chat-image {
@@ -340,5 +337,3 @@ body {
     font-size:11px;
     color:#999;
 }
-
-
