@@ -55,6 +55,7 @@ DROP TABLE IF EXISTS `forum`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `forum` (
   `user_name` varchar(20) NOT NULL,
+  `icon_path` varchar(255) DEFAULT NULL,
   `forum_history` varchar(100) NOT NULL,
   `day` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -66,7 +67,7 @@ CREATE TABLE `forum` (
 
 LOCK TABLES `forum` WRITE;
 /*!40000 ALTER TABLE `forum` DISABLE KEYS */;
-INSERT INTO `forum` VALUES ('adsfa','adfa','2026-06-05 00:00:00'),('bananaa','adfafs','2026-06-05 03:14:51'),('bananaa','zzzzzzz','2026-06-05 03:15:24'),('bananaa','adsf','2026-06-05 03:15:52'),('bananaa','adsfad','2026-06-05 03:17:30'),('bananaa','zxcvzcxv','2026-06-05 03:17:38'),('bananaa','kintamawwwwww','2026-06-05 03:20:29'),('bananaa','asdfa','2026-06-05 04:58:58'),('bananaa','asdfsadoaof','2026-06-05 05:02:11'),('bananaa','asdfdas','2026-06-05 05:02:16'),('bananaa','adfdas','2026-06-05 05:02:17'),('bananaa','asdf','2026-06-09 00:55:07'),('bananaa','zxcv','2026-06-09 01:17:45'),('bananaa','ttt','2026-06-09 01:25:18'),('bananaa','adsfa','2026-06-09 01:31:59'),('bananaa','banana','2026-06-09 01:54:23'),('bananaa','zakow','2026-06-09 04:49:25'),('bananaa','asdfasd','2026-06-09 05:14:27'),('admin','asdf','2026-06-09 05:27:01'),('katou','こんにちは！','2026-06-18 01:05:13'),('katou','あｓｆだｓｆｄｓ','2026-06-18 01:05:15'),('takeya','adfdasfds','2026-06-19 04:32:34'),('takeya','<script>alert(1)</script>','2026-06-19 04:33:25'),('takeya','<h2>asdfa</h2>','2026-06-19 04:34:07'),('takeya','<a href=\"example.com\">click</a>','2026-06-19 04:34:47');
+INSERT INTO `forum` VALUES ('adsfa',NULL,'adfa','2026-06-05 00:00:00'),('bananaa',NULL,'adfafs','2026-06-05 03:14:51'),('bananaa',NULL,'zzzzzzz','2026-06-05 03:15:24'),('bananaa',NULL,'adsf','2026-06-05 03:15:52'),('bananaa',NULL,'adsfad','2026-06-05 03:17:30'),('bananaa',NULL,'zxcvzcxv','2026-06-05 03:17:38'),('bananaa',NULL,'kintamawwwwww','2026-06-05 03:20:29'),('bananaa',NULL,'asdfa','2026-06-05 04:58:58'),('bananaa',NULL,'asdfsadoaof','2026-06-05 05:02:11'),('bananaa',NULL,'asdfdas','2026-06-05 05:02:16'),('bananaa',NULL,'adfdas','2026-06-05 05:02:17'),('bananaa',NULL,'asdf','2026-06-09 00:55:07'),('bananaa',NULL,'zxcv','2026-06-09 01:17:45'),('bananaa',NULL,'ttt','2026-06-09 01:25:18'),('bananaa',NULL,'adsfa','2026-06-09 01:31:59'),('bananaa',NULL,'banana','2026-06-09 01:54:23'),('bananaa',NULL,'zakow','2026-06-09 04:49:25'),('bananaa',NULL,'asdfasd','2026-06-09 05:14:27'),('admin',NULL,'asdf','2026-06-09 05:27:01'),('katou',NULL,'こんにちは！','2026-06-18 01:05:13'),('katou',NULL,'あｓｆだｓｆｄｓ','2026-06-18 01:05:15'),('takeya',NULL,'adfdasfds','2026-06-19 04:32:34'),('takeya',NULL,'<script>alert(1)</script>','2026-06-19 04:33:25'),('takeya',NULL,'<h2>asdfa</h2>','2026-06-19 04:34:07'),('takeya',NULL,'<a href=\"example.com\">click</a>','2026-06-19 04:34:47');
 /*!40000 ALTER TABLE `forum` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -116,7 +117,7 @@ CREATE TABLE `friend_chat` (
   `sent_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `is_read` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -125,7 +126,7 @@ CREATE TABLE `friend_chat` (
 
 LOCK TABLES `friend_chat` WRITE;
 /*!40000 ALTER TABLE `friend_chat` DISABLE KEYS */;
-INSERT INTO `friend_chat` VALUES (1,'user_6a1906899955d','user_6a20e44e86d82','text',NULL,'asdf',NULL,NULL,'2026-06-18 11:30:58',1),(2,'user_6a1906899955d','user_6a20e44e86d82','text',NULL,'asdf',NULL,NULL,'2026-06-18 11:30:58',1),(3,'user_6a1906899955d','user_6a20e44e86d82','text',NULL,'zxvc',NULL,NULL,'2026-06-18 11:31:05',1),(4,'user_6a1906899955d','user_6a20e44e86d82','text',NULL,'zxvc',NULL,NULL,'2026-06-18 11:31:05',1),(5,'user_6a1906899955d','user_6a20e44e86d82','text',NULL,'tasukete',NULL,NULL,'2026-06-18 11:32:33',1),(6,'user_6a1906899955d','user_6a20e44e86d82','text',NULL,'tasukete',NULL,NULL,'2026-06-18 11:32:33',1),(7,'user_6a1906899955d','user_6a20e44e86d82','text','msg_6a34aaea44c1c6.88462506','あｓｄｆ',NULL,NULL,'2026-06-19 11:35:22',1),(8,'user_6a1906899955d','user_6a20e44e86d82','text','msg_6a34aaea4ba978.71626396','あｓｄｆ',NULL,NULL,'2026-06-19 11:35:22',1),(9,'user_6a1906899955d','user_6a20e44e86d82','image','msg_6a34aaf5ec75a4.28441505','','public/uploads/friend_chat/e64892015a95067a09656a15406f1934.png','スクリーンショット 2025-11-07 140340.png','2026-06-19 11:35:33',1),(10,'user_6a1906899955d','user_6a20e44e86d82','text','msg_6a34ab740fc220.60254380','asdf',NULL,NULL,'2026-06-19 11:37:40',0),(11,'user_6a1906899955d','user_6a20e44e86d82','text','msg_6a34ab741142b9.95427587','asdf',NULL,NULL,'2026-06-19 11:37:40',0),(12,'user_6a1906899955d','user_6a20e44e86d82','text','msg_6a34aba8894a83.81081878','sdfg',NULL,NULL,'2026-06-19 11:38:32',0),(13,'user_6a1906899955d','user_6a20e44e86d82','text','msg_6a34aba88a8eb8.06038643','sdfg',NULL,NULL,'2026-06-19 11:38:32',0),(14,'user_6a1906899955d','user_6a20e44e86d82','text','msg_6a34aba9f096c0.30209421','asdfa',NULL,NULL,'2026-06-19 11:38:33',0);
+INSERT INTO `friend_chat` VALUES (1,'user_6a1906899955d','user_6a20e44e86d82','text',NULL,'asdf',NULL,NULL,'2026-06-18 11:30:58',1),(2,'user_6a1906899955d','user_6a20e44e86d82','text',NULL,'asdf',NULL,NULL,'2026-06-18 11:30:58',1),(3,'user_6a1906899955d','user_6a20e44e86d82','text',NULL,'zxvc',NULL,NULL,'2026-06-18 11:31:05',1),(4,'user_6a1906899955d','user_6a20e44e86d82','text',NULL,'zxvc',NULL,NULL,'2026-06-18 11:31:05',1),(5,'user_6a1906899955d','user_6a20e44e86d82','text',NULL,'tasukete',NULL,NULL,'2026-06-18 11:32:33',1),(6,'user_6a1906899955d','user_6a20e44e86d82','text',NULL,'tasukete',NULL,NULL,'2026-06-18 11:32:33',1),(7,'user_6a1906899955d','user_6a20e44e86d82','text','msg_6a34aaea44c1c6.88462506','あｓｄｆ',NULL,NULL,'2026-06-19 11:35:22',1),(8,'user_6a1906899955d','user_6a20e44e86d82','text','msg_6a34aaea4ba978.71626396','あｓｄｆ',NULL,NULL,'2026-06-19 11:35:22',1),(9,'user_6a1906899955d','user_6a20e44e86d82','image','msg_6a34aaf5ec75a4.28441505','','public/uploads/friend_chat/e64892015a95067a09656a15406f1934.png','スクリーンショット 2025-11-07 140340.png','2026-06-19 11:35:33',1),(10,'user_6a1906899955d','user_6a20e44e86d82','text','msg_6a34ab740fc220.60254380','asdf',NULL,NULL,'2026-06-19 11:37:40',0),(11,'user_6a1906899955d','user_6a20e44e86d82','text','msg_6a34ab741142b9.95427587','asdf',NULL,NULL,'2026-06-19 11:37:40',0),(12,'user_6a1906899955d','user_6a20e44e86d82','text','msg_6a34aba8894a83.81081878','sdfg',NULL,NULL,'2026-06-19 11:38:32',0),(13,'user_6a1906899955d','user_6a20e44e86d82','text','msg_6a34aba88a8eb8.06038643','sdfg',NULL,NULL,'2026-06-19 11:38:32',0),(14,'user_6a1906899955d','user_6a20e44e86d82','text','msg_6a34aba9f096c0.30209421','asdfa',NULL,NULL,'2026-06-19 11:38:33',0),(15,'user_6a1906899955d','user_6a335ef888f54','text','msg_6a3e22268d14b9.76116249','asdf',NULL,NULL,'2026-06-26 15:54:30',0),(16,'user_6a1906899955d','user_6a335ef888f54','text','msg_6a3e22436327c6.29693705','ccccccccccccccccccccccccccc',NULL,NULL,'2026-06-26 15:54:59',0);
 /*!40000 ALTER TABLE `friend_chat` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -206,7 +207,7 @@ CREATE TABLE `profile` (
 
 LOCK TABLES `profile` WRITE;
 /*!40000 ALTER TABLE `profile` DISABLE KEYS */;
-INSERT INTO `profile` VALUES ('user_6a0e77927b826','banana',NULL,'saefd@gmail.com',0,0),('user_6a0e781eaff7e','banana',NULL,'banana@gmail.com',0,0),('user_6a0fced2a1165','user',NULL,'aaa@gmail.com',0,0),('user_6a15251201dcf','swerfier',NULL,'bbb@gmail.com',0,0),('user_6a1906899955d','takeya',NULL,'ccc@gmail.com',0,0),('user_6a191df673768','ddd',NULL,'ddd@gmail.com',0,0),('user_6a191f8f778ef','eee',NULL,'eee@gmail.com',0,0),('user_6a19262b8b4a7','fff',NULL,'fff@gmail.com',0,0),('user_6a20d6c787c11','asdfasdf',NULL,'sss@gmail.com',0,0),('user_6a20d78901c78','zzz',NULL,'zzz@gmail.com',0,0),('user_6a20e44e86d82','ppp',NULL,'ppp@gmail.com',0,0),('user_6a20ecb3b3581','sdafsdf',NULL,'ooo@gmail.com',0,0),('user_6a27a4098bc0c','admin',NULL,'admin@gmail.com',0,0),('user_6a334436e0167','katou',NULL,'oo@gmail.com',0,0),('user_6a335ef888f54','adfklasladsldsalk',NULL,'anal@gmail.com',0,0);
+INSERT INTO `profile` VALUES ('user_6a0e77927b826','banana',NULL,'saefd@gmail.com',0,0),('user_6a0e781eaff7e','banana',NULL,'banana@gmail.com',0,0),('user_6a0fced2a1165','user',NULL,'aaa@gmail.com',0,0),('user_6a15251201dcf','swerfier',NULL,'bbb@gmail.com',0,0),('user_6a1906899955d','takeya','uploads/icons/user_user_6a1906899955d_1782355230.png','ccc@gmail.com',0,0),('user_6a191df673768','ddd',NULL,'ddd@gmail.com',0,0),('user_6a191f8f778ef','eee',NULL,'eee@gmail.com',0,0),('user_6a19262b8b4a7','fff',NULL,'fff@gmail.com',0,0),('user_6a20d6c787c11','asdfasdf',NULL,'sss@gmail.com',0,0),('user_6a20d78901c78','zzz',NULL,'zzz@gmail.com',0,0),('user_6a20e44e86d82','ppp',NULL,'ppp@gmail.com',0,0),('user_6a20ecb3b3581','sdafsdf',NULL,'ooo@gmail.com',0,0),('user_6a27a4098bc0c','admin',NULL,'admin@gmail.com',0,0),('user_6a334436e0167','katou',NULL,'oo@gmail.com',0,0),('user_6a335ef888f54','adfklasladsldsalk',NULL,'anal@gmail.com',0,0);
 /*!40000 ALTER TABLE `profile` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -247,4 +248,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-25 10:29:52
+-- Dump completed on 2026-07-03 13:59:31
