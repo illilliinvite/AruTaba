@@ -16,7 +16,7 @@ try {
 }
 
 $stmt = $pdo->prepare("
-    SELECT user_name 
+    SELECT user_name
     FROM profile
     WHERE user_id = :user_id
 ");
