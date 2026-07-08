@@ -151,8 +151,8 @@ async function loadMessages(isInitial) {
                 );
             }
 
-            if (parseInt(msg.message_id) > lastMessageId) {
-                lastMessageId = parseInt(msg.message_id);
+            if (msg.id > lastMessageId) {
+                lastMessageId = msg.id;
             }
         });
 

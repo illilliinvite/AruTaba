@@ -44,23 +44,31 @@ try {
 
     $stmt = $pdo->prepare("
         SELECT
+            id,
             user_id,
-            friend_user_id,
+            receiver_id,
             message_id,
+            message_type,
             chat_history,
+            file_path,
+            file_name,
             sent_at
         FROM friend_chat
-        WHERE message_id > :last_id
-          AND (
-                (user_id = :my_user_id AND friend_user_id = :friend_user_id)
-             OR (user_id = :friend_user_id AND friend_user_id = :my_user_id)
-          )
-        ORDER BY message_id ASC
+        WHERE id > :last_id
+        AND (
+                (user_id = :my_user_id1 AND receiver_id = :friend_user_id1)
+            OR (user_id = :friend_user_id2 AND receiver_id = :my_user_id2)
+        )
+        ORDER BY id ASC
     ");
 
     $stmt->bindValue(':last_id', $last_id, PDO::PARAM_INT);
-    $stmt->bindValue(':my_user_id', $my_user_id, PDO::PARAM_STR);
-    $stmt->bindValue(':friend_user_id', $friend_user_id, PDO::PARAM_STR);
+
+    $stmt->bindValue(':my_user_id1', $my_user_id, PDO::PARAM_STR);
+    $stmt->bindValue(':friend_user_id1', $friend_user_id, PDO::PARAM_STR);
+
+    $stmt->bindValue(':friend_user_id2', $friend_user_id, PDO::PARAM_STR);
+    $stmt->bindValue(':my_user_id2', $my_user_id, PDO::PARAM_STR);
     $stmt->execute();
 
     $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
