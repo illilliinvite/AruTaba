@@ -66,11 +66,12 @@ $user_name = $row["user_name"];
 // フレンド削除（両方向）
 // ---------------------------
 $sql = "DELETE FROM friend 
-        WHERE user_name = :user_name and friend = 1";
+        WHERE user_name = :user_name or friend_id = :friend_id and friend = 1";
 
 $stmt = $pdo->prepare($sql);
 
 $stmt->bindParam(":user_name", $user_name, PDO::PARAM_STR);
+$stmt->bindParam(":friend_id", $friend_mail, PDO::PARAM_STR);
 
 
 $result = $stmt->execute();
