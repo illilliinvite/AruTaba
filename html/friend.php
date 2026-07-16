@@ -1,3 +1,6 @@
+<?php
+    include "../backend/session.php";
+?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>

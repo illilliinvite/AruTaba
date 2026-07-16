@@ -1,3 +1,6 @@
+<?php
+    require_once "../backend/session.php";
+?>
 <!DOCTYPE html>
 <html lang="ja">
 

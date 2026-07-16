@@ -49,7 +49,7 @@
         </a>  
       </ul>
 
-      <a href="login.php" class="logout">
+      <a href="../backend/logout.php" class="logout">
         <i class="fa-solid fa-right-from-bracket"></i> ログアウト
       </a>
   </nav>
