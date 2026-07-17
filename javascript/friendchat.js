@@ -4,12 +4,13 @@
 const POLLING_INTERVAL = 3000;
 let lastMessageId = 0;
 let pollingTimer = null;
+let friendIconSrc = "../image/default_icon.png"; // 相手のアイコン画像パス（取得できればここが上書きされる）
 
 // ===========================
 // 初期化
 // ===========================
 document.addEventListener("DOMContentLoaded", async () => {
-    await fetchUserByMail(); // ← async 関数内なら await が使える
+    await fetchUserByMail();
     await loadMessages(true);
 
     document.getElementById("messageInput")
@@ -17,6 +18,24 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (e.key === "Enter") {
                 sendMessage();
             }
+        });
+
+    document.getElementById("sendBtn")
+        .addEventListener("click", sendMessage);
+
+    // ＋ボタン → ファイル選択ダイアログを開く
+    document.querySelector(".plus-btn")
+        .addEventListener("click", () => {
+            document.getElementById("fileInput").click();
+        });
+
+    // ファイルが選択されたら送信
+    document.getElementById("fileInput")
+        .addEventListener("change", async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            await sendFile(file);
+            e.target.value = ""; // 同じファイルを連続で選んでも change が発火するようにリセット
         });
 
     pollingTimer = setInterval(() => {
@@ -31,24 +50,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 // ===========================
 function getMailFromUrl() {
     const params = new URLSearchParams(window.location.search);
+    console.log(params.get("mail"));
     return params.get("mail");
 }
 
 // ===========================
-// mail を PHP に送信してユーザー情報取得
+// mail を PHP に送信してユーザー情報取得（相手のアイコンもここで取得）
 // ===========================
 async function fetchUserByMail() {
     const mail = getMailFromUrl();
     if (!mail) {
-        console.warn("mail パラメータがありません");
+        console.log("mail パラメータがありません");
         return;
     }
 
     try {
-        const response = await fetch("../backend/friendchat_load.php", {
+        const response = await fetch("../backend/friendchat_mail.php", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ mail: mail })
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                mail: mail
+            })
         });
 
         const result = await response.json();
@@ -57,6 +81,11 @@ async function fetchUserByMail() {
         if (result.success && result.user) {
             // 必要ならここでユーザー情報を画面に反映できる
             console.log("ログインユーザー:", result.user);
+
+            // 吹き出し横アイコン用に保持（friend_llist.php と同じ考え方）
+            if (result.user.icon_path) {
+                friendIconSrc = result.user.icon_path;
+            }
         }
 
     } catch (error) {
@@ -69,8 +98,11 @@ async function fetchUserByMail() {
 // ===========================
 async function loadMessages(isInitial) {
     try {
+
+        const mail = getMailFromUrl();
+
         const response = await fetch(
-            `../backend/friendchat_load.php?last_id=${lastMessageId}`
+        `../backend/friendchat_load.php?mail=${encodeURIComponent(mail)}&last_id=${lastMessageId}`
         );
 
         if (!response.ok) {
@@ -110,7 +142,7 @@ async function loadMessages(isInitial) {
                     "beforeend",
                     `<div class="message-row me" data-date="${msgDate}">
                         <div class="message-content">
-                            <div class="bubble">${escapeHtml(msg.chat_history)}</div>
+                            <div class="bubble">${renderBubbleContent(msg)}</div>
                             <div class="time">${time}</div>
                         </div>
                     </div>`
@@ -119,17 +151,17 @@ async function loadMessages(isInitial) {
                 chatContainer.insertAdjacentHTML(
                     "beforeend",
                     `<div class="message-row friend" data-date="${msgDate}">
-                        <div class="friend-icon">👤</div>
+                        <img src="${escapeHtml(friendIconSrc)}" class="friend-icon" alt="">
                         <div class="message-content">
-                            <div class="bubble">${escapeHtml(msg.chat_history)}</div>
+                            <div class="bubble">${renderBubbleContent(msg)}</div>
                             <div class="time">${time}</div>
                         </div>
                     </div>`
                 );
             }
 
-            if (parseInt(msg.message_id) > lastMessageId) {
-                lastMessageId = parseInt(msg.message_id);
+            if (msg.id > lastMessageId) {
+                lastMessageId = msg.id;
             }
         });
 
@@ -149,7 +181,23 @@ async function loadMessages(isInitial) {
 }
 
 // ===========================
-// メッセージ送信
+// バブルの中身を組み立てる（テキスト/画像/動画）
+// ===========================
+function renderBubbleContent(msg) {
+    // 画像・動画は file_path に保存されている（DBのルート相対パス）
+    if (msg.message_type === "image") {
+        const src = "../" + msg.file_path;
+        return `<img src="${escapeHtml(src)}" class="chat-image" alt="${escapeHtml(msg.file_name || "image")}">`;
+    }
+    if (msg.message_type === "video") {
+        const src = "../" + msg.file_path;
+        return `<video src="${escapeHtml(src)}" class="chat-video" controls></video>`;
+    }
+    return escapeHtml(msg.chat_history);
+}
+
+// ===========================
+// メッセージ送信（テキスト）
 // ===========================
 async function sendMessage() {
     const input = document.getElementById("messageInput");
@@ -161,10 +209,17 @@ async function sendMessage() {
     sendBtn.disabled = true;
 
     try {
+        const mail = getMailFromUrl();
+
         const response = await fetch("../backend/friendchat_send.php", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: message })
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                mail: mail,
+                message: message
+            })
         });
 
         if (!response.ok) {
@@ -188,6 +243,46 @@ async function sendMessage() {
     } finally {
         sendBtn.disabled = false;
         input.focus();
+    }
+}
+
+// ===========================
+// ファイル送信（画像・動画）
+// ===========================
+async function sendFile(file) {
+    const mail = getMailFromUrl();
+    const sendBtn = document.getElementById("sendBtn");
+    sendBtn.disabled = true;
+
+    try {
+        const formData = new FormData();
+        formData.append("mail", mail);
+        formData.append("file", file);
+
+        const response = await fetch("../backend/friendchat_upload.php", {
+            method: "POST",
+            body: formData
+            // Content-Type は付けない（ブラウザが自動でboundary付きmultipartにする）
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (!result.success) {
+            alert("ファイル送信に失敗しました: " + (result.error || ""));
+            return;
+        }
+
+        await loadMessages(false);
+
+    } catch (error) {
+        console.error("ファイル送信エラー:", error);
+        alert("通信エラーが発生しました。");
+    } finally {
+        sendBtn.disabled = false;
     }
 }
 

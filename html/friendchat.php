@@ -22,7 +22,7 @@ session_start();
     <main class="chat-wrapper">
         <!-- 相手のヘッダー情報 -->
         <div class="chat-header">
-            <div class="chat-header-icon">👤</div>
+            <img src="../image/default_icon.png" id="chatHeaderIcon" class="chat-header-icon" alt="">
             <div class="chat-header-name" id="friendName"></div>
             <div class="chat-header-status">オンライン</div>
         </div>
@@ -77,9 +77,20 @@ session_start();
     console.log(result);
     if (result.success && result.user) {
         document.getElementById("friendName").textContent = result.user.user_name;
+
+        // ===== アイコン画像の反映（friend_llist.php と同じ考え方） =====
+        const iconEl = document.getElementById("chatHeaderIcon");
+        const path = result.user.icon_path;
+
+        if (path) {
+            // すでに "../" 始まりならそのまま、そうでなければ付与
+            iconEl.src = path.startsWith("../") ? path : "../" + path;
+        }
+        // pathが無ければ最初に設定した default_icon.png のまま
     }
 
 })();
+
 </script>
 
 </body>

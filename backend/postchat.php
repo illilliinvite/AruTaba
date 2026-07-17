@@ -38,6 +38,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once "session.php";
+date_default_timezone_set('Asia/Tokyo');
 
 try {
     $pdo = new PDO(

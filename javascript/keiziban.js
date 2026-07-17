@@ -93,7 +93,7 @@ function renderPosts() {
         // 残りも追加（スクロールで見れる）
         sorted.slice(5).forEach(msg => {
             const initials = msg.user_name.slice(0, 2);
-            const date = new Date(msg.day);
+            const date = new Date(msg.day.replace(" ", "T"));
             const timeStr = `${date.getMonth()+1}/${date.getDate()} ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}`;
 
             const card = document.createElement("div");

@@ -15,8 +15,10 @@
     </div>
 
     <div class="header-profile">
-        <img id="headerProfileImage" src="../images/default_icon.png" alt="プロフィール画像" style="display:none;">
-        <i id="headerProfileDefault"class="fa-solid fa-user"></i>
+        <a href="profile_setting.php">
+          <img id="headerProfileImage" src="../images/default_icon.png" alt="プロフィール画像" style="display:none;">
+          <i id="headerProfileDefault"class="fa-solid fa-user"></i>
+        </a>
     </div>
 
 </header>
