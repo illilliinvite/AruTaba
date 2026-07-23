@@ -132,6 +132,24 @@ body{
     color:#2d65d1;
 }
 
+/* ログインエラーメッセージ */
+.login-error{
+    width:360px;
+
+    margin:-30px 0 25px;
+    padding:12px 18px;
+
+    background:#fdecea;
+    border:1px solid #f3c2bd;
+    border-radius:12px;
+
+    color:#c0392b;
+    font-size:13.5px;
+    text-align:center;
+
+    box-sizing:border-box;
+}
+
 /* ログインボタン */
 .login-button{
     width:360px;

@@ -58,10 +58,15 @@ try{
 
     }
     else{
-        echo "メールアドレスまたはパスワードが違います";
+        // 🔧 直接echoせず、ログイン画面にエラー付きでリダイレクト
+        header("Location: ../html/login.php?error=1");
+        exit();
     }   
 }catch(PDOException $e){
-    echo "接続失敗" . $e->getMessage();
+    // 🔧 接続失敗時も同様にログイン画面へ戻す（詳細はサーバーログに記録）
+    error_log("login.php PDOException: " . $e->getMessage());
+    header("Location: ../html/login.php?error=2");
+    exit();
 }
 
 ?>

@@ -17,6 +17,9 @@
             <div class="title-line"></div>
         </div>
 
+        <!-- エラーメッセージ（JSで必要な時だけ表示） -->
+        <p class="login-error" id="loginError" style="display:none;"></p>
+
         <!-- 入力フォーム -->
         <form class="login-form" action="../backend/login.php" method="POST">
 
@@ -39,6 +42,26 @@
         </form>
 
     </div>
+
+    <script>
+        (() => {
+            const params = new URLSearchParams(window.location.search);
+            const errorCode = params.get("error");
+            if (!errorCode) return;
+
+            const messages = {
+                "1": "メールアドレスまたはパスワードが違います",
+                "2": "サーバーエラーが発生しました。しばらくしてから再度お試しください"
+            };
+
+            const el = document.getElementById("loginError");
+            el.textContent = messages[errorCode] || "ログインに失敗しました";
+            el.style.display = "block";
+
+            // URLからクエリを消す（リロード時に再表示されないように）
+            window.history.replaceState({}, document.title, window.location.pathname);
+        })();
+    </script>
 
 </body>
 </html>
